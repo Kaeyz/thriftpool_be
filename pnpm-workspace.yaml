@@ -1,0 +1,48 @@
+catalogMode: prefer
+packages:
+  - apps/*
+  - packages/*
+
+onlyBuiltDependencies:
+  - '@scarf/scarf'
+  - esbuild
+  - sharp
+
+catalog:
+  bcryptjs: 3.0.3
+  cookie-parser: 1.4.6
+  cors: 2.8.6
+  eslint: 9.39.2
+  express: 5.2.1
+  express-basic-auth: 1.2.1
+  express-rate-limit: 8.2.1
+  helmet: 8.1.0
+  jsonwebtoken: 9.0.3
+  mongoose: 8.12.1
+  multer: 2.0.2
+  passport: 0.7.0
+  passport-jwt: 4.0.1
+  swagger-jsdoc: 6.2.8
+  swagger-themes: 1.4.3
+  swagger-ui-express: 5.0.1
+  typescript: 5.4.5
+  tsx: 4.21.0
+  tsup: 8.5.1
+  winston: 3.19.0
+  vitest: 4.0.16
+  zod: 4.3.5
+  '@types/express': 5.0.6
+  '@types/cors': 2.8.19
+  '@types/node': 25.5.0
+  '@types/cookie-parser': 1.4.10
+  '@types/jsonwebtoken': 9.0.10
+  '@types/passport': 1.0.17
+  '@types/passport-jwt': 4.0.1
+  '@types/swagger-jsdoc': 6.0.4
+  '@typescript-eslint/eslint-plugin': 8.53.1
+  '@typescript-eslint/parser': 8.53.1
+
+allowBuilds:
+  '@scarf/scarf': set this to true or false
+  esbuild: set this to true or false
+  sharp: set this to true or false

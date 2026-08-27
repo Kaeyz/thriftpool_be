@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "allowImportingTsExtensions": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "noEmit": true,
+    "typeRoots": ["node_modules/@types", "./src/types"],
+    "composite": true,
+    "skipLibCheck": true,
+    "declaration": true,
+  },
+  "exclude": ["dist", "node_modules", "coverage", "_tests_"]
+}

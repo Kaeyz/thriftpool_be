@@ -1,0 +1,24 @@
+{
+  "name": "@packages/runtime",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./http/*": "./src/http/*/index.ts",
+    "./event-bus": "./src/event-bus/index.ts"
+  },
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "devDependencies": {
+    "@packages/config": "workspace:*",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "dependencies": {
+    "@packages/core": "workspace:*",
+    "axios": "^1.13.6",
+    "ioredis": "^5.10.1",
+    "zod": "catalog:"
+  }
+}

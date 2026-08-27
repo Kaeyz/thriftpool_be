@@ -1,0 +1,17 @@
+{
+  "name": "@packages/config",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "catalog:",
+    "@typescript-eslint/parser": "catalog:",
+    "eslint": "^9.39.2",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-security": "^3.0.1",
+    "prettier": "^3.7.4"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "@packages/email",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "email dev --dir=src/templates"
+  },
+  "devDependencies": {
+    "@packages/config": "workspace:*",
+    "@types/express": "catalog:",
+    "@types/react": "^19.2.9",
+    "@react-email/preview-server": "5.2.5",
+    "typescript": "catalog:",
+    "react-email": "5.2.5",
+    "vitest": "catalog:"
+  },
+  "dependencies": {
+    "@packages/core": "workspace:*",
+    "@react-email/components": "1.0.6",
+    "@react-email/render": "^2.0.4",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "resend": "^6.8.0"
+  }
+}
