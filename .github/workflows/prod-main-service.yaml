@@ -1,0 +1,81 @@
+name: Prod Main Service Deploy Workflow
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '*'
+      - 'packages/**'
+      - 'apps/community/**'
+      - '.github/workflows/prod-main-service.yaml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [24.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - name: Install dependencies for main-service
+        run: pnpm install --frozen-lockfile --filter ./apps/main
+
+      - name: Run Lint
+        run: pnpm --filter ./apps/main lint
+
+      - name: Install Railway CLI
+        shell: bash
+        run: |
+          curl -fsSL https://railway.app/install.sh | bash
+          echo "$HOME/.railway/bin" >> $GITHUB_PATH
+
+      - name: Deploy to Railway
+        run: railway up --service sc-prod-be-main
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_PROD_TOKEN }}
+
+      - name: Set env on Railway
+        run: |
+          variables=(
+            "APP_ENV=prod"
+            "DEBUG_MODE=true"
+            "HOST=https://main-service.schoolivo.com"
+            "ADMIN_DASHBOARD_BASE_URL=https://admin-portal.schoolivo.com"
+            "SCHOOL_PORTAL_BASE_URL=https://schoolivo.com"
+            "MONGO_URI=${{ secrets.MONGO_URI_PROD }}"
+            "REDIS_URL=${{ secrets.REDIS_URL_PROD }}"
+            "SERVER_USERNAME=${{ secrets.SERVER_USERNAME_PROD }}"
+            "SERVER_PASSWORD=${{ secrets.SERVER_PASSWORD_PROD }}"
+            "SECRET_KEY=${{ secrets.SECRET_KEY_PROD }}"
+            "DISCORD_KEY=${{ secrets.DISCORD_KEY }}"
+            "DISCORD_GUILD_NAME=${{ secrets.DISCORD_GUILD_NAME }}"
+            "RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}"
+            "RESEND_FROM=${{ secrets.RESEND_FROM }}"
+            "CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}"
+            "CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}"
+            "CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}"
+          )
+          
+          SET_FLAGS=""
+          for var in "${variables[@]}"; do
+            SET_FLAGS+="--set \"$var\" "
+          done
+
+          eval "railway variables --service sc-prod-be-main $SET_FLAGS"
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_PROD_TOKEN }}

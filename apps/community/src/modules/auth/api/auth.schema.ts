@@ -11,19 +11,7 @@ import {
   VerifyAccountResponseSchema,
 } from "../zod/auth.zod";
 
-export const AP_AuthSchemas = {
-  AdminOnboardingInput: z.toJSONSchema(AdminOnboardingInputSchema),
-  LoginInput: z.toJSONSchema(LoginInputSchema),
-  LoginRs: z.toJSONSchema(HttpResponseSchema(LoginResponseSchema)),
-  ResetPasswordInput: z.toJSONSchema(ResetPasswordSchema),
-  RefreshTokenRes: z.toJSONSchema(HttpResponseSchema(LoginResponseSchema)),
-  ForgotInput: z.toJSONSchema(ForgotPasswordSchema),
-  ForgotRes: z.toJSONSchema(HttpResponseSchema()),
-  VerifyAccountInput: z.toJSONSchema(VerifyAccountInputSchema),
-  VerifyAccountRes: z.toJSONSchema(HttpResponseSchema(VerifyAccountResponseSchema)),
-};
-
-export const MP_AuthSchemas = {
+export const WebAppAuthSchemas = {
   CreateUserInput: z.toJSONSchema(CreateUserSchema),
   LoginInput: z.toJSONSchema(LoginInputSchema),
   LoginRes: z.toJSONSchema(HttpResponseSchema(LoginResponseSchema)),

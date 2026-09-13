@@ -1,8 +1,7 @@
 import path, { resolve } from "path";
 import swaggerJsDoc from "swagger-jsdoc";
+import { webAppSchemas } from "./schemas";
 import { getKeys } from "@/config/keys";
-
-const webAppApiSchemas = {};
 
 const docsConfig = {
   webAppDocsConfig: swaggerJsDoc({
@@ -16,7 +15,7 @@ const docsConfig = {
         version: "1.0.0",
       },
       components: {
-        schemas: webAppApiSchemas,
+        schemas: webAppSchemas,
         securitySchemes: {
           DeviceId: {
             type: "apiKey",

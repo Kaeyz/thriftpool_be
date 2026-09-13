@@ -8,9 +8,7 @@ import {
   UpdateMyEmailSchema,
 } from "../zod/user.zod";
 
-export const AP_UserSchemas = {};
-
-export const MP_UserSchemas = {
+export const WebAppUserSchemas = {
   Users: z.toJSONSchema(HttpResponseSchema(UsersQueryResponse)),
   User: z.toJSONSchema(HttpResponseSchema(ISUserSchema)),
 

@@ -47,7 +47,7 @@ export const setupDocs = (router: Router, options: options) => {
   `,
   };
 
-  if (options.appEnv === "test") {
+  if (options.appEnv !== "prod") {
     const swaggerHtml = generateHTML(config, themeConfig);
     router.use(route, serveFiles(config));
     router.get(route, (_req: Request, res: Response) => res.send(swaggerHtml));

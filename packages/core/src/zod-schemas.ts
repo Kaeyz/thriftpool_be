@@ -33,7 +33,6 @@ export const AmountSchema = z.object({
 
 export const PhoneNumberSchema = z.object({
   countryCode: z.string(),
-  nationalNumber: z.string(),
-  fullPhoneNumber: z.string(),
+  number: z.string(),
   isVerified: z.boolean(),
 });

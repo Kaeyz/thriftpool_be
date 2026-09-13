@@ -44,7 +44,6 @@ export const amountField: FieldDefinition<Amount> = {
 
 export const phoneNumberField: FieldDefinition<PhoneNumber> = {
   countryCode: String,
-  nationalNumber: String,
-  fullPhoneNumber: String,
+  number: String,
   isVerified: { type: Boolean },
 };
