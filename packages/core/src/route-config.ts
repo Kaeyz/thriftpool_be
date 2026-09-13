@@ -1,17 +1,16 @@
-
 import type { Router, Request, Response, NextFunction } from "express";
 import basicAuth from "express-basic-auth";
 import { SwaggerTheme, SwaggerThemeNameEnum } from "swagger-themes";
 import type { SwaggerUiOptions } from "swagger-ui-express";
 import { generateHTML, serveFiles } from "swagger-ui-express";
-import { AppEnv } from "./types";
-import { ApiError, StatusCodes } from "./http";
+import { AppError, StatusCodes } from "./res-config";
+import type { AppEnv } from "./types";
 
 export const setupRouteAuth = (username: string, password: string): ReturnType<typeof basicAuth> => {
   const getUnauthorizedResponse = (req: basicAuth.IBasicAuthedRequest) => {
     return req.auth
-      ? new ApiError(StatusCodes.UNAUTHENTICATED, "Invalid Auth Credentials")
-      : new ApiError(StatusCodes.UNAUTHENTICATED, "No auth credentials provided");
+      ? new AppError(StatusCodes.UNAUTHENTICATED, "Invalid Auth Credentials")
+      : new AppError(StatusCodes.UNAUTHENTICATED, "No auth credentials provided");
   };
 
   return basicAuth({
@@ -28,7 +27,7 @@ export const useBasicAuth = (username: string, password: string) => {
 };
 
 interface options {
-  appEnv: AppEnv
+  appEnv: AppEnv;
   route: string;
   config: object;
   auth: { username: string; password: string };

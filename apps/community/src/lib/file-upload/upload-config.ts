@@ -1,33 +1,38 @@
+import type { Ctx } from "../ctx/ctx.types";
 import type { RequestSource } from "../definitions/types";
-import type { Ctx } from "../request-context/config";
-import { userUploadConfig } from "@/components/users/common/user.upload";
+import type { EntityConfig } from "./types";
 
-export const fileUploadConfigs = {
-  user: userUploadConfig,
+const fileUploadConfigs: Partial<Record<string, EntityConfig<string, string, object>>> = {};
+
+export const registerFileUploadConfig = (entityName: string, config: EntityConfig<string, string, object>) => {
+  fileUploadConfigs[entityName] = config;
 };
 
-export type FileUploadConfigs = typeof fileUploadConfigs;
-export type EntityName = keyof FileUploadConfigs;
+export const getFileUploadConfig = (entityName: string) => {
+  return fileUploadConfigs[entityName];
+};
 
-const sourceConfigs: Record<RequestSource, EntityName[]> = {
+const sourceConfigs: Record<RequestSource, string[]> = {
+  "web-app": ["user"],
   system: [],
-  "web-app": [],
 };
 
-export const validateEntityName = (ctx: Ctx, entityName: EntityName) => {
+export const validateEntityName = (ctx: Ctx, entityName: string) => {
   return sourceConfigs[ctx.requestSource].includes(entityName);
 };
 
 export const getConfigMap = (ctx: Ctx) => {
-  let obj: Partial<Record<EntityName, FileUploadConfigs[EntityName]>> = {};
-  const map = sourceConfigs[ctx.requestSource];
+  const obj: Record<string, EntityConfig<string, string, object>> = {};
 
-  Object.keys(fileUploadConfigs).forEach((key) => {
-    const entityKey = key as EntityName;
-    if (map.includes(entityKey)) {
-      obj = { ...obj, [entityKey]: fileUploadConfigs[entityKey] };
+  const allowedEntities = sourceConfigs[ctx.requestSource];
+
+  for (const entityName of allowedEntities) {
+    const config = fileUploadConfigs[entityName];
+
+    if (config) {
+      obj[entityName] = config;
     }
-  });
+  }
 
-  return obj as Record<EntityName, FileUploadConfigs[EntityName]>;
+  return obj;
 };

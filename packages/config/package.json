@@ -6,7 +6,7 @@
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "catalog:",
     "@typescript-eslint/parser": "catalog:",
-    "eslint": "^9.39.2",
+    "eslint": "catalog:",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.5.5",

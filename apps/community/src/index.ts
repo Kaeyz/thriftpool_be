@@ -1,9 +1,8 @@
 /* eslint-disable no-console */
 import util from "util";
-
-import { App } from "./app";
 import { DB } from "./config/db";
-import { eventService } from "./lib/event";
+import { eventService } from "./runtime/event";
+import { App } from "./runtime/http/app";
 
 if (process.env.APP_ENV === "test") {
   util.inspect.defaultOptions = {
@@ -22,6 +21,7 @@ void (async () => {
   const graceFullExit = () => {
     console.log("SIGTERM signal received.");
     console.log("Closing http server.");
+
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     liveServer.close(async () => {
       console.log("Http server closed.");

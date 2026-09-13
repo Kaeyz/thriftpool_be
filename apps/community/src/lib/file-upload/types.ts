@@ -1,5 +1,5 @@
-import type { MediaFile } from "../definitions/types";
-import type { Ctx } from "../request-context/config";
+import type { MediaFile } from "@packages/core/types";
+import type { Ctx } from "../ctx/ctx.types";
 
 export type MimeType = "image/jpeg" | "image/png" | "application/pdf";
 
@@ -25,7 +25,7 @@ export interface UseCaseConfig<UseCaseName extends string, EntityDtoType> {
   resolve: (ctx: Ctx, entityId: string, data: MediaFile) => Promise<EntityDtoType>;
 }
 
-export interface EntityConfig<EntityNameType extends string, UseCaseName extends string, EntityDtoType> {
+export interface EntityConfig<EntityNameType extends string, UseCaseName extends string, EntityDtoType extends object> {
   entityName: EntityNameType;
   useCases: UseCaseConfig<UseCaseName, EntityDtoType>[];
 }

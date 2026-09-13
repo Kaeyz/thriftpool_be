@@ -1,4 +1,3 @@
-import type cors from "cors";
 import { getKeys } from "./keys";
 
 const prodOrigins = ["https://account.thriftpool.com"];
@@ -10,15 +9,4 @@ const testOrigins = [
   "https://dev-account.thriftpool.com",
 ];
 
-const allowedOrigins = getKeys().appEnv === "prod" ? prodOrigins : testOrigins;
-
-export const corsConfig: cors.CorsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("CORS Error"), false);
-    }
-  },
-  credentials: true,
-};
+export const allowedOrigins = getKeys().appEnv === "prod" ? prodOrigins : testOrigins;

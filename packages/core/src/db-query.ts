@@ -1,4 +1,4 @@
-import { SortDirection } from "./types";
+import type { SortDirection } from "./types";
 
 export const buildSortObject = (sortKey?: string, sortDir?: SortDirection, path: Record<string, string> = {}) => {
   let finalKey = "createdAt";

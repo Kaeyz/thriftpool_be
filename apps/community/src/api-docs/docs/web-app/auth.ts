@@ -38,7 +38,30 @@
  *           application/json:
  *             schema:
  *               type: object
- *               $ref: '#/components/schemas/RefreshToken'
+ *               $ref: '#/components/schemas/RefreshTokenRes'
+ */
+
+/**
+ * @swagger
+ * /auth/verify:
+ *   post:
+ *     summary: verify account with token
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             $ref: '#/components/schemas/VerifyAccountInput'
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/components/schemas/VerifyAccountRes'
  */
 
 /**
@@ -47,38 +70,13 @@
  *   post:
  *     summary: Set password with token
  *     tags: [Auth]
- *     security:
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             $ref: '#/components/schemas/SetPasswordInput'
- *     responses:
- *       200:
- *         description: Success
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               $ref: '#/components/schemas/SetPassword'
- */
-
-/**
- * @swagger
- * /auth/signup:
- *   post:
- *     summary: Signup User
- *     tags: [Auth]
- *     security:
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             $ref: '#/components/schemas/SignupInput'
+ *             $ref: '#/components/schemas/ResetPasswordInput'
  *     responses:
  *       200:
  *         description: Success
@@ -91,60 +89,10 @@
 
 /**
  * @swagger
- * /auth/verify-account:
- *   post:
- *     summary: Verify User
- *     tags: [Auth]
- *     security:
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             $ref: '#/components/schemas/VerifyTokenInput'
- *     responses:
- *       200:
- *         description: Success
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               $ref: '#/components/schemas/Verify'
- */
-
-/**
- * @swagger
- * /auth/verify-reset-token:
- *   post:
- *     summary: Verify Forgot Password token
- *     tags: [Auth]
- *     security:
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             $ref: '#/components/schemas/VerifyTokenInput'
- *     responses:
- *       200:
- *         description: Success
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               $ref: '#/components/schemas/Verify'
- */
-
-/**
- * @swagger
  * /auth/login:
  *   post:
  *     summary: Login User
  *     tags: [Auth]
- *     security:
- *       - DeviceId: []
  *     requestBody:
  *       required: true
  *       content:
@@ -159,7 +107,30 @@
  *           application/json:
  *             schema:
  *               type: object
- *               $ref: '#/components/schemas/Login'
+ *               $ref: '#/components/schemas/LoginRes'
+ */
+
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: Register
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             $ref: '#/components/schemas/CreateUserInput'
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/components/schemas/User'
  */
 
 /**
@@ -168,7 +139,6 @@
  *   post:
  *     summary: Request forgot password
  *     tags: [Auth]
- *     security:
  *     requestBody:
  *       required: true
  *       content:
@@ -183,5 +153,5 @@
  *           application/json:
  *             schema:
  *               type: object
- *               $ref: '#/components/schemas/Forgot'
+ *               $ref: '#/components/schemas/ForgotRes'
  */

@@ -9,7 +9,7 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "noEmit": true,
-    "typeRoots": ["node_modules/@types", "./src/types"],
+    "typeRoots": ["node_modules/@types", "./src/modules/types"],
     "composite": true,
     "skipLibCheck": true,
     "declaration": true,

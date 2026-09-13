@@ -13,18 +13,16 @@
   "devDependencies": {
     "@packages/config": "workspace:*",
     "@types/express": "catalog:",
+    "@react-email/ui": "6.9.3",
     "@types/react": "^19.2.9",
-    "@react-email/preview-server": "5.2.5",
     "typescript": "catalog:",
-    "react-email": "5.2.5",
     "vitest": "catalog:"
   },
   "dependencies": {
     "@packages/core": "workspace:*",
-    "@react-email/components": "1.0.6",
-    "@react-email/render": "^2.0.4",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "resend": "^6.8.0"
+    "react-email": "6.9.3",
+    "resend": "6.25.0"
   }
 }

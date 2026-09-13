@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Application } from "express";
 import { createLogger, transports, format } from "winston";
 
 const activityLogger = createLogger({
@@ -8,7 +8,7 @@ const activityLogger = createLogger({
   transports: [new transports.Console()],
 });
 
-export const setupActivityLogger = (app: Express) => {
+export const setupActivityLogger = (app: Application) => {
   app.use((req, res, next) => {
     if (req.path.includes("docs") || req.path.includes("socket")) {
       return next();

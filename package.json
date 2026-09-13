@@ -21,8 +21,7 @@
   ],
   "scripts": {
     "packages:install": "pnpm install --filter ./packages/config... --filter ./packages/core... --filter ./packages/email... --filter ./packages/runtime...",
-    "community": "pnpm --filter ./apps/community",
-    "admin": "pnpm --filter ./apps/admin"
+    "com": "pnpm --filter ./apps/community"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "catalog:",

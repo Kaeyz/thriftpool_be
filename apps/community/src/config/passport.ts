@@ -1,4 +1,4 @@
-import type { Request } from "express";
+/* import type { Request } from "express";
 import type { PassportStatic } from "passport";
 import type { JwtFromRequestFunction, StrategyOptions } from "passport-jwt";
 import { Strategy } from "passport-jwt";
@@ -32,3 +32,4 @@ export const passportConfig = (passport: PassportStatic) => {
     })
   );
 };
+ */
