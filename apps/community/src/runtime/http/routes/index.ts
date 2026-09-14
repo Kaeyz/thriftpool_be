@@ -1,5 +1,5 @@
-import type { Application, Request, Response } from "express";
-import { Router } from "express";
+import { Router } from "@packages/runtime/http";
+import { type Application, type Request, type Response } from "express";
 
 import { setupWebAppRoutes } from "./web-app";
 

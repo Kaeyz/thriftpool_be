@@ -52,3 +52,5 @@ export const createHttpServer = async (config: ServerConfig): Promise<Applicatio
 
   return app;
 };
+
+export { Router } from "express";

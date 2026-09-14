@@ -1,14 +1,14 @@
-name: Dev Community Server Deploy Workflow
+name: Staging Community Server Deploy Workflow
 
 on:
   push:
     branches:
-      - dev
+      - staging
     paths:
       - '*'
       - 'packages/**'
       - 'apps/community/**'
-      - '.github/workflows/dev-cp-server.yaml'
+      - '.github/workflows/staging-cp-server.yaml'
   workflow_dispatch:
 
 jobs:
@@ -36,7 +36,7 @@ jobs:
         run: pnpm install --frozen-lockfile --filter ./apps/main
 
       - name: Run Lint
-        run: pnpm --filter ./apps/main lint
+        run: pnpm cp lint
 
       - name: Install Railway CLI
         shell: bash
@@ -45,7 +45,7 @@ jobs:
           echo "$HOME/.railway/bin" >> $GITHUB_PATH
 
       - name: Deploy to Railway
-        run: railway up --service main-service-staging
+        run: railway up --service cp-server-staging
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_STAGING_TOKEN }}
 
@@ -54,9 +54,8 @@ jobs:
           variables=(
             "APP_ENV=test"
             "DEBUG_MODE=true"
-            "HOST=https://dev-main-service.schoolivo.com"
-            "ADMIN_DASHBOARD_BASE_URL=https://dev-admin.schoolivo.com"
-            "SCHOOL_PORTAL_BASE_URL=https://dev.schoolivo.com"
+            "HOST=staging-cp-api.up.railway.app"
+            "WEB_APP_BASE_URL=staging-cp-fe.up.railway.app"
             "MONGO_URI=${{ secrets.MONGO_URI_STAGING }}"
             "REDIS_URL=${{ secrets.REDIS_URL_STAGING }}"
             "SERVER_USERNAME=${{ secrets.SERVER_USERNAME_STAGING }}"
@@ -76,6 +75,6 @@ jobs:
             SET_FLAGS+="--set \"$var\" "
           done
 
-          eval "railway variables --service main-service-staging $SET_FLAGS"
+          eval "railway variables --service cp-server-staging $SET_FLAGS"
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_STAGING_TOKEN }}

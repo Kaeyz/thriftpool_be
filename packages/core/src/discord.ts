@@ -18,16 +18,15 @@ export type DiscordConfig = {
   key: string;
   guildName: string;
   serverName: string;
-}
+};
 
 export class DiscordService {
-
   private key: string;
   private guildName: string;
   private servername: string;
   private bot = new Client({ intents: [GatewayIntentBits.Guilds] });
   private botIsReady = false;
-  
+
   constructor(config: DiscordConfig) {
     this.key = config.key;
     this.guildName = config.guildName;
