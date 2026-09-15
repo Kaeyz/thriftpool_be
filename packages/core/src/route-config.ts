@@ -39,9 +39,13 @@ export const setupDocs = (router: Router, options: options) => {
 
   const themeConfig: SwaggerUiOptions = {
     explorer: false,
+    swaggerOptions: {
+      docExpansion: "none",
+      tagsSorter: "alpha",
+    },
     customCss: `
     ${theme.getBuffer(SwaggerThemeNameEnum.FEELING_BLUE)}
-    .swagger-ui > div:nth-child(2) > .wrapper:last-child {
+    .swagger-ui .models {
       display: none !important;
     }
   `,
