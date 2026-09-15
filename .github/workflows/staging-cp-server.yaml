@@ -32,8 +32,8 @@ jobs:
         with:
           version: 11
 
-      - name: Install dependencies for main-service
-        run: pnpm install --frozen-lockfile --filter ./apps/main
+      - name: Install dependencies for cp-service
+        run: pnpm cp install --frozen-lockfile
 
       - name: Run Lint
         run: pnpm cp lint

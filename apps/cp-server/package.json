@@ -1,5 +1,5 @@
 {
-  "name": "community_server",
+  "name": "cp-server",
   "version": "1.0.0",
   "main": "dist/index.js",
   "keywords": [],

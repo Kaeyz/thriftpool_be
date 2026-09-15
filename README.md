@@ -26,8 +26,8 @@ This is the monorepo for **ThriftPool backend Apps**, built using **npm workspac
 
 /
 ├── apps/
-   ├── community-server     # Main API server (Express + TypeScript)
-├── packages/             # Shared TypeScript utilities and types
+   ├── cp-server        # Main API server (Express + TypeScript)
+├── packages/           # Shared TypeScript utilities and types
 ├── .eslintrc.js        # ESLint configuration
 ├── tsconfig.json       # Base TypeScript config
 ├── package.json        # Root with npm workspaces
@@ -47,7 +47,7 @@ This is the monorepo for **ThriftPool backend Apps**, built using **npm workspac
 ### Installation
 
 ```bash
-npm install
+pnpm install
 cp .env.example .env
 ````
 
@@ -64,7 +64,7 @@ npm run dev
 ### Run a Specific Service
 
 ```bash
-pnpm community dev
+pnpm cp dev
 ```
 
 ---
@@ -90,7 +90,7 @@ npm run lint
 
 | Name              | Path                                                          | Description                          |
 | ----------------  | ------------------------------------------------------------  | ------------------------------------ |
-| **Community**     | [`/apps/community`](./packages/community/README.md)           | REST API service using Express       |
+| **Community**     | [`/apps/cp-server`](./packages/community/README.md)           | REST API service using Express       |
 | **Packages**      | [`/shared`](./shared/README.md)                               | Common types, utilities, and configs |
 
 ---
@@ -138,7 +138,7 @@ npm run lint
 The REST API is documented using **OpenAPI (Swagger)**.
 You can access the live API documentation here:
 
-🔗 **[Community Portal Api Docs](https://community-api.thriftpool.com/docs)**
+🔗 **[Community Server Api Docs](https://cp-api.thriftpool.com/docs)**
 
 ---
 
