@@ -1,15 +1,17 @@
 import { AppError, StatusCodes } from "@packages/core/res-config";
 import type { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
-import { authenticateHttp } from "./http-headers";
-import { CtxError, type PermissionCode } from "@/lib/ctx/ctx.types";
+import { authenticateHttp, validateHttpCommunity } from "./http-headers";
+import type { AuthorizeRoleRes } from "@/lib/ctx/ctx.types";
+import { CtxError } from "@/lib/ctx/ctx.types";
+import { validateCommunityRole } from "@/modules/communities";
 import type { ISUser } from "@/modules/users/common/user.dto";
 
 type BaseCtxConfig = {
   authenticate?: boolean;
-  validateShortCode?: boolean;
-  routePermissions?: { admin?: PermissionCode; staff?: PermissionCode };
+  requireCommunity?: boolean;
   dbTransaction?: boolean;
+  roleConfig?: { community?: string[] };
 };
 
 type CtxConfig = BaseCtxConfig | ((req: Request) => BaseCtxConfig);
@@ -19,9 +21,21 @@ export const useApiCtx = (config: CtxConfig) => {
     const resolvedConfig: BaseCtxConfig = typeof config === "function" ? config(req) : config;
 
     try {
-      const { dbTransaction, authenticate } = resolvedConfig;
+      const { dbTransaction, authenticate, requireCommunity, roleConfig } = resolvedConfig;
       let user: ISUser | null = null;
       if (authenticate) user = await authenticateHttp(req, res);
+
+      let authorizeCommunityRes: AuthorizeRoleRes | null = null;
+
+      if (requireCommunity) {
+        await validateHttpCommunity(req);
+        if (roleConfig?.community) authorizeCommunityRes = await validateCommunityRole(req.ctx, roleConfig.community);
+      }
+
+      const communityAuthorized = authorizeCommunityRes !== null && authorizeCommunityRes?.isAuthorized === true;
+      if (!communityAuthorized) {
+        if (roleConfig?.community && authorizeCommunityRes) throw authorizeCommunityRes?.err;
+      }
 
       if (dbTransaction) {
         const session = await mongoose.startSession();

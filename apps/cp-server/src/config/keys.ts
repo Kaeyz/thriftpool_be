@@ -4,6 +4,7 @@ interface keysInterface {
   port: string;
   appEnv: AppEnv;
   host: string;
+  webAppUrl: string;
   mongoUri: string;
   redisUrl: string;
   secretKey: string;
@@ -42,6 +43,7 @@ export const getKeys = (): keysInterface => {
     host: getEnv("HOST"),
     appEnv: getEnv("APP_ENV") as AppEnv,
     mongoUri: getEnv("MONGO_URI"),
+    webAppUrl: getEnv("WEB_APP_BASE_URL"),
     redisUrl: getEnv("REDIS_URL"),
     secretKey: getEnv("SECRET_KEY"),
     serverUsername: getEnv("SERVER_USERNAME"),

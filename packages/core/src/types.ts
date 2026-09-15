@@ -2,6 +2,7 @@ import type * as z from "zod";
 import type {
   AddressSchema,
   AmountSchema,
+  CurrenciesSchema,
   CurrencySchema,
   EmailSchema,
   EncryptionKeySchema,
@@ -29,3 +30,4 @@ export type Currency = z.infer<typeof CurrencySchema>;
 export type Amount = z.infer<typeof AmountSchema>;
 export type PhoneNumber = z.infer<typeof PhoneNumberSchema>;
 export type SortDirection = z.infer<typeof SortDirectionSchema>;
+export type Currencies = z.infer<typeof CurrenciesSchema>;

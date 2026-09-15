@@ -1,5 +1,7 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import * as z from "zod";
+import { currencyCodes } from "./currencies";
+import { transformIds } from "./validation";
 
 type TextFieldOptions = {
   max?: number;
@@ -108,5 +110,21 @@ export class FieldSchemas {
         const d = new Date(year, month - 1, day);
         return d.getFullYear() === year && d.getMonth() === month - 1 && d.getDate() === day;
       }, `${fieldName} is invalid`);
+  }
+
+  static dbIdsSchema(fieldName: string = "ids") {
+    return z
+      .union([z.array(z.string()), z.string({ error: `${fieldName} is required` })])
+      .refine((ids) => transformIds(ids).every((id) => Types.ObjectId.isValid(id)), {
+        message: `One or more ${fieldName} are invalid ObjectIds`,
+      });
+  }
+
+  static currencyCodeSchema(fieldName: string = "Currency Code") {
+    const list = currencyCodes.join(", ");
+
+    return z.string({ error: `${fieldName} is required` }).refine((val) => currencyCodes.includes(val), {
+      message: `${fieldName} is required or invalid. Must be one of: ${list}`,
+    });
   }
 }

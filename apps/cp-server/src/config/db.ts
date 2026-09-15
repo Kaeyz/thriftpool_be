@@ -8,7 +8,7 @@ const { mongoUri, appEnv } = getKeys();
 export class DB {
   static async connect() {
     try {
-      const dbUrl = `${mongoUri}/community-server${appEnv}`;
+      const dbUrl = `${mongoUri}/community-server-${appEnv}`;
       await mongoose.connect(dbUrl);
 
       console.log("Connected to Database Successfully");

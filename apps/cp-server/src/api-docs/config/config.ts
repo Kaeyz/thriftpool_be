@@ -27,6 +27,11 @@ const docsConfig = {
             in: "cookie",
             name: "rtk",
           },
+          CommunityKey: {
+            type: "apiKey",
+            in: "header",
+            name: "community-key",
+          },
         },
       },
       security: [],

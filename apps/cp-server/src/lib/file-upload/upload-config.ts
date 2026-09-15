@@ -1,5 +1,5 @@
 import type { Ctx } from "../ctx/ctx.types";
-import type { RequestSource } from "../definitions/types";
+import type { RequestSource } from "../definitions";
 import type { EntityConfig } from "./types";
 
 const fileUploadConfigs: Partial<Record<string, EntityConfig<string, string, object>>> = {};

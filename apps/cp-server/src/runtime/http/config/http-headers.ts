@@ -2,6 +2,7 @@ import { StatusCodes } from "@packages/core/res-config";
 import type { Request, Response } from "express";
 import passport from "passport";
 import { CtxError } from "@/lib/ctx/ctx.types";
+import { validateCommunity } from "@/modules/communities";
 import type { ISUser } from "@/modules/users/common/user.dto";
 
 export const authenticateHttp = (req: Request, res: Response): Promise<ISUser> => {
@@ -14,4 +15,10 @@ export const authenticateHttp = (req: Request, res: Response): Promise<ISUser> =
       return resolve(user);
     })(req, res);
   });
+};
+
+export const validateHttpCommunity = async (req: Request) => {
+  const communityKey = req.headers["community-key"] as string | undefined;
+  req.ctx = await validateCommunity(req.ctx, communityKey);
+  return req.ctx;
 };

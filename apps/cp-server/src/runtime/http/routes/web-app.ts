@@ -3,7 +3,10 @@ import type { Router } from "express";
 import docsConfig from "@/api-docs/config/config";
 import { getKeys } from "@/config/keys";
 import { webAppAuthRouter } from "@/modules/auth";
+import { webAppCommunityRouter } from "@/modules/communities";
+import { webAppCommunityMemberRouter } from "@/modules/community-members";
 import { webAppUserRouter } from "@/modules/users";
+import { webAppUtilsRouter } from "@/modules/utils";
 
 export const setupWebAppRoutes = (router: Router) => {
   const rootPath = "/web-app";
@@ -20,6 +23,9 @@ export const setupWebAppRoutes = (router: Router) => {
 
   router = webAppAuthRouter(rootPath, router);
   router = webAppUserRouter(rootPath, router);
+  router = webAppCommunityRouter(rootPath, router);
+  router = webAppCommunityMemberRouter(rootPath, router);
+  router = webAppUtilsRouter(rootPath, router);
 
   router = setupDocs(router, options);
 

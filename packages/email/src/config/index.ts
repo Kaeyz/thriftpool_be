@@ -1,10 +1,12 @@
 import { Platform } from "@packages/core/types";
 import { authEmailConfig } from "./auth";
+import { communityEmailConfig } from "./community";
 import { userEmailConfig } from "./user";
 
-const communityEmailConfig = {
+const cpEmailConfig = {
   ...authEmailConfig,
   ...userEmailConfig,
+  ...communityEmailConfig,
 };
 
 const adminEmailConfig = {
@@ -13,5 +15,5 @@ const adminEmailConfig = {
 
 export const emailConfigs = {
   [Platform.Admin]: adminEmailConfig,
-  [Platform.Community]: communityEmailConfig,
-}
+  [Platform.Community]: cpEmailConfig,
+};

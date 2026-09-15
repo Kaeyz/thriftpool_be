@@ -2,7 +2,7 @@ import { sign, verify } from "jsonwebtoken";
 import type { JwtPayload } from "./auth.dto";
 import { getKeys } from "@/config/keys";
 import type { Ctx } from "@/lib/ctx/ctx.types";
-import type { RequestSource } from "@/lib/definitions/types";
+import type { RequestSource } from "@/lib/definitions";
 import type { ISUser } from "@/modules/users/common/user.dto";
 
 export class AuthUtils {
