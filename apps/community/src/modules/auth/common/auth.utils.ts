@@ -26,7 +26,7 @@ export class AuthUtils {
       "web-app": "web",
     };
 
-    return `${keys[ctx.requestSource]}rtk`;
+    return `${keys[ctx?.requestSource]}rtk`;
   }
 
   static async verifyUserToken(token: string) {

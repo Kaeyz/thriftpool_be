@@ -4,7 +4,7 @@ import { UpdateMyEmailSchema, UpdateMyPasswordSchema, UpdateMyProfileSchema } fr
 import { UserController } from "./user.controller";
 import { useApiCtx } from "@/runtime/http/config";
 
-export const MP_UserRouter = (rootPath: string, router: Router) => {
+export const webAppUserRouter = (rootPath: string, router: Router) => {
   const baseRoute = `${rootPath}/users`;
 
   router.put(

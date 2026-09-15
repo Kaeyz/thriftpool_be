@@ -17,11 +17,6 @@ const docsConfig = {
       components: {
         schemas: webAppSchemas,
         securitySchemes: {
-          DeviceId: {
-            type: "apiKey",
-            in: "header",
-            name: "dv-id",
-          },
           AuthToken: {
             type: "apiKey",
             in: "header",

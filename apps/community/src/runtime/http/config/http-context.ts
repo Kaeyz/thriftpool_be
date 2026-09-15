@@ -19,7 +19,7 @@ export const useApiCtx = (config: CtxConfig) => {
     const resolvedConfig: BaseCtxConfig = typeof config === "function" ? config(req) : config;
 
     try {
-      const { validateShortCode, routePermissions, dbTransaction, authenticate } = resolvedConfig;
+      const { dbTransaction, authenticate } = resolvedConfig;
       let user: ISUser | null = null;
       if (authenticate) user = await authenticateHttp(req, res);
 

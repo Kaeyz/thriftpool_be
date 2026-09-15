@@ -1,8 +1,8 @@
+import type { DiscordService } from "@packages/core/discord";
+import type { AppEnv } from "@packages/core/types";
 import type { CreateEmailResponseSuccess, ErrorResponse } from "resend";
 import { Resend } from "resend";
 import type { MailData } from "./email-dto";
-import { DiscordService } from "@packages/core/discord";
-import { AppEnv } from "@packages/core/types";
 
 const getEmailClient = (apiKey: string) => {
   return new Resend(apiKey);
@@ -18,10 +18,9 @@ export type SendEmailResponse =
       data: CreateEmailResponseSuccess | null;
     };
 
-
 export type EmailConfig = {
   apiKey: string;
-  appEnv: AppEnv;    
+  appEnv: AppEnv;
   discordService: DiscordService;
 };
 

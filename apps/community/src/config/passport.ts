@@ -1,10 +1,11 @@
-/* import type { Request } from "express";
+import type { Request } from "express";
 import type { PassportStatic } from "passport";
 import type { JwtFromRequestFunction, StrategyOptions } from "passport-jwt";
 import { Strategy } from "passport-jwt";
 import { getKeys } from "./keys";
-import { UserApiService } from "@/registries/api-services";
-import type { JwtPayload, ISUser } from "@/registries/dtos";
+import type { JwtPayload } from "@/modules/auth/common/auth.dto";
+import { UserService } from "@/modules/users";
+import type { ISUser } from "@/modules/users/common/user.dto";
 
 const tokenExtractor: JwtFromRequestFunction<Request> = (req) => {
   let token: string | null = null;
@@ -21,7 +22,7 @@ export const passportConfig = (passport: PassportStatic) => {
 
   passport.use(
     new Strategy(opts, (req: Request, jwt_payload: JwtPayload, done: (arg0: null, arg1: boolean | ISUser) => void) => {
-      UserApiService.getUser(req.ctx, jwt_payload.id)
+      UserService.getUserById(req.ctx, jwt_payload.id)
         .then((res) => {
           if (!res.data) return done(null, false);
           return done(null, res.data);
@@ -32,4 +33,3 @@ export const passportConfig = (passport: PassportStatic) => {
     })
   );
 };
- */

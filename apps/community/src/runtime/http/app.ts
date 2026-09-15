@@ -1,11 +1,13 @@
 import { createHttpServer } from "@packages/runtime/http";
 import type { Application } from "express";
+import passport from "passport";
 import { setupRedis } from "../event";
 import { allowedOrigins } from "./config";
 import routes from "./routes";
 import { setupActivityLogger } from "@/config/activityLogger";
 import { DB } from "@/config/db";
-import { setupSystemData } from "@/config/system-data";
+import { passportConfig } from "@/config/passport";
+import { resolveReqSrc, setupSystemData } from "@/config/system-data";
 
 export class App {
   static async boot(): Promise<Application> {
@@ -18,8 +20,10 @@ export class App {
       cors: { allowedOrigins },
     });
 
-    // app.use(passport.initialize());
-    // passportConfig(passport);
+    app.use(passport.initialize());
+    passportConfig(passport);
+
+    app.use(resolveReqSrc);
 
     setupActivityLogger(app);
     routes(app);

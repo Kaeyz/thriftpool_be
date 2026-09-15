@@ -1,6 +1,6 @@
 import { DiscordService } from "@packages/core/discord";
 import { getKeys } from "@/config/keys";
 
-const discordKeys = getKeys().discord;
+const { discord: discordKeys } = getKeys();
 
-export const discordService = new DiscordService({ ...discordKeys, serverName: "account-server" });
+export const discordService = new DiscordService({ ...discordKeys, serverName: "cp-server" });

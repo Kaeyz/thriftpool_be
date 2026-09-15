@@ -76,7 +76,7 @@ export class DiscordService {
   }
 
   async sendMessage(channelKey: ChannelKey, data: MessageData) {
-    if (!this.botIsReady) await this.loginBot();
+    if (!this.botIsReady) await this.setupDiscordBot();
     const guild = this.getTargetGuild();
     const channel = guild.channels.cache.find(
       (c): c is TextChannel => c.type === ChannelType.GuildText && c.name === channels[channelKey]
