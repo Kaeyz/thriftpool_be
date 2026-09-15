@@ -54,8 +54,8 @@ jobs:
           variables=(
             "APP_ENV=test"
             "DEBUG_MODE=true"
-            "HOST=staging-cp-api.up.railway.app"
-            "WEB_APP_BASE_URL=staging-cp-fe.up.railway.app"
+            "HOST=https://staging-cp-api.up.railway.app"
+            "WEB_APP_BASE_URL=https://staging-cp-fe.up.railway.app"
             "MONGO_URI=${{ secrets.MONGO_URI_STAGING }}"
             "REDIS_URL=${{ secrets.REDIS_URL_STAGING }}"
             "SERVER_USERNAME=${{ secrets.SERVER_USERNAME_STAGING }}"
