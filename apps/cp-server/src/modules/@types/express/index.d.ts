@@ -1,4 +1,4 @@
-import type { Ctx } from "@/lib/ctx/config";
+import type { Ctx } from "@/lib/ctx/ctx.types";
 
 export {};
 

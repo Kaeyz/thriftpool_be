@@ -11,7 +11,7 @@ export const resolveReqSrc = (req: Request, _res: Response, next: NextFunction) 
   }
 
   if (req.path.startsWith("/web-app")) {
-    req.ctx = { requestSource: "web-portal" };
+    req.ctx = { requestSource: "web-app" };
   }
 
   next();
