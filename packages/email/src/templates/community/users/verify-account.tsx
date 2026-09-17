@@ -7,7 +7,7 @@ export type VerifyAccountProps = {
   token: string;
 };
 
-const VerifyAccount = (props: VerifyAccountProps) => (
+const VerifyAccountEmail = (props: VerifyAccountProps) => (
   <CommunityEmailLayout>
     <Text style={communityEmailStyles.h3}>Verify your account</Text>
     <Text style={communityEmailStyles.paragraph}>Hello {props.name},</Text>
@@ -19,9 +19,9 @@ const VerifyAccount = (props: VerifyAccountProps) => (
   </CommunityEmailLayout>
 );
 
-VerifyAccount.PreviewProps = {
+VerifyAccountEmail.PreviewProps = {
   name: "John Doe",
   token: "12345",
 } satisfies VerifyAccountProps;
 
-export default VerifyAccount;
+export default VerifyAccountEmail;
