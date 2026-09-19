@@ -1,16 +1,16 @@
 /**
  * @swagger
  * tags:
- *   name: Community Members
- *   description: API endpoints for community members
+ *   name: Community Invites
+ *   description: API endpoints for community invites
  */
 
 /**
  * @swagger
- * /community-members/me:
+ * /community-invites/me:
  *   get:
- *     summary: Get LoggedInUser Memberships
- *     tags: [Community Members]
+ *     summary: Get LoggedInUser invites
+ *     tags: [Community Invites]
  *     security:
  *       - AuthToken: []
  *     parameters:
@@ -39,15 +39,15 @@
  *           application/json:
  *             schema:
  *               type: object
- *               $ref: '#/components/schemas/CommunityMembers'
+ *               $ref: '#/components/schemas/CommunityInvites'
  */
 
 /**
  * @swagger
- * /community-members:
+ * /community-invites:
  *   get:
- *     summary: Get all Community members and invites
- *     tags: [Community Members]
+ *     summary: Get all Community invites
+ *     tags: [Community Invites]
  *     security:
  *       - AuthToken: []
  *       - CommunityKey: []
@@ -80,30 +80,25 @@
  *           application/json:
  *             schema:
  *               type: object
- *               $ref: '#/components/schemas/CommunityMembers'
+ *               $ref: '#/components/schemas/CommunityInvites'
  */
 
 /**
  * @swagger
- * /community-members/{memberId}/set-role:
- *   put:
- *     summary: Update accepted member role
- *     tags: [Community Members]
+ * /community-invites:
+ *   post:
+ *     summary: Send new Invite
+ *     tags: [Community Invites]
  *     security:
  *       - AuthToken: []
  *       - MinistryKey: []
- *     parameters:
- *       - in: path
- *         name: memberId
- *         type: string
- *         required: true
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             $ref: '#/components/schemas/CommunityRoleUpdateInput'
+ *             $ref: '#/components/schemas/CommunityInviteInput'
  *     responses:
  *       200:
  *         description: Success
@@ -111,23 +106,24 @@
  *           application/json:
  *             schema:
  *               type: object
- *               $ref: '#/components/schemas/CommunityMember'
+ *               $ref: '#/components/schemas/CommunityInvite'
  */
 
 /**
  * @swagger
- * /community-members/{memberId}/suspend:
+ * /community-invites/pending-decision:
  *   put:
- *     summary: Suspend accepted member role
- *     tags: [Community Members]
+ *     summary: User responds to pending invites
+ *     tags: [Community Invites]
  *     security:
  *       - AuthToken: []
- *       - MinistryKey: []
- *     parameters:
- *       - in: path
- *         name: memberId
- *         type: string
- *         required: true
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             $ref: '#/components/schemas/CommunityPendingInviteInput'
  *     responses:
  *       200:
  *         description: Success
@@ -135,29 +131,5 @@
  *           application/json:
  *             schema:
  *               type: object
- *               $ref: '#/components/schemas/CommunityMember'
- */
-
-/**
- * @swagger
- * /community-members/{memberId}/unsuspend:
- *   put:
- *     summary: unSuspend accepted member role
- *     tags: [Community Members]
- *     security:
- *       - AuthToken: []
- *       - MinistryKey: []
- *     parameters:
- *       - in: path
- *         name: memberId
- *         type: string
- *         required: true
- *     responses:
- *       200:
- *         description: Success
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               $ref: '#/components/schemas/CommunityMember'
+ *               $ref: '#/components/schemas/CommunityInvite'
  */

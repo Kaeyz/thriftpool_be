@@ -3,6 +3,7 @@ import type {
   AddressSchema,
   AmountSchema,
   CurrenciesSchema,
+  CurrencyCodeSchema,
   CurrencySchema,
   EmailSchema,
   EncryptionKeySchema,
@@ -31,3 +32,4 @@ export type Amount = z.infer<typeof AmountSchema>;
 export type PhoneNumber = z.infer<typeof PhoneNumberSchema>;
 export type SortDirection = z.infer<typeof SortDirectionSchema>;
 export type Currencies = z.infer<typeof CurrenciesSchema>;
+export type CurrencyCode = z.infer<typeof CurrencyCodeSchema>;

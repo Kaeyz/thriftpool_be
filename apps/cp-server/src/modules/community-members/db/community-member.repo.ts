@@ -15,20 +15,12 @@ export class CommunityMemberRepo {
     return CommunityMember.findOne({ community: data.communityId, user: data.userId }, {}, { session: ctx?.session });
   }
 
-  static async getByEmail(ctx: Ctx, data: { communityId: string; emailAddress: string }): Promise<CommunityMemberDoc | null> {
-    return CommunityMember.findOne(
-      { community: data.communityId, emailAddress: data.emailAddress },
-      {},
-      { session: ctx?.session }
-    );
-  }
-
   static getById(ctx: Ctx, id: string): Promise<CommunityMemberDoc | null> {
     return CommunityMember.findById(id, {}, { session: ctx?.session });
   }
 
   static async getAll(ctx: Ctx, query: GetCommunityMembersQuery) {
-    const { sortKey, sortDir, role, communityId, userId, status, emailAddress } = query;
+    const { sortKey, sortDir, role, communityId, userId, status } = query;
 
     const { skip, page, limit } = buildPagination(query.page, query.limit);
     const sort = buildSortObject(sortKey, sortDir);
@@ -40,7 +32,6 @@ export class CommunityMemberRepo {
     if (status) queryObject.status = status;
     if (communityId) queryObject.community = communityId;
     if (userId) orConditions.push({ user: userId });
-    if (emailAddress) orConditions.push({ emailAddress });
 
     if (orConditions.length > 0) queryObject.$or = orConditions;
     const countQuery = CommunityMember.countDocuments(queryObject, { session: ctx?.session });

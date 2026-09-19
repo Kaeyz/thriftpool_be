@@ -7,12 +7,11 @@ import { ISUserSchema } from "@/modules/users/zod/user.zod";
 export const UserInCommunityMemberSchema = ISUserSchema.pick({ id: true, firstName: true, lastName: true });
 export const CommunityInCommunityMemberSchema = ISCommunitySchema.pick({ id: true, name: true, key: true, logo: true });
 
-export const CommunityMemberStatusSchema = z.enum(["pending", "accepted", "suspended", "rejected", "removed", "left"]);
+export const CommunityMemberStatusSchema = z.enum(["active", "suspended", "rejected", "removed", "left"]);
 export const CommunityMemberRoleSchema = z.enum(["owner", "admin", "member"]);
 
 export const CommunityMemberSchema = z.object({
   id: z.string(),
-  emailAddress: z.string(),
   community: CommunityInCommunityMemberSchema,
   user: UserInCommunityMemberSchema,
   role: CommunityMemberRoleSchema,
@@ -24,7 +23,6 @@ export const CommunityMemberSchema = z.object({
 export const IPCommunityMemberSchema = CommunityMemberSchema.pick({
   id: true,
   user: true,
-  emailAddress: true,
   role: true,
   community: true,
   status: true,
@@ -48,25 +46,13 @@ export const CommunityMembersQueryInputSchema = z.object({
   status: CommunityMemberStatusSchema.optional(),
   communityId: FieldSchemas.dbIdSchema("communityId").optional(),
   userId: FieldSchemas.dbIdSchema("userId").optional(),
-  emailAddress: FieldSchemas.emailSchema("emailAddress").optional(),
   sortKey: FieldSchemas.enumSelectSchema("sortKey", CommunityMemberSortKeySchema).optional(),
   sortDir: FieldSchemas.enumSelectSchema("sortDir", SortDirectionSchema).optional(),
 });
 
 export const CommunityMemberInputSchema = z.object({
-  communityId: FieldSchemas.dbIdSchema("communityId"),
   userId: FieldSchemas.dbIdSchema("userId"),
   role: CommunityMemberRoleSchema,
-});
-
-export const InviteCommunityMemberSchema = z.object({
-  emailAddress: FieldSchemas.emailSchema("emailAddress"),
-});
-
-export const CommunityPendingInviteSchema = z.object({
-  communityId: FieldSchemas.dbIdSchema("communityId"),
-  communityMemberId: FieldSchemas.dbIdSchema("communityMemberId"),
-  status: FieldSchemas.enumSelectSchema("status", CommunityMemberStatusSchema.extract(["accepted", "rejected"])),
 });
 
 export const CommunityRoleUpdateSchema = z.object({

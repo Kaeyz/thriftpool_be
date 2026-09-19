@@ -14,7 +14,6 @@ export class CommunityMemberController {
       sortDir,
       status,
       userId: ctx?.loggedInUser?.id,
-      emailAddress: ctx?.loggedInUser?.email.address,
     };
 
     const serviceResponse = await CommunityMemberService.getCommunityMembers(ctx, query);
@@ -25,16 +24,6 @@ export class CommunityMemberController {
     const { limit, page, sortKey, sortDir, status } = req.query as GetCommunityMembersQuery;
     const query: GetCommunityMembersQuery = { limit, page, sortKey, sortDir, status, communityId: req.ctx.community?.id };
     const serviceResponse = await CommunityMemberService.getCommunityMembers(req.ctx, query);
-    return getApiSuccessResponse(res, serviceResponse);
-  }
-
-  static async sendMembersInvite(req: Request, res: Response) {
-    const serviceResponse = await CommunityMemberService.inviteMinistryMember(req.ctx, req.body);
-    return getApiSuccessResponse(res, serviceResponse);
-  }
-
-  static async processPendingMember(req: Request, res: Response) {
-    const serviceResponse = await CommunityMemberService.processPendingMember(req.ctx, req.body);
     return getApiSuccessResponse(res, serviceResponse);
   }
 
