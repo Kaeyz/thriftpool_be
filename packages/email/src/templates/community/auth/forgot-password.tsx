@@ -1,3 +1,4 @@
+import React from "react";
 import { Text } from "react-email";
 import { CommunityEmailLayout } from "../../../components/community-email-layout";
 import { communityEmailStyles } from "../../../styles/community-styles";
