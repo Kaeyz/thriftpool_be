@@ -1,5 +1,5 @@
 import { FieldSchemas } from "@packages/core/field-schema";
-import { PageInputSchema, LimitInputSchema, SortDirectionSchema, CurrencyCodeSchema } from "@packages/core/zod-schemas";
+import { PageInputSchema, LimitInputSchema, SortDirectionSchema } from "@packages/core/zod-schemas";
 import * as z from "zod";
 import { PoolSchema } from "./pool.zod";
 import { ISCommunityMemberSchema } from "@/modules/community-members/zod/community-member.zod";
@@ -10,7 +10,6 @@ export const PoolSlotStatusSchema = z.enum(["pending", "approved", "rejected"]);
 export const PoolSlotSchema = z.object({
   id: z.string(),
   pool: PoolSchema,
-  emailAddress: z.string(),
   member: PoolSlotMemberSchema,
   order: z.number(),
   createdAt: z.number(),
@@ -32,12 +31,12 @@ export const PoolSlotQueryResponse = z.object({
   limit: z.int(),
 });
 
-export const PoolSlotSortKeySchema = z.enum(["name", "amount", "currency", "createdAt"]);
-export const PoolQueryInputSchema = z.object({
+export const PoolSlotSortKeySchema = z.enum(["createdAt"]);
+export const PoolSlotQueryInputSchema = z.object({
   search: FieldSchemas.textSchema("search").optional(),
   page: PageInputSchema,
   limit: LimitInputSchema,
-  communityIds: FieldSchemas.dbIdsSchema("communityIds").optional(),
+  poolId: FieldSchemas.dbIdSchema("poolId").optional(),
   sortKey: FieldSchemas.enumSelectSchema("sortKey", PoolSlotSortKeySchema).optional(),
   sortDir: FieldSchemas.enumSelectSchema("sortDir", SortDirectionSchema).optional(),
 });

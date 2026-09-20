@@ -1,4 +1,4 @@
-import type { StatusCodesType } from "@packages/core/res-config";
+import type { AppError } from "@packages/core/res-config";
 import type { ClientSession } from "mongoose";
 import type { RequestSource } from "../definitions";
 import type { ISCommunity } from "@/modules/communities/common/community.dto";
@@ -13,16 +13,4 @@ export interface Ctx {
   community?: ISCommunity;
 }
 
-export class CtxError {
-  statusCode: StatusCodesType;
-  message: string;
-  data: unknown;
-
-  constructor(statusCode: StatusCodesType, message: string, data?: unknown) {
-    this.statusCode = statusCode;
-    this.message = message;
-    this.data = data;
-  }
-}
-
-export type AuthorizeRoleRes = { isAuthorized: boolean; err?: CtxError };
+export type AuthorizeRoleRes = { isAuthorized: boolean; err?: AppError };

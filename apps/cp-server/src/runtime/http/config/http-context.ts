@@ -3,7 +3,6 @@ import type { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import { authenticateHttp, validateHttpCommunity } from "./http-headers";
 import type { AuthorizeRoleRes } from "@/lib/ctx/ctx.types";
-import { CtxError } from "@/lib/ctx/ctx.types";
 import { validateCommunityRole } from "@/modules/communities";
 import type { ISUser } from "@/modules/users/common/user.dto";
 
@@ -56,7 +55,7 @@ export const useApiCtx = (config: CtxConfig) => {
       let response: AppError;
       response = new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "Unknown error");
       if (err instanceof Error) response = new AppError(StatusCodes.INTERNAL_SERVER_ERROR, err.message);
-      if (err instanceof CtxError) response = new AppError(err.statusCode, err.message, err?.data);
+      if (err instanceof AppError) response = err;
       return res.status(response.errorCode).json(response);
     }
   };

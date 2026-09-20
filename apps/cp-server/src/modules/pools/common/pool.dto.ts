@@ -1,26 +1,22 @@
 import type { z } from "zod";
 import type {
-  ISPoolSchema,
-  IPPoolSchema,
-  PoolSortKeySchema,
-  PoolQueryInputSchema,
-  PoolInputSchema,
-  PoolStatusSchema,
-  PoolPaymentIntervalSchema,
-  PoolPaymentModeSchema,
-} from "../zod/pool.zod";
+  ISPoolSlotSchema,
+  IPPoolSlotSchema,
+  PoolSlotSortKeySchema,
+  PoolSlotInputSchema,
+  PoolSlotStatusSchema,
+  PoolSlotQueryInputSchema,
+} from "../zod/pool-slot.zod";
 
-export type ISPool = z.infer<typeof ISPoolSchema>;
-export type IPPool = z.infer<typeof IPPoolSchema>;
+export type ISPoolSlot = z.infer<typeof ISPoolSlotSchema>;
+export type IPPoolSlot = z.infer<typeof IPPoolSlotSchema>;
 
-export type PoolSortKey = z.infer<typeof PoolSortKeySchema>;
-export type PoolStatus = z.infer<typeof PoolStatusSchema>;
-export type PoolPaymentInterval = z.infer<typeof PoolPaymentIntervalSchema>;
-export type PoolPaymentMode = z.infer<typeof PoolPaymentModeSchema>;
+export type PoolSlotSortKey = z.infer<typeof PoolSlotSortKeySchema>;
+export type PoolSlotStatus = z.infer<typeof PoolSlotStatusSchema>;
 
-export type GetPoolQuery = z.infer<typeof PoolQueryInputSchema>;
-export type PoolInput = z.infer<typeof PoolInputSchema>;
+export type GetPoolSlotQuery = z.infer<typeof PoolSlotQueryInputSchema>;
+export type PoolSlotInput = z.infer<typeof PoolSlotInputSchema>;
 
-export type ValidatePoolOptions = {
-  status?: PoolStatus;
+export type ValidatePoolSlotOptions = {
+  status?: PoolSlotStatus;
 };
