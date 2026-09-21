@@ -3,8 +3,8 @@ import basicAuth from "express-basic-auth";
 import { SwaggerTheme, SwaggerThemeNameEnum } from "swagger-themes";
 import type { SwaggerUiOptions } from "swagger-ui-express";
 import { generateHTML, serveFiles } from "swagger-ui-express";
+import type { AppEnv } from "./enums";
 import { AppError, StatusCodes } from "./res-config";
-import type { AppEnv } from "./types";
 
 export const setupRouteAuth = (username: string, password: string): ReturnType<typeof basicAuth> => {
   const getUnauthorizedResponse = (req: basicAuth.IBasicAuthedRequest) => {

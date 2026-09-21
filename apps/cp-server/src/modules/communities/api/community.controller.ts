@@ -9,7 +9,7 @@ export class CommunityController {
     return getApiSuccessResponse(res, serviceResponse);
   }
 
-  static async getMyMinistries(req: Request, res: Response) {
+  static async getMyCommunities(req: Request, res: Response) {
     const { limit, page, sortKey, sortDir } = req.query as GetCommunityQuery;
     const query: GetCommunityQuery = { limit, page, sortKey, sortDir };
     const serviceResponse = await CommunityService.getMyCommunities(req.ctx, query);
@@ -17,7 +17,7 @@ export class CommunityController {
   }
 
   static async updateCommunity(req: Request, res: Response) {
-    const communityId = req.ctx?.ministry?.id || "";
+    const communityId = req.ctx?.community?.id || "";
     const serviceResponse = await CommunityService.updateCommunity(req.ctx, communityId, req.body);
     return getApiSuccessResponse(res, serviceResponse);
   }

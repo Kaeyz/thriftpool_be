@@ -1,5 +1,5 @@
 import { AppError, StatusCodes } from "@packages/core/res-config";
-import { generateTokenAndExpiry, hashValue } from "@packages/core/token";
+import { generateTokenAndExpiry, hashPassword } from "@packages/core/token";
 import * as resp from "../common/user.res";
 import { UserUtils } from "../common/user.utils";
 import { UserRepo } from "../db/user.repo";
@@ -18,7 +18,7 @@ export class UserAccountService {
       email: { address: newUser.emailAddress, isVerified: false },
       userType: "user",
       token: generateTokenAndExpiry(),
-      password: await hashValue(newUser.password),
+      password: await hashPassword(newUser.password),
     });
 
     await emailService.send("welcomeEmail", user.email.address, { name: user.firstName, token: user.token.value });

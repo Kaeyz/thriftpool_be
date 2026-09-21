@@ -1,4 +1,4 @@
-import type { AppEnv } from "@packages/core/types";
+import { AppEnv } from "@packages/core/enums";
 
 interface keysInterface {
   port: string;
@@ -32,7 +32,7 @@ const getEnv = (key: string): string => {
 export const getKeys = (): keysInterface => {
   const env = process.env;
   const appEnv = env.APP_ENV as AppEnv;
-  const appEnvOptions: AppEnv[] = ["prod", "test", "dev"];
+  const appEnvOptions = Object.values(AppEnv);
 
   if (appEnv && !appEnvOptions.includes(appEnv)) {
     throw new Error(`APP_ENV must be one of ${appEnvOptions.join(", ")}`);

@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { CurrencyCode } from "./enums";
 import { FieldSchemas } from "./field-schema";
 
 export const SortDirectionSchema = z.enum(["asc", "desc"]);
@@ -25,17 +26,17 @@ export const TokenSchema = z.object({
 export const AddressSchema = FieldSchemas.addressSchema();
 export const DateSchema = FieldSchemas.dateSchema();
 
-export const CurrencySchema = z.object({
-  name: z.string(),
-  symbol: z.string(),
-  code: z.string().length(3),
-});
-
-export const CurrenciesSchema = z.record(z.string(), CurrencySchema);
 export const CurrencyCodeSchema = FieldSchemas.currencyCodeSchema();
+export const CurrenciesSchema = z.record(
+  CurrencyCodeSchema,
+  z.object({
+    name: z.string(),
+    symbol: z.string(),
+  })
+);
 export const AmountSchema = z.object({
   value: z.int(),
-  currency: CurrencySchema,
+  currencyCode: CurrencyCode,
 });
 
 export const PhoneNumberSchema = z.object({

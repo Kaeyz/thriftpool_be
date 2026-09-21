@@ -1,6 +1,6 @@
 import type { SchemaTypeOptions } from "mongoose";
+import { CurrencyCode } from "./enums";
 import type { Address, Amount, Email, EncryptionKey, MediaFile, PhoneNumber, Token } from "./types";
-import { CurrencySchema } from "./zod-schemas";
 
 export type FieldDefinition<T> = {
   [K in keyof T]: SchemaTypeOptions<T[K]>;
@@ -38,7 +38,7 @@ export const tokenField: FieldDefinition<Token> = {
 };
 
 export const amountField: FieldDefinition<Amount> = {
-  currency: { type: String, enum: CurrencySchema.options },
+  currencyCode: { type: String, enum: Object.values(CurrencyCode) },
   value: Number,
 };
 

@@ -18,7 +18,7 @@ export const webAppCommunityRouter = (rootPath: string, router: Router) => {
     catchHttpError(CommunityController.updateCommunity)
   );
 
-  router.get(`${baseRoute}/me`, useApiCtx({ authenticate: true }), catchHttpError(CommunityController.getMyMinistries));
+  router.get(`${baseRoute}/me`, useApiCtx({ authenticate: true }), catchHttpError(CommunityController.getMyCommunities));
 
   router.post(
     `${baseRoute}`,

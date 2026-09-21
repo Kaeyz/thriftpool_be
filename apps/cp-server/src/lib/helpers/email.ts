@@ -1,4 +1,4 @@
-import { Platform } from "@packages/core/types";
+import { Platform } from "@packages/core/enums";
 import { EmailService } from "@packages/email";
 import { discordService } from "./discord";
 import { getKeys } from "@/config/keys";

@@ -1,16 +1,34 @@
 import { FieldSchemas } from "@packages/core/field-schema";
 import { PageInputSchema, LimitInputSchema, SortDirectionSchema } from "@packages/core/zod-schemas";
 import * as z from "zod";
-import { PoolSchema } from "./pool.zod";
+import { PoolPaymentModeSchema, PoolSchema } from "./pool.zod";
 import { ISCommunityMemberSchema } from "@/modules/community-members/zod/community-member.zod";
 
-export const PoolSlotMemberSchema = ISCommunityMemberSchema.pick({ id: true, user: true, role: true });
-export const PoolSlotStatusSchema = z.enum(["pending", "approved", "rejected"]);
+export const SlotMemberSchema = ISCommunityMemberSchema.pick({ id: true, user: true, role: true });
+export const PoolSlotMemberStatusSchema = z.enum(["pending", "approved", "rejected"]);
+const PoolSlotCycleStateSchema = z.enum(["pending", "active", "completed"]);
+
+const PoolSlotMemberSchema = z.object({
+  member: SlotMemberSchema,
+  status: PoolSlotMemberStatusSchema,
+});
+
+const SlotCycleStateSchema = z.object({
+  state: PoolSlotCycleStateSchema,
+  startDate: z.number(),
+  endDate: z.number(),
+});
+
+const SlotPaymentInfoSchema = z.object({
+  paymentMode: PoolPaymentModeSchema,
+});
 
 export const PoolSlotSchema = z.object({
   id: z.string(),
   pool: PoolSchema,
-  member: PoolSlotMemberSchema,
+  slotOwner: PoolSlotMemberSchema,
+  cycleState: SlotCycleStateSchema,
+  paymentInfo: SlotPaymentInfoSchema,
   order: z.number(),
   createdAt: z.number(),
   updatedAt: z.number(),

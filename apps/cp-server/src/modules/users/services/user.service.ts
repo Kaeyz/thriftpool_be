@@ -1,5 +1,5 @@
 import { AppError, StatusCodes } from "@packages/core/res-config";
-import { compareHash, generateTokenAndExpiry, hashValue } from "@packages/core/token";
+import { comparePassword, generateTokenAndExpiry, hashPassword } from "@packages/core/token";
 import type {
   GetUsersQuery,
   UpdateMyEmailInput,
@@ -19,7 +19,7 @@ export class UserService {
     const user = await UserRepo.getByEmail(ctx, loginData.emailAddress);
     if (!user) throw new AppError(StatusCodes.BAD_REQUEST, resp.AUTHENTICATION_FAILED);
 
-    const isMatch = await compareHash(user.password, loginData?.password);
+    const isMatch = await comparePassword(user.password, loginData?.password);
     if (!isMatch) throw new AppError(StatusCodes.BAD_REQUEST, resp.AUTHENTICATION_FAILED);
 
     return { data: UserUtils.sanitize(user), message: resp.LOGIN_SUCCESSFUL };
@@ -71,7 +71,7 @@ export class UserService {
     let user = await UserRepo.getByToken(ctx, resetData.token);
     if (!user) throw new AppError(StatusCodes.BAD_REQUEST, resp.INVALID_TOKEN);
 
-    const passwordHash = await hashValue(resetData?.password || "");
+    const passwordHash = await hashPassword(resetData?.password || "");
 
     user = await UserRepo.update(ctx, user.id, {
       password: passwordHash,
@@ -117,7 +117,7 @@ export class UserService {
 
     if (!user.password) throw new AppError(StatusCodes.BAD_REQUEST, resp.AUTHENTICATION_FAILED);
 
-    const isMatch = await compareHash(user.password, newEmail.password);
+    const isMatch = await comparePassword(user.password, newEmail.password);
     if (!isMatch) throw new AppError(StatusCodes.BAD_REQUEST, resp.AUTHENTICATION_FAILED);
 
     const userWithEmailExist = await UserRepo.getByEmail(ctx, newEmail.newEmailAddress);
@@ -136,10 +136,10 @@ export class UserService {
 
     if (!user.password) throw new AppError(StatusCodes.BAD_REQUEST, resp.AUTHENTICATION_FAILED);
 
-    const isMatch = await compareHash(user.password, newPasswordData.currentPassword);
+    const isMatch = await comparePassword(user.password, newPasswordData.currentPassword);
     if (!isMatch) throw new AppError(StatusCodes.BAD_REQUEST, resp.AUTHENTICATION_FAILED);
 
-    const passwordHash = await hashValue(newPasswordData?.newPassword || "");
+    const passwordHash = await hashPassword(newPasswordData?.newPassword || "");
     user = await UserRepo.update(ctx, user.id, { password: passwordHash });
     user = UserUtils.validateUser(user);
 

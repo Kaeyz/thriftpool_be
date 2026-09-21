@@ -1,26 +1,22 @@
-import type { Currencies } from "./types";
+import type { CurrencyCode } from "./enums";
 
-export const currencies: Currencies = {
+export const currencies: Record<CurrencyCode, { name: string; symbol: string }> = {
   NGN: {
     name: "Naira",
-    code: "NGN",
     symbol: "₦",
   },
   USD: {
     name: "Dollars",
-    code: "USD",
     symbol: "$",
   },
   EUR: {
     name: "Euro",
-    code: "EUR",
     symbol: "€",
   },
   GBP: {
     name: "British Pound",
-    code: "GBP",
     symbol: "£",
   },
 };
 
-export const currencyCodes = Object.values(currencies).map((v) => v.code);
+export const currencyCodes = Object.keys(currencies) as CurrencyCode[];

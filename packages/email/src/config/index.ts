@@ -1,4 +1,4 @@
-import { Platform } from "@packages/core/types";
+import { Platform } from "@packages/core/enums";
 import { authEmailConfig } from "./auth";
 import { communityEmailConfig } from "./community";
 import { userEmailConfig } from "./user";

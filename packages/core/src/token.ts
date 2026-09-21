@@ -1,4 +1,6 @@
+import { createHash } from "crypto";
 import { compare, genSalt, hash } from "bcryptjs";
+import { sortObject } from "./helpers";
 import type { Token } from "./types";
 
 export const generateTokenAndExpiry = (length = 6, expiresInHours: number = 1): Token => {
@@ -12,7 +14,7 @@ export const generateTokenAndExpiry = (length = 6, expiresInHours: number = 1): 
   };
 };
 
-export const hashValue = (value: string): Promise<string> => {
+export const hashPassword = (value: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     genSalt(10, (err, salt) => {
       if (err) return reject(err);
@@ -24,10 +26,18 @@ export const hashValue = (value: string): Promise<string> => {
   });
 };
 
-export const compareHash = (hash: string, value: string): Promise<boolean | Error> => {
+export const comparePassword = (hash: string, value: string): Promise<boolean | Error> => {
   return new Promise((resolve, reject) => {
     compare(value, hash)
       .then((isMatch: boolean) => resolve(isMatch))
       .catch((err: Error) => reject(err));
   });
+};
+
+export const hashString = (value: string): string => {
+  return createHash("sha256").update(value).digest("hex");
+};
+
+export const hashObject = (value: object): string => {
+  return hashString(JSON.stringify(sortObject(value)));
 };

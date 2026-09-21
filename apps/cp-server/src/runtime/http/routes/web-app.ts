@@ -3,6 +3,7 @@ import type { Router } from "express";
 import docsConfig from "@/api-docs/config/config";
 import { getKeys } from "@/config/keys";
 import { webAppAuthRouter } from "@/modules/auth";
+import { webAppBankAccountRouter } from "@/modules/bank-accounts";
 import { webAppCommunityRouter } from "@/modules/communities";
 import { webAppCommunityInviteRouter } from "@/modules/community-invites";
 import { webAppCommunityMemberRouter } from "@/modules/community-members";
@@ -24,6 +25,7 @@ export const setupWebAppRoutes = (router: Router) => {
 
   router = webAppAuthRouter(rootPath, router);
   router = webAppUserRouter(rootPath, router);
+  router = webAppBankAccountRouter(rootPath, router);
   router = webAppCommunityRouter(rootPath, router);
   router = webAppCommunityInviteRouter(rootPath, router);
   router = webAppCommunityMemberRouter(rootPath, router);

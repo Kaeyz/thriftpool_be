@@ -1,6 +1,7 @@
 import mongoose, { Types } from "mongoose";
 import * as z from "zod";
 import { currencyCodes } from "./currencies";
+import type { CurrencyCode } from "./enums";
 import { transformIds } from "./validation";
 
 type TextFieldOptions = {
@@ -27,6 +28,28 @@ export class FieldSchemas {
     return schema.refine((val) => options.includes(val), {
       message: `${fieldName} is required or invalid. Must be one of: ${list}`,
     }) as T;
+  }
+
+  static numberStringSchema(fieldName: string = "Number", options?: { max?: number; min?: number }) {
+    let schema = z.string({ error: `${fieldName} is required` }).regex(/^\d+$/, {
+      error: `${fieldName} must contain only numbers`,
+    });
+
+    if (options) {
+      const { min, max } = options;
+      if (min !== undefined) {
+        schema = schema.min(min, {
+          error: `${fieldName} must be at least ${min} digits long`,
+        });
+      }
+      if (max !== undefined) {
+        schema = schema.max(max, {
+          error: `${fieldName} must be at most ${max} digits long`,
+        });
+      }
+    }
+
+    return schema;
   }
 
   static passwordSchema(fieldName: string = "Password") {
@@ -123,7 +146,7 @@ export class FieldSchemas {
   static currencyCodeSchema(fieldName: string = "Currency Code") {
     const list = currencyCodes.join(", ");
 
-    return z.string({ error: `${fieldName} is required` }).refine((val) => currencyCodes.includes(val), {
+    return z.string({ error: `${fieldName} is required` }).refine((val) => currencyCodes.includes(val as CurrencyCode), {
       message: `${fieldName} is required or invalid. Must be one of: ${list}`,
     });
   }
