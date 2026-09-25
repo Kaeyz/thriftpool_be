@@ -7,7 +7,7 @@ on:
     paths:
       - '*'
       - 'packages/**'
-      - 'apps/community/**'
+      - 'apps/cp-server/**'
       - '.github/workflows/staging-cp-server.yaml'
   workflow_dispatch:
 
