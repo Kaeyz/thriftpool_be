@@ -1,7 +1,7 @@
 import type { Ctx } from "../ctx/ctx.types";
 import { CloudinaryService } from "./cloudinary";
 import type { IMediaUpload } from "./types";
-import { getFileUploadConfig, validateEntityName } from "./upload-config";
+import { fileUploadConfigs, validateEntityName } from "./upload-config";
 import { validateUpload } from "./upload-validator";
 
 export async function handleUpload(ctx: Ctx, fileData: IMediaUpload) {
@@ -11,7 +11,7 @@ export async function handleUpload(ctx: Ctx, fileData: IMediaUpload) {
 
     if (!validateEntityName(ctx, entityName)) throw new Error(`Unknown entity: ${entityName}`);
 
-    const entityConfig = getFileUploadConfig(entityName);
+    const entityConfig = fileUploadConfigs[entityName];
     if (!entityConfig) throw new Error(`Upload Config for ${entityName} not found`);
 
     const useCaseConfig = entityConfig.useCases.find((u) => u.useCaseName === useCase);

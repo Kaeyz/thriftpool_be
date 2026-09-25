@@ -8,8 +8,8 @@ import type {
   ValidateUserOptions,
 } from "../common/user.dto";
 import * as resp from "../common/user.res";
-import { UserUtils } from "../common/user.utils";
 import { UserRepo } from "../db/user.repo";
+import { UserUtils } from "./user.utils";
 import type { Ctx } from "@/lib/ctx/ctx.types";
 import { emailService } from "@/lib/helpers/email";
 import type { LoginInput, ResetPasswordInput } from "@/modules/auth/common/auth.dto";

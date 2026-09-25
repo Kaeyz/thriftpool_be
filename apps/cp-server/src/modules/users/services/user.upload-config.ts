@@ -1,14 +1,13 @@
+import type { ISUser } from "../common/user.dto";
+import { USER_NOT_FOUND, USER_ACCOUNT_SUSPENDED } from "../common/user.res";
 import { UserRepo } from "../db/user.repo";
-import type { ISUser } from "./user.dto";
-import { USER_NOT_FOUND, USER_ACCOUNT_SUSPENDED } from "./user.res";
 import { UserUtils } from "./user.utils";
-import { registerFileUploadConfig } from "@/lib/file-upload";
 import type { EntityConfig } from "@/lib/file-upload";
 
 const userProfileUseCase = "profile";
 const userEntityName = "user";
 
-const userUploadConfig: EntityConfig<string, string, ISUser> = {
+export const userUploadConfig: EntityConfig<string, string, ISUser> = {
   entityName: userEntityName,
   useCases: [
     {
@@ -39,5 +38,3 @@ const userUploadConfig: EntityConfig<string, string, ISUser> = {
     },
   ],
 };
-
-registerFileUploadConfig(userEntityName, userUploadConfig);

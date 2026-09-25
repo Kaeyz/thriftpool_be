@@ -18,7 +18,6 @@ export const CommunitySchema = z.object({
 });
 
 export const IPCommunitySchema = CommunitySchema.pick({ id: true, name: true, key: true, logo: true });
-
 export const ISCommunitySchema = CommunitySchema.omit({ updatedAt: true });
 
 export const CommunityInputSchema = z.object({

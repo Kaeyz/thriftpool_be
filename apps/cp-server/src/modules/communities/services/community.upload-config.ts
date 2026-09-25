@@ -4,13 +4,12 @@ import { CommunityRepo } from "../db/community.repo";
 import { validateCommunityRole } from "./community.ctx";
 import { CommunityUtils } from "./community.utils";
 import { allCommunityAdmin } from "@/lib/definitions/roles";
-import { registerFileUploadConfig } from "@/lib/file-upload";
 import type { EntityConfig } from "@/lib/file-upload";
 
 const communityEntityName = "community";
 const communityLogoUseCase = "logo";
 
-const communityUploadConfig: EntityConfig<string, string, ISCommunity> = {
+export const communityUploadConfig: EntityConfig<string, string, ISCommunity> = {
   entityName: communityEntityName,
   useCases: [
     {
@@ -50,5 +49,3 @@ const communityUploadConfig: EntityConfig<string, string, ISCommunity> = {
     },
   ],
 };
-
-registerFileUploadConfig(communityEntityName, communityUploadConfig);

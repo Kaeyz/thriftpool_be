@@ -1,7 +1,7 @@
 import { AppError, StatusCodes } from "@packages/core/res-config";
+import type { ISUser, ValidateUserOptions } from "../common/user.dto";
 import * as resp from "../common/user.res";
 import type { UserDoc } from "../db/user.types";
-import type { ISUser, ValidateUserOptions } from "./user.dto";
 
 const validateOptions: ValidateUserOptions = {
   isEmailVerified: true,

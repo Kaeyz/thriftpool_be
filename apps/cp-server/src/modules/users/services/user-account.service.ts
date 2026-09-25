@@ -1,8 +1,8 @@
 import { AppError, StatusCodes } from "@packages/core/res-config";
 import { generateTokenAndExpiry, hashPassword } from "@packages/core/token";
 import * as resp from "../common/user.res";
-import { UserUtils } from "../common/user.utils";
 import { UserRepo } from "../db/user.repo";
+import { UserUtils } from "./user.utils";
 import type { Ctx } from "@/lib/ctx/ctx.types";
 import { emailService } from "@/lib/helpers/email";
 import type { CreateUserInput } from "@/modules/auth/common/auth.dto";
