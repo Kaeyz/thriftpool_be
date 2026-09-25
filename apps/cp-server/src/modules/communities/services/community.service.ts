@@ -20,7 +20,7 @@ export class CommunityService {
       visibility: newCommunity.visibility,
     });
 
-    await CommunityMemberService.createCommunityMember(ctx, community.id, { userId, role: "owner" });
+    await CommunityMemberService.createCommunityMember(ctx, String(community.id), { userId, role: "owner" });
     return { data: CommunityUtils.sanitize(community), message: resp.COMMUNITY_CREATED };
   }
 
