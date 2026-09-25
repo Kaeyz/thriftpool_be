@@ -91,7 +91,7 @@
  *     tags: [Community Members]
  *     security:
  *       - AuthToken: []
- *       - MinistryKey: []
+ *       - CommunityKey: []
  *     parameters:
  *       - in: path
  *         name: memberId
@@ -122,7 +122,7 @@
  *     tags: [Community Members]
  *     security:
  *       - AuthToken: []
- *       - MinistryKey: []
+ *       - CommunityKey: []
  *     parameters:
  *       - in: path
  *         name: memberId
@@ -146,7 +146,7 @@
  *     tags: [Community Members]
  *     security:
  *       - AuthToken: []
- *       - MinistryKey: []
+ *       - CommunityKey: []
  *     parameters:
  *       - in: path
  *         name: memberId

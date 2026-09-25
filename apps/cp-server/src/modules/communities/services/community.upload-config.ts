@@ -43,8 +43,8 @@ export const communityUploadConfig: EntityConfig<string, string, ISCommunity> = 
         return response;
       },
       resolve: async (ctx, entityId, mediaFile): Promise<ISCommunity> => {
-        const ministry = await CommunityRepo.update(ctx, entityId, { logo: mediaFile });
-        return CommunityUtils.sanitize(ministry!);
+        const community = await CommunityRepo.update(ctx, entityId, { logo: mediaFile });
+        return CommunityUtils.sanitize(community!);
       },
     },
   ],

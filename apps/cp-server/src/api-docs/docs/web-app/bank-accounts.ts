@@ -46,7 +46,6 @@
  *     tags: [Bank Accounts]
  *     security:
  *       - AuthToken: []
- *       - MinistryKey: []
  *     requestBody:
  *       required: true
  *       content:

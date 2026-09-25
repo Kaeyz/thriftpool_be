@@ -91,7 +91,7 @@
  *     tags: [Community Invites]
  *     security:
  *       - AuthToken: []
- *       - MinistryKey: []
+ *       - CommunityKey: []
  *     requestBody:
  *       required: true
  *       content:

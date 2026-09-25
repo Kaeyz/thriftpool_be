@@ -39,7 +39,7 @@ export const CommunityQueryInputSchema = z.object({
   search: FieldSchemas.textSchema("search").optional(),
   page: PageInputSchema,
   limit: LimitInputSchema,
-  communityIds: FieldSchemas.dbIdsSchema("ministryIds").optional(),
+  communityIds: FieldSchemas.dbIdsSchema("communityIds").optional(),
   visibility: FieldSchemas.enumSelectSchema("visibility", CommunityVisibilitySchema).optional(),
   isSuspended: z.enum(["true", "false"]).optional(),
   sortKey: FieldSchemas.enumSelectSchema("sortKey", CommunitySortKeySchema).optional(),

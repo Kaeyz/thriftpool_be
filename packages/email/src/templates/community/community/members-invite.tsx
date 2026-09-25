@@ -23,7 +23,7 @@ const MemberInviteEmail = (props: MemberInviteProps) => (
 );
 
 MemberInviteEmail.PreviewProps = {
-  communityName: "Test Ministry",
+  communityName: "Test Community",
   platformUrl: "localhost",
 } satisfies MemberInviteProps;
 

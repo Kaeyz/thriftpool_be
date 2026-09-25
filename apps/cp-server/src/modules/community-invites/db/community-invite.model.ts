@@ -26,7 +26,7 @@ addVirtualId(CommunityInviteSchema);
 
 const autoPopulate = function (this: Query<unknown, unknown>, next: () => void) {
   this.populate([{ transform, path: "user", select: parseSelectFromSchema(UserInCommunityInviteSchema) }]);
-  this.populate([{ transform, path: "ministry", select: parseSelectFromSchema(CommunityInCommunityInviteSchema) }]);
+  this.populate([{ transform, path: "community", select: parseSelectFromSchema(CommunityInCommunityInviteSchema) }]);
   next();
 };
 
