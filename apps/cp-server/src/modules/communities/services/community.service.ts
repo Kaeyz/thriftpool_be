@@ -20,7 +20,7 @@ export class CommunityService {
       visibility: newCommunity.visibility,
     });
 
-    await CommunityMemberService.createCommunityMember(ctx, { userId, communityId: community.id, role: "owner" });
+    await CommunityMemberService.createCommunityMember(ctx, community.id, { userId, role: "owner" });
     return { data: CommunityUtils.sanitize(community), message: resp.COMMUNITY_CREATED };
   }
 
@@ -62,7 +62,6 @@ export class CommunityService {
     const { data: communityMembers } = await CommunityMemberService.getCommunityMembers(ctx, {
       limit: query.limit,
       page: query.page,
-      status: "accepted",
       userId,
     });
 

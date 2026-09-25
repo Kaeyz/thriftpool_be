@@ -12,8 +12,7 @@ import type { Ctx } from "@/lib/ctx/ctx.types";
 import { UserService } from "@/modules/users";
 
 export class CommunityMemberService {
-  static async createCommunityMember(ctx: Ctx, newMember: CommunityMemberInput) {
-    const communityId = ctx?.community?.id || "";
+  static async createCommunityMember(ctx: Ctx, communityId: string, newMember: CommunityMemberInput) {
     let member = await CommunityMemberRepo.getByUserId(ctx, { communityId: communityId, userId: newMember.userId });
     if (member) throw new AppError(StatusCodes.BAD_REQUEST, resp.COMMUNITY_MEMBER_EXIST);
 

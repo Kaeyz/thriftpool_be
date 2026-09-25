@@ -76,7 +76,7 @@ export class CommunityInviteService {
     if (!invite) throw new AppError(StatusCodes.BAD_REQUEST, resp.COMMUNITY_INVITE_NOT_UPDATED);
 
     if (invite.status === "accepted")
-      await CommunityMemberService.createCommunityMember(ctx, {
+      await CommunityMemberService.createCommunityMember(ctx, invite.community.id, {
         role: "member",
         userId: invite.user.id,
       });
