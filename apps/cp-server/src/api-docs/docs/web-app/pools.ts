@@ -88,7 +88,7 @@
  *         application/json:
  *           schema:
  *             type: object
- *             $ref: '#/components/schemas/CommunityInput'
+ *             $ref: '#/components/schemas/PoolInput'
  *     responses:
  *       200:
  *         description: Success
@@ -96,5 +96,5 @@
  *           application/json:
  *             schema:
  *               type: object
- *               $ref: '#/components/schemas/Community'
+ *               $ref: '#/components/schemas/Pool'
  */
