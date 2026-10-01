@@ -7,6 +7,7 @@ import { webAppBankAccountRouter } from "@/modules/bank-accounts";
 import { webAppCommunityRouter } from "@/modules/communities";
 import { webAppCommunityInviteRouter } from "@/modules/community-invites";
 import { webAppCommunityMemberRouter } from "@/modules/community-members";
+import { webAppPoolRouter } from "@/modules/pools";
 import { webAppUserRouter } from "@/modules/users";
 import { webAppUtilsRouter } from "@/modules/utils";
 
@@ -29,6 +30,7 @@ export const setupWebAppRoutes = (router: Router) => {
   router = webAppCommunityRouter(rootPath, router);
   router = webAppCommunityInviteRouter(rootPath, router);
   router = webAppCommunityMemberRouter(rootPath, router);
+  router = webAppPoolRouter(rootPath, router);
   router = webAppUtilsRouter(rootPath, router);
 
   router = setupDocs(router, options);

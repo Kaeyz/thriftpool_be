@@ -25,6 +25,8 @@ export const validateCommunityRole = async (ctx: Ctx, roles: string[]) => {
     const err = new AppError(StatusCodes.UNAUTHORIZED, "User not a member of community");
     res = { isAuthorized: false, err };
   }
+
+  if (member) ctx.communityMember = member;
   if (member && !roles.includes(member.role)) {
     const err = new AppError(StatusCodes.UNAUTHORIZED, "User not authorized for operation");
     res = { isAuthorized: false, err };

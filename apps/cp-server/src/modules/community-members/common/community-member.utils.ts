@@ -16,7 +16,7 @@ export class CommunityMemberUtils {
   ) {
     const { isActive } = options;
     if (!member) throw new AppError(StatusCodes.NOT_FOUND, COMMUNITY_MEMBER_NOT_FOUND);
-    if (isActive && member.status !== "accepted") throw new AppError(StatusCodes.BAD_REQUEST, MEMBER_IS_INACTIVE);
+    if (isActive && member.status !== "active") throw new AppError(StatusCodes.BAD_REQUEST, MEMBER_IS_INACTIVE);
     return member;
   }
 }

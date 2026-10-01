@@ -1,30 +1,43 @@
 import { catchHttpError, validateHttpInput } from "@packages/runtime/http";
 import type { Router } from "express";
 import { PoolInputSchema } from "../zod/pool.zod";
-import { CommunityController } from "./pool.controller";
+import { PoolController } from "./pool.controller";
+import { allCommunityAdmin, allCommunityMembers } from "@/lib/definitions/roles";
 import { useApiCtx } from "@/runtime/http/config/http-context";
 
-export const webAppCommunityRouter = (rootPath: string, router: Router) => {
-  const baseRoute = `${rootPath}/communities`;
+export const webAppPoolRouter = (rootPath: string, router: Router) => {
+  const baseRoute = `${rootPath}/pools`;
 
   router.put(
+    `${baseRoute}/:id`,
+    useApiCtx({
+      authenticate: true,
+      requireCommunity: true,
+      roleConfig: { community: allCommunityAdmin },
+    }),
+    validateHttpInput(PoolInputSchema, "body"),
+    catchHttpError(PoolController.updatePool)
+  );
+
+  router.get(
     `${baseRoute}/me`,
     useApiCtx({
       authenticate: true,
       requireCommunity: true,
-      roleConfig: { community: ["owner"] },
+      roleConfig: { community: allCommunityMembers },
     }),
-    validateHttpInput(PoolInputSchema, "body"),
-    catchHttpError(CommunityController.updateCommunity)
+    catchHttpError(PoolController.getMyPools)
   );
-
-  router.get(`${baseRoute}/me`, useApiCtx({ authenticate: true }), catchHttpError(CommunityController.getMyPools));
 
   router.post(
     `${baseRoute}`,
-    useApiCtx({ authenticate: true }),
+    useApiCtx({
+      authenticate: true,
+      requireCommunity: true,
+      roleConfig: { community: allCommunityAdmin },
+    }),
     validateHttpInput(PoolInputSchema, "body"),
-    catchHttpError(CommunityController.createCommunity)
+    catchHttpError(PoolController.createPool)
   );
 
   return router;

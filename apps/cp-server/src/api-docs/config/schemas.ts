@@ -5,6 +5,7 @@ import { WebAppBankAccountSchemas } from "@/modules/bank-accounts";
 import { WebAppCommunitySchemas } from "@/modules/communities";
 import { WebAppCommunityInviteSchemas } from "@/modules/community-invites";
 import { WebAppCommunityMemberSchemas } from "@/modules/community-members";
+import { WebAppPoolSchemas } from "@/modules/pools";
 import { WebAppUserSchemas } from "@/modules/users";
 import { WebAppUtilsSchemas } from "@/modules/utils";
 
@@ -20,5 +21,6 @@ export const webAppSchemas = {
   ...WebAppCommunitySchemas,
   ...WebAppCommunityInviteSchemas,
   ...WebAppCommunityMemberSchemas,
+  ...WebAppPoolSchemas,
   ...WebAppUtilsSchemas,
 };

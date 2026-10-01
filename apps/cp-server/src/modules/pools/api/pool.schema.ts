@@ -1,10 +1,10 @@
 import { HttpResponseSchema } from "@packages/core/validation";
 import * as z from "zod";
-import { ISCommunitySchema, CommunityQueryResponse, CommunityInputSchema } from "../zod/pool.zod";
+import { ISPoolSchema, PoolInputSchema, PoolQueryResponse } from "../zod/pool.zod";
 
-export const WebAppCommunitySchemas = {
-  Communities: z.toJSONSchema(HttpResponseSchema(CommunityQueryResponse)),
-  Community: z.toJSONSchema(HttpResponseSchema(ISCommunitySchema)),
+export const WebAppPoolSchemas = {
+  Pools: z.toJSONSchema(HttpResponseSchema(PoolQueryResponse)),
+  Pool: z.toJSONSchema(HttpResponseSchema(ISPoolSchema)),
 
-  CommunityInput: z.toJSONSchema(CommunityInputSchema),
+  PoolInput: z.toJSONSchema(PoolInputSchema),
 };

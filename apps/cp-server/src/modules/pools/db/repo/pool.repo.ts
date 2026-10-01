@@ -1,9 +1,9 @@
 import { parseSelectFromSchema } from "@packages/core/database";
 import { buildPagination, buildSortObject } from "@packages/core/db-query";
-import type { GetPoolQuery, IPPool } from "../common/pool.dto";
-import { IPPoolSchema } from "../zod/pool.zod";
-import { Pool } from "./pool.model";
-import type { IPoolInput, PoolDoc } from "./pool.types";
+import type { GetPoolQuery, IPPool } from "../../common/pool.dto";
+import { IPPoolSchema } from "../../zod/pool.zod";
+import { Pool } from "../models/pool.model";
+import type { IPoolInput, PoolDoc } from "../types/pool.types";
 import type { Ctx } from "@/lib/ctx/ctx.types";
 
 export class PoolRepo {
@@ -16,7 +16,7 @@ export class PoolRepo {
   }
 
   static async getAll(ctx: Ctx, query: GetPoolQuery) {
-    const { search, sortKey, sortDir, paymentInterval, paymentMode, status } = query;
+    const { search, sortKey, sortDir, paymentInterval, paymentMode, status, memberId } = query;
 
     const { skip, page, limit } = buildPagination(query.page, query.limit);
     const sort = buildSortObject(sortKey, sortDir);
@@ -34,6 +34,7 @@ export class PoolRepo {
     if (paymentInterval) queryObject.paymentInterval = paymentInterval;
     if (status) queryObject.status = status;
     if (paymentMode) queryObject.paymentMode = paymentMode;
+    if (memberId) queryObject["poolMembers.member"] = memberId;
 
     const countQuery = Pool.countDocuments(queryObject, { session: ctx?.session });
     const dataQuery = Pool.find<IPPool>(queryObject, null, { session: ctx?.session })
@@ -49,5 +50,9 @@ export class PoolRepo {
 
   static update(ctx: Ctx, id: string, data: IPoolInput): Promise<PoolDoc | null> {
     return Pool.findByIdAndUpdate(id, data, { new: true, session: ctx?.session });
+  }
+
+  static delete(ctx: Ctx, id: string): Promise<PoolDoc | null> {
+    return Pool.findByIdAndDelete(id, { new: true, session: ctx?.session });
   }
 }
