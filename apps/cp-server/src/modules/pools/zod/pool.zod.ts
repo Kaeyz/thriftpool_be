@@ -57,12 +57,21 @@ export const PoolInputSchema = z
     poolBankAccountId: FieldSchemas.dbIdSchema("poolBankAccountId").optional(),
     noOfSlot: FieldSchemas.numberSchema("noOfSlot"),
   })
-  .refine((data) => data.paymentMode === "via_pool_account" && !data.poolAccountType, {
-    path: ["poolAccountType"],
-    message: "Pool account Type is required",
-  })
   .refine(
-    (data) => data.paymentMode === "via_pool_account" && data.poolAccountType === "bank_account" && !data.poolBankAccountId,
+    (data) => {
+      if (data.paymentMode !== "via_pool_account") return true;
+      return data.paymentMode === "via_pool_account" && data.poolAccountType;
+    },
+    {
+      path: ["poolAccountType"],
+      message: "Pool account Type is required",
+    }
+  )
+  .refine(
+    (data) => {
+      if (data.paymentMode !== "via_pool_account") return true;
+      return data.paymentMode === "via_pool_account" && data.poolAccountType === "bank_account" && data.poolBankAccountId;
+    },
     {
       path: ["poolBankAccountId"],
       message: "Pool Bank account is required",
