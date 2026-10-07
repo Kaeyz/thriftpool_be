@@ -85,7 +85,7 @@ export const PoolQueryResponse = z.object({
   limit: z.int(),
 });
 
-export const PoolSortKeySchema = z.enum(["name", "amount", "currency", "createdAt"]);
+export const PoolSortKeySchema = z.enum(["name", "amount", "createdAt"]);
 export const PoolQueryInputSchema = z.object({
   search: FieldSchemas.textSchema("search").optional(),
   page: PageInputSchema,
