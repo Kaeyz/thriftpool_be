@@ -1,7 +1,5 @@
 import mongoose, { Types } from "mongoose";
 import * as z from "zod";
-import { currencyCodes } from "./currencies";
-import type { CurrencyCode } from "./enums";
 import { transformIds } from "./validation";
 
 type TextFieldOptions = {
@@ -141,13 +139,5 @@ export class FieldSchemas {
       .refine((ids) => transformIds(ids).every((id) => Types.ObjectId.isValid(id)), {
         message: `One or more ${fieldName} are invalid ObjectIds`,
       });
-  }
-
-  static currencyCodeSchema(fieldName: string = "Currency Code") {
-    const list = currencyCodes.join(", ");
-
-    return z.string({ error: `${fieldName} is required` }).refine((val) => currencyCodes.includes(val as CurrencyCode), {
-      message: `${fieldName} is required or invalid. Must be one of: ${list}`,
-    });
   }
 }

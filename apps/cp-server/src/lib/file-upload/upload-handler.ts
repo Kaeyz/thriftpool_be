@@ -7,7 +7,7 @@ import { validateUpload } from "./upload-validator";
 export async function handleUpload(ctx: Ctx, fileData: IMediaUpload) {
   let response: { data?: unknown; err?: string } = {};
   try {
-    const { file, entityName, useCase } = fileData;
+    const { file, entityName, useCase, entityId } = fileData;
 
     if (!validateEntityName(ctx, entityName)) throw new Error(`Unknown entity: ${entityName}`);
 
@@ -19,14 +19,14 @@ export async function handleUpload(ctx: Ctx, fileData: IMediaUpload) {
     validateUpload(file, useCaseConfig.config);
 
     if (useCaseConfig.validate) {
-      const { message, status } = await useCaseConfig.validate(ctx, fileData.entityId);
+      const { message, status } = await useCaseConfig.validate(ctx, entityId);
       if (!status) throw new Error(message);
     }
 
     const uploadRes = await CloudinaryService.upload(fileData);
     if (uploadRes.status === "failed") throw new Error(`Unable to upload: ${uploadRes.data.message}`);
 
-    const data = await useCaseConfig.resolve(ctx, fileData.entityId, uploadRes.data);
+    const data = await useCaseConfig.resolve(ctx, entityId, uploadRes.data);
 
     response = { ...response, data };
 

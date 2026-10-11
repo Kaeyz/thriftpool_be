@@ -26,7 +26,7 @@ export const TokenSchema = z.object({
 export const AddressSchema = FieldSchemas.addressSchema();
 export const DateSchema = FieldSchemas.dateSchema();
 
-export const CurrencyCodeSchema = FieldSchemas.currencyCodeSchema();
+export const CurrencyCodeSchema = z.enum(Object.values(CurrencyCode));
 export const CurrenciesSchema = z.record(
   CurrencyCodeSchema,
   z.object({

@@ -2,14 +2,14 @@ import { setupRouteAuth, setupDocs } from "@packages/core/route-config";
 import type { Router } from "express";
 import docsConfig from "@/api-docs/config/config";
 import { getKeys } from "@/config/keys";
-import { webAppAuthRouter } from "@/modules/auth";
-import { webAppBankAccountRouter } from "@/modules/bank-accounts";
-import { webAppCommunityRouter } from "@/modules/communities";
-import { webAppCommunityInviteRouter } from "@/modules/community-invites";
-import { webAppCommunityMemberRouter } from "@/modules/community-members";
-import { webAppPoolRouter } from "@/modules/pools";
-import { webAppUserRouter } from "@/modules/users";
-import { webAppUtilsRouter } from "@/modules/utils";
+import { webAppAuthRouter } from "@/modules/auth/api/auth.routes";
+import { webAppBankAccountRouter } from "@/modules/bank-accounts/api/bank-account.routes";
+import { webAppCommunityRouter } from "@/modules/communities/api/community.routes";
+import { webAppCommunityInviteRouter } from "@/modules/community-invites/api/community-invite.routes";
+import { webAppCommunityMemberRouter } from "@/modules/community-members/api/community-member.routes";
+import { webAppPoolRouter } from "@/modules/pools/api/pool.routes";
+import { webAppUserRouter } from "@/modules/users/api/user.routes";
+import { webAppUtilsRouter } from "@/modules/utils/api/utils.routes";
 
 export const setupWebAppRoutes = (router: Router) => {
   const rootPath = "/web-app";

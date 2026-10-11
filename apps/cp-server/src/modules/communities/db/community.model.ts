@@ -2,7 +2,6 @@ import { addVirtualId } from "@packages/core/database";
 import { mediaFileField } from "@packages/core/db-fields";
 import type { Model } from "mongoose";
 import { Schema, models, model } from "mongoose";
-import { CommunityVisibilitySchema } from "../zod/community.zod";
 import type { ICommunity } from "./community.types";
 import { COMMUNITIES } from "@/lib/definitions";
 
@@ -13,7 +12,7 @@ const CommunitySchema: Schema = new Schema(
     key: String,
     logo: mediaFileField,
     isSuspended: { type: Boolean, default: false },
-    visibility: { type: String, enum: CommunityVisibilitySchema.options },
+    visibility: { type: String, enum: ["private", "public"] },
   },
   {
     timestamps: { createdAt: true, updatedAt: true },

@@ -3,7 +3,7 @@ import { PageInputSchema, LimitInputSchema, SortDirectionSchema } from "@package
 import * as z from "zod";
 import { MediaFileSchema } from "@/lib/file-upload";
 
-export const CommunityVisibilitySchema = z.enum(["public", "private"]);
+export const CommunityVisibilitySchema = z.enum(["private", "public"]);
 
 export const CommunitySchema = z.object({
   id: z.string(),
