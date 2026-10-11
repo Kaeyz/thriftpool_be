@@ -12,6 +12,7 @@ export const validateBankAccountOptions = {
 export class BankAccountUtils {
   static sanitize(bankAccount: BankAccountDoc): ISBankAccount {
     const obj = bankAccount.toJSON();
+    delete obj.accountHash;
     delete obj.updatedAt;
     return obj as unknown as ISBankAccount;
   }
