@@ -1,5 +1,5 @@
-import ForgotPassword from "../templates/community/auth/forgot-password";
-import WelcomeEmail from "../templates/community/auth/welcome-email";
+import ForgotPassword from "../templates/cp/auth/forgot-password";
+import WelcomeEmail from "../templates/cp/auth/welcome-email";
 
 export const authEmailConfig = {
   welcomeEmail: {

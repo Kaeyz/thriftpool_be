@@ -1,5 +1,5 @@
 import type { DiscordService } from "@packages/core/discord";
-import type { AppEnv } from "@packages/core/types";
+import type { AppEnv } from "@packages/core/enums";
 import type { CreateEmailResponseSuccess, ErrorResponse } from "resend";
 import { Resend } from "resend";
 import type { MailData } from "./email-dto";

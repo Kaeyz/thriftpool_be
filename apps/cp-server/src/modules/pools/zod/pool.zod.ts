@@ -13,6 +13,13 @@ export const PoolPaymentModeSchema = z.enum(["direct_payment", "via_pool_account
 export const PoolAccountTypeSchema = z.enum(["bank_account"]);
 export const PoolMemberRoleSchema = z.enum(["owner", "admin", "member"]);
 
+export const DeadLineUnitSchema = z.enum(["day", "week"]);
+
+export const PaymentDeadlineSchema = z.object({
+  value: z.number(),
+  unit: DeadLineUnitSchema,
+});
+
 export const PoolAccountInfoSchema = z.object({
   accountType: PoolAccountTypeSchema,
   bankAccount: IPBankAccountSchema,
@@ -33,6 +40,7 @@ export const PoolSchema = z.object({
   paymentInterval: PoolPaymentIntervalSchema,
   noOfSlots: z.number(),
   paymentMode: PoolPaymentModeSchema,
+  paymentDeadline: PaymentDeadlineSchema,
   poolAccountInfo: PoolAccountInfoSchema,
   poolMembers: z.array(PoolMemberSchema),
   status: PoolStatusSchema,
@@ -48,7 +56,7 @@ export const ISPoolSchema = PoolSchema.omit({ updatedAt: true });
 export const PoolInputSchema = z
   .object({
     name: FieldSchemas.nameSchema("name"),
-    description: FieldSchemas.nameSchema("description"),
+    description: FieldSchemas.textSchema("description"),
     amount: FieldSchemas.numberSchema("amount"),
     currencyCode: CurrencyCodeSchema,
     paymentInterval: FieldSchemas.enumSelectSchema("paymentInterval", PoolPaymentIntervalSchema),

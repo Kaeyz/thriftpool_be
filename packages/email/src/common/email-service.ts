@@ -1,4 +1,4 @@
-import type { Platform } from "@packages/core/types";
+import type { Platform } from "@packages/core/enums";
 import { createElement } from "react";
 import { render } from "react-email";
 import { emailConfigs } from "../config";

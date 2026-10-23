@@ -19,7 +19,7 @@ export const SlotCycleStateSchema = z.object({
   endDate: z.number(),
 });
 
-export const PoolSlotAccountTypeSchema = z.enum(["bank_account"]);
+export const PoolSlotAccountTypeSchema = z.enum(["bank_account", "pool_account"]);
 export const PoolSlotPaymentInfoSchema = z.object({
   slotAccountType: PoolSlotAccountTypeSchema,
   bankAccount: IPBankAccountSchema,

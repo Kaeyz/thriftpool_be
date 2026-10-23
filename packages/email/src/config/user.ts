@@ -1,4 +1,4 @@
-import VerifyAccount from "../templates/community/users/verify-account";
+import VerifyAccount from "../templates/cp/users/verify-account";
 
 export const userEmailConfig = {
   verifyAccount: {

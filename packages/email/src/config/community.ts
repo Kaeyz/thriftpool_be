@@ -1,4 +1,4 @@
-import MemberInvite from "../templates/community/community/members-invite";
+import MemberInvite from "../templates/cp/community/members-invite";
 
 export const communityEmailConfig = {
   MembersInvite: {

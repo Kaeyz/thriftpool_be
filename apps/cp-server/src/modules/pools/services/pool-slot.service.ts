@@ -54,4 +54,9 @@ export class PoolSlotService {
 
     return { data: PoolUtils.sanitizePoolSlot(poolSlot), message: resp.pool_slot_updated };
   }
+
+  // User Accept Slot
+  // User Reject Slot
+
+  // Admin revoke slot
 }
