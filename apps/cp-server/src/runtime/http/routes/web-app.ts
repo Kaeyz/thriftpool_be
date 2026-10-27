@@ -7,6 +7,7 @@ import { webAppBankAccountRouter } from "@/modules/bank-accounts/api/bank-accoun
 import { webAppCommunityRouter } from "@/modules/communities/api/community.routes";
 import { webAppCommunityInviteRouter } from "@/modules/community-invites/api/community-invite.routes";
 import { webAppCommunityMemberRouter } from "@/modules/community-members/api/community-member.routes";
+import { webAppPoolSlotRouter } from "@/modules/pools/api/pool-slot.routes";
 import { webAppPoolRouter } from "@/modules/pools/api/pool.routes";
 import { webAppUserRouter } from "@/modules/users/api/user.routes";
 import { webAppUtilsRouter } from "@/modules/utils/api/utils.routes";
@@ -31,6 +32,7 @@ export const setupWebAppRoutes = (router: Router) => {
   router = webAppCommunityInviteRouter(rootPath, router);
   router = webAppCommunityMemberRouter(rootPath, router);
   router = webAppPoolRouter(rootPath, router);
+  router = webAppPoolSlotRouter(rootPath, router);
   router = webAppUtilsRouter(rootPath, router);
 
   router = setupDocs(router, options);

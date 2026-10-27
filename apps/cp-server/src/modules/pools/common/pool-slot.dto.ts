@@ -9,6 +9,7 @@ import type {
   SlotCycleStateSchema,
   PoolSlotPaymentInfoSchema,
   PoolSlotOwnerStatusSchema,
+  PoolSlotPaymentInputSchema,
 } from "../zod/pool-slot.zod";
 
 export type ISPoolSlot = z.infer<typeof ISPoolSlotSchema>;
@@ -22,7 +23,7 @@ export type PoolSlotPaymentInfo = z.infer<typeof PoolSlotPaymentInfoSchema>;
 
 export type GetPoolSlotQuery = z.infer<typeof PoolSlotQueryInputSchema>;
 export type PoolSlotInput = z.infer<typeof PoolSlotInputSchema>;
-
+export type PoolSlotPaymentInput = z.infer<typeof PoolSlotPaymentInputSchema>;
 export type ValidatePoolSlotOptions = {
   notFound?: true;
 };

@@ -7,6 +7,8 @@ import { ISCommunityMemberSchema } from "@/modules/community-members/zod/communi
 
 export const SlotMemberSchema = ISCommunityMemberSchema.pick({ id: true, user: true, role: true });
 export const PoolSlotOwnerStatusSchema = z.enum(["draft", "pending", "approved", "rejected"]);
+export const PoolSlotAccountTypeSchema = z.enum(["bank_account"]);
+
 export const PoolSlotOwnerSchema = z.object({
   member: SlotMemberSchema,
   status: PoolSlotOwnerStatusSchema,
@@ -19,7 +21,6 @@ export const SlotCycleStateSchema = z.object({
   endDate: z.number(),
 });
 
-export const PoolSlotAccountTypeSchema = z.enum(["bank_account", "pool_account"]);
 export const PoolSlotPaymentInfoSchema = z.object({
   slotAccountType: PoolSlotAccountTypeSchema,
   bankAccount: IPBankAccountSchema,
@@ -40,8 +41,23 @@ export const IPPoolSlotSchema = PoolSlotSchema.pick({ id: true, position: true, 
 export const ISPoolSlotSchema = PoolSlotSchema.omit({ updatedAt: true });
 
 export const PoolSlotInputSchema = z.object({
-  memberId: FieldSchemas.nameSchema("name"),
+  memberId: FieldSchemas.dbIdSchema("memberId"),
   position: FieldSchemas.numberSchema("position"),
+  slotAccountType: PoolSlotAccountTypeSchema.optional(),
+  bankAccountId: FieldSchemas.dbIdSchema("bankAccountId").optional(),
+});
+
+export const PoolSlotPaymentInputSchema = z.object({
+  slotAccountType: PoolSlotAccountTypeSchema,
+  bankAccountId: FieldSchemas.dbIdSchema("bankAccountId"),
+});
+
+export const PoolIdParamsSchema = z.object({
+  poolId: FieldSchemas.dbIdSchema("poolId"),
+});
+
+export const PoolSlotIdParamsSchema = z.object({
+  id: FieldSchemas.dbIdSchema("poolSlotId"),
 });
 
 export const PoolSlotQueryResponse = z.object({
@@ -58,4 +74,8 @@ export const PoolSlotQueryInputSchema = z.object({
   poolId: FieldSchemas.dbIdSchema("poolId").optional(),
   sortKey: FieldSchemas.enumSelectSchema("sortKey", PoolSlotSortKeySchema).optional(),
   sortDir: FieldSchemas.enumSelectSchema("sortDir", SortDirectionSchema).optional(),
+});
+
+export const PoolSlotsQueryInputSchema = PoolSlotQueryInputSchema.extend({
+  poolId: FieldSchemas.dbIdSchema("poolId"),
 });

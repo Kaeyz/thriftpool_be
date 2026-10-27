@@ -4,7 +4,13 @@ import * as z from "zod";
 import { ISCommunitySchema } from "@/modules/communities/zod/community.zod";
 import { ISUserSchema } from "@/modules/users/zod/user.zod";
 
-export const UserInCommunityMemberSchema = ISUserSchema.pick({ id: true, firstName: true, lastName: true });
+export const UserInCommunityMemberSchema = ISUserSchema.pick({
+  id: true,
+  firstName: true,
+  lastName: true,
+  email: true,
+  profilePhoto: true,
+});
 export const CommunityInCommunityMemberSchema = ISCommunitySchema.pick({ id: true, name: true, key: true, logo: true });
 
 export const CommunityMemberStatusSchema = z.enum(["active", "suspended", "rejected", "removed", "left"]);

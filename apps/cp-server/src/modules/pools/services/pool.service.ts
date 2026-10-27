@@ -2,7 +2,6 @@ import type { CurrencyCode } from "@packages/core/enums";
 import { AppError, StatusCodes } from "@packages/core/res-config";
 import type { GetPoolQuery, PoolAccountType, PoolInput, ValidatePoolOptions } from "../common/pool.dto";
 import * as resp from "../common/pool.res";
-import { PoolSlotRepo } from "../db/repo/pool-slot.repo";
 import { PoolRepo } from "../db/repo/pool.repo";
 import type { IPoolInput } from "../db/types/pool.types";
 import { PoolUtils } from "./pool.utils";

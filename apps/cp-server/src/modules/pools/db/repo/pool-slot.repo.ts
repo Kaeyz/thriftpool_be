@@ -41,8 +41,9 @@ export class PoolSlotRepo {
     return { data, count, page, limit };
   }
 
-  static update(ctx: Ctx, id: string, data: IPoolSlotInput): Promise<PoolSlotDoc | null> {
-    return PoolSlot.findByIdAndUpdate(id, data, { new: true, session: ctx?.session });
+  static update(ctx: Ctx, id: string, data: IPoolSlotInput, unsetPaymentInfo = false): Promise<PoolSlotDoc | null> {
+    const update = unsetPaymentInfo ? { $set: data, $unset: { paymentInfo: 1 } } : data;
+    return PoolSlot.findByIdAndUpdate(id, update, { new: true, session: ctx?.session });
   }
 
   static delete(ctx: Ctx, id: string): Promise<PoolSlotDoc | null> {
