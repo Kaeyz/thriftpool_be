@@ -61,6 +61,7 @@ export const PoolInputSchema = z
     currencyCode: CurrencyCodeSchema,
     paymentInterval: FieldSchemas.enumSelectSchema("paymentInterval", PoolPaymentIntervalSchema),
     paymentMode: FieldSchemas.enumSelectSchema("paymentMode", PoolPaymentModeSchema),
+    paymentDeadline: PaymentDeadlineSchema,
     poolAccountType: FieldSchemas.enumSelectSchema("poolAccountType", PoolAccountTypeSchema).optional(),
     poolBankAccountId: FieldSchemas.dbIdSchema("poolBankAccountId").optional(),
     noOfSlot: FieldSchemas.numberSchema("noOfSlot"),

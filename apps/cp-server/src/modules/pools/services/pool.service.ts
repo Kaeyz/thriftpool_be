@@ -23,6 +23,7 @@ export class PoolService {
       paymentMode: newPool.paymentMode,
       poolMembers: [{ member: memberId, role: "owner" }],
       status: "initiated",
+      paymentDeadline: newPool.paymentDeadline,
     };
     if (newPool.paymentMode === "via_pool_account") {
       poolInput.poolAccountInfo = {

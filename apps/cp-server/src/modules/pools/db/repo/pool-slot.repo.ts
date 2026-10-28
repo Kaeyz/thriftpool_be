@@ -19,6 +19,12 @@ export class PoolSlotRepo {
     return PoolSlot.findOne({ pool: poolId, position }, {}, { session: ctx?.session });
   }
 
+  static hasOtherSlotsForMember(ctx: Ctx, poolId: string, memberId: string, excludedSlotId: string): Promise<boolean> {
+    return PoolSlot.exists({ pool: poolId, _id: { $ne: excludedSlotId }, "slotOwner.member": memberId })
+      .session(ctx?.session ?? null)
+      .then(Boolean);
+  }
+
   static async getAll(ctx: Ctx, query: GetPoolSlotQuery) {
     const { sortKey, sortDir, poolId } = query;
 

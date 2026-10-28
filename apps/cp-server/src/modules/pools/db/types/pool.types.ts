@@ -1,7 +1,14 @@
 import type { CurrencyCode } from "@packages/core/enums";
 import type { Document } from "mongoose";
 import type { z } from "zod";
-import type { PoolAccountType, PoolMemberRole, PoolPaymentInterval, PoolPaymentMode, PoolStatus } from "../../common/pool.dto";
+import type {
+  DeadLineUnit,
+  PoolAccountType,
+  PoolMemberRole,
+  PoolPaymentInterval,
+  PoolPaymentMode,
+  PoolStatus,
+} from "../../common/pool.dto";
 import type { PoolSchema } from "../../zod/pool.zod";
 
 export type IPool = {
@@ -21,6 +28,10 @@ export type IPool = {
     member: string;
     role: PoolMemberRole;
   }[];
+  paymentDeadline: {
+    value: number;
+    unit: DeadLineUnit;
+  };
   status: PoolStatus;
   startDate: number;
   endDate: number;

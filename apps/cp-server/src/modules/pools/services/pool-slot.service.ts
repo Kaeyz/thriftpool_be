@@ -32,6 +32,15 @@ export class PoolSlotService {
     });
   }
 
+  private static async addPoolMemberIfMissing(ctx: Ctx, poolId: string, memberId: string) {
+    await PoolRepo.addMemberIfMissing(ctx, poolId, memberId);
+  }
+
+  private static async removePoolMemberIfUnused(ctx: Ctx, poolId: string, memberId: string, excludedSlotId: string) {
+    const hasOtherSlots = await PoolSlotRepo.hasOtherSlotsForMember(ctx, poolId, memberId, excludedSlotId);
+    if (!hasOtherSlots) await PoolRepo.removeMember(ctx, poolId, memberId);
+  }
+
   static async addNewSlot(ctx: Ctx, poolId: string, newSlot: PoolSlotInput) {
     const pool = await PoolRepo.getById(ctx, poolId);
     PoolUtils.validatePool(pool, { notFound: true, status: "initiated" });
@@ -89,6 +98,7 @@ export class PoolSlotService {
   static async updatePoolSlotMember(ctx: Ctx, poolSlotId: string, slotData: PoolSlotInput) {
     let poolSlot = await PoolSlotRepo.getById(ctx, poolSlotId);
     if (!poolSlot) throw new AppError(StatusCodes.NOT_FOUND, resp.pool_slot_not_found);
+    const previousMemberId = poolSlot.slotOwner?.member?.id;
 
     const poolId = PoolUtils.validatePoolIdFromSlot(poolSlot);
     const pool = await PoolRepo.getById(ctx, poolId);
@@ -127,6 +137,10 @@ export class PoolSlotService {
       !paymentInfo
     );
     if (!poolSlot) throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_slot_not_updated);
+
+    if (previousMemberId && previousMemberId !== slotData.memberId) {
+      await PoolSlotService.removePoolMemberIfUnused(ctx, poolId, previousMemberId, poolSlotId);
+    }
 
     return { data: PoolUtils.sanitizePoolSlot(poolSlot), message: resp.pool_slot_updated };
   }
@@ -187,6 +201,8 @@ export class PoolSlotService {
     });
     if (!poolSlot) throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_slot_not_updated);
 
+    await PoolSlotService.addPoolMemberIfMissing(ctx, poolId, poolSlot.slotOwner.member.id);
+
     await PoolSlotService.notifyPoolOwners(
       ctx,
       pool,
@@ -217,6 +233,8 @@ export class PoolSlotService {
     });
     if (!poolSlot) throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_slot_not_updated);
 
+    await PoolSlotService.removePoolMemberIfUnused(ctx, poolId, poolSlot.slotOwner.member.id, poolSlotId);
+
     const slotOwnerName = `${poolSlot.slotOwner.member.user.firstName} ${poolSlot.slotOwner.member.user.lastName}`.trim();
     await PoolSlotService.notifyPoolOwners(ctx, pool, slotOwnerName, "rejected");
 
@@ -236,6 +254,8 @@ export class PoolSlotService {
       slotOwner: { member: poolSlot.slotOwner.member.id, status: "rejected" },
     });
     if (!poolSlot) throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_slot_not_updated);
+
+    await PoolSlotService.removePoolMemberIfUnused(ctx, poolId, poolSlot.slotOwner.member.id, poolSlotId);
 
     const recipientEmail = poolSlot.slotOwner?.member?.user?.email?.address;
     if (recipientEmail) {

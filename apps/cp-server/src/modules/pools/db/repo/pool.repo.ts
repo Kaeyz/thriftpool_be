@@ -52,6 +52,22 @@ export class PoolRepo {
     return Pool.findByIdAndUpdate(id, data, { new: true, session: ctx?.session });
   }
 
+  static addMemberIfMissing(ctx: Ctx, id: string, memberId: string): Promise<PoolDoc | null> {
+    return Pool.findOneAndUpdate(
+      { _id: id, "poolMembers.member": { $ne: memberId } },
+      { $push: { poolMembers: { member: memberId, role: "member" } } },
+      { new: true, session: ctx?.session }
+    );
+  }
+
+  static removeMember(ctx: Ctx, id: string, memberId: string): Promise<PoolDoc | null> {
+    return Pool.findByIdAndUpdate(
+      id,
+      { $pull: { poolMembers: { member: memberId, role: "member" } } },
+      { new: true, session: ctx?.session }
+    );
+  }
+
   static delete(ctx: Ctx, id: string): Promise<PoolDoc | null> {
     return Pool.findByIdAndDelete(id, { new: true, session: ctx?.session });
   }

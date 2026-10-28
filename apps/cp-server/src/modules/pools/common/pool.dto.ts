@@ -10,6 +10,7 @@ import type {
   PoolPaymentModeSchema,
   PoolAccountTypeSchema,
   PoolMemberRoleSchema,
+  DeadLineUnitSchema,
 } from "../zod/pool.zod";
 
 export type ISPool = z.infer<typeof ISPoolSchema>;
@@ -21,6 +22,7 @@ export type PoolPaymentInterval = z.infer<typeof PoolPaymentIntervalSchema>;
 export type PoolPaymentMode = z.infer<typeof PoolPaymentModeSchema>;
 export type PoolAccountType = z.infer<typeof PoolAccountTypeSchema>;
 export type PoolMemberRole = z.infer<typeof PoolMemberRoleSchema>;
+export type DeadLineUnit = z.infer<typeof DeadLineUnitSchema>;
 
 export type GetPoolQuery = z.infer<typeof PoolQueryInputSchema>;
 export type PoolInput = z.infer<typeof PoolInputSchema>;

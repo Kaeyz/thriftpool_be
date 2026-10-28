@@ -3,6 +3,7 @@ import { addVirtualId, parseSelectFromSchema, transform } from "@packages/core/d
 import type { Model, Query } from "mongoose";
 import { Schema, models, model } from "mongoose";
 import {
+  DeadLineUnitSchema,
   MemberInPoolSchema,
   PoolAccountTypeSchema,
   PoolCommunitySchema,
@@ -28,6 +29,10 @@ const PoolSchema: Schema = new Schema(
     poolAccountInfo: {
       accountType: { type: String, enum: PoolAccountTypeSchema.options },
       bankAccount: { type: Schema.Types.ObjectId, ref: BANK_ACCOUNTS },
+    },
+    paymentDeadline: {
+      value: Number,
+      unit: { type: String, enum: DeadLineUnitSchema.options },
     },
     status: { type: String, enum: PoolStatusSchema.options },
     poolMembers: [
