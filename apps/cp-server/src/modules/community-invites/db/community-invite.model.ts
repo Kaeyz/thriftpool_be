@@ -1,4 +1,4 @@
-import { addVirtualId, parseSelectFromSchema, transform } from "@packages/core/database";
+import { addVirtualId, isPathSelected, parseSelectFromSchema, transform } from "@packages/core/database";
 import type { Model, Query } from "mongoose";
 import { Schema, models, model } from "mongoose";
 import {
@@ -25,8 +25,14 @@ const CommunityInviteSchema: Schema = new Schema(
 addVirtualId(CommunityInviteSchema);
 
 const autoPopulate = function (this: Query<unknown, unknown>, next: () => void) {
-  this.populate([{ transform, path: "user", select: parseSelectFromSchema(UserInCommunityInviteSchema) }]);
-  this.populate([{ transform, path: "community", select: parseSelectFromSchema(CommunityInCommunityInviteSchema) }]);
+  const projection = this.projection();
+
+  if (isPathSelected(projection, "user")) {
+    this.populate([{ transform, path: "user", select: parseSelectFromSchema(UserInCommunityInviteSchema) }]);
+  }
+  if (isPathSelected(projection, "community")) {
+    this.populate([{ transform, path: "community", select: parseSelectFromSchema(CommunityInCommunityInviteSchema) }]);
+  }
   next();
 };
 

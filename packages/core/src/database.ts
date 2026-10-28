@@ -10,7 +10,9 @@ export const transform = (v: Record<string, unknown>) => {
   return v;
 };
 
-export const addVirtualId = (schema: Schema) => {
+type SerializationHook = (_doc: Document, ret: Record<string, unknown>) => void;
+
+export const addVirtualId = (schema: Schema, serialize?: SerializationHook) => {
   schema.virtual("id").get(function (this: { _id: Types.ObjectId }) {
     return this._id.toString();
   });
@@ -19,6 +21,8 @@ export const addVirtualId = (schema: Schema) => {
     ret.id = ret._id?.toString();
     delete ret._id;
     delete ret.__v;
+
+    serialize?.(_doc, ret);
     return ret;
   };
 
@@ -34,6 +38,22 @@ export const parseSelectFromSchema = <T extends z.ZodRawShape>(schema: z.ZodObje
   }
 
   return projection;
+};
+
+export const isPathSelected = (projection: object | null | undefined, path: string) => {
+  if (!projection) return true;
+
+  const entries = Object.entries(projection);
+  const isInclusive = entries.some(([key, selected]) => key !== "_id" && selected === 1);
+
+  if (isInclusive) {
+    return entries.some(
+      ([key, selected]) => selected === 1 && (key === path || key.startsWith(`${path}.`) || path.startsWith(`${key}.`))
+    );
+  }
+
+  const excludedPath = entries.find(([key]) => key === path || path.startsWith(`${key}.`));
+  return excludedPath?.[1] !== 0;
 };
 
 export const createSubDocument = <T>(schema: FieldDefinition<T>): Schema<T> => {

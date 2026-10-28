@@ -1,4 +1,4 @@
-import { addVirtualId, parseSelectFromSchema, transform } from "@packages/core/database";
+import { addVirtualId, isPathSelected, parseSelectFromSchema, transform } from "@packages/core/database";
 import type { Model, Query } from "mongoose";
 import { Schema, models, model } from "mongoose";
 import {
@@ -39,9 +39,17 @@ const PoolSlotSchema: Schema = new Schema(
 addVirtualId(PoolSlotSchema);
 
 const autoPopulate = function (this: Query<unknown, unknown>, next: () => void) {
-  this.populate([{ transform, path: "pool", select: parseSelectFromSchema(IPPoolSchema) }]);
-  this.populate([{ transform, path: "slotOwner.member", select: parseSelectFromSchema(SlotMemberSchema) }]);
-  this.populate([{ transform, path: "paymentInfo.bankAccount", select: parseSelectFromSchema(IPBankAccountSchema) }]);
+  const projection = this.projection();
+
+  if (isPathSelected(projection, "pool")) {
+    this.populate([{ transform, path: "pool", select: parseSelectFromSchema(IPPoolSchema) }]);
+  }
+  if (isPathSelected(projection, "slotOwner")) {
+    this.populate([{ transform, path: "slotOwner.member", select: parseSelectFromSchema(SlotMemberSchema) }]);
+  }
+  if (isPathSelected(projection, "paymentInfo")) {
+    this.populate([{ transform, path: "paymentInfo.bankAccount", select: parseSelectFromSchema(IPBankAccountSchema) }]);
+  }
   next();
 };
 

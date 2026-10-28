@@ -1,6 +1,6 @@
 import { addVirtualId } from "@packages/core/database";
 import type { Model } from "mongoose";
-import { Schema, models, model } from "mongoose";
+import { Schema, models, model, Types } from "mongoose";
 import type { IBankAccount } from "./bank-account.types";
 import { BANK_ACCOUNTS, USERS } from "@/lib/definitions";
 
@@ -16,7 +16,11 @@ const BankAccountSchema: Schema = new Schema(
   }
 );
 
-addVirtualId(BankAccountSchema);
+addVirtualId(BankAccountSchema, (_doc, ret) => {
+  if (ret.user instanceof Types.ObjectId) {
+    ret.user = ret.user.toString();
+  }
+});
 
 BankAccountSchema.index({ "accountDetail.accountNumber": "text" });
 BankAccountSchema.index({ "accountDetail.accountNumber": 1 });

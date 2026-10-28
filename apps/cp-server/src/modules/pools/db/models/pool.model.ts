@@ -1,5 +1,5 @@
 import { currencyCodes } from "@packages/core/currencies";
-import { addVirtualId, parseSelectFromSchema, transform } from "@packages/core/database";
+import { addVirtualId, isPathSelected, parseSelectFromSchema, transform } from "@packages/core/database";
 import type { Model, Query } from "mongoose";
 import { Schema, models, model } from "mongoose";
 import {
@@ -58,9 +58,17 @@ PoolSchema.index({ name: 1 });
 PoolSchema.index({ description: 1 });
 
 const autoPopulate = function (this: Query<unknown, unknown>, next: () => void) {
-  this.populate([{ transform, path: "community", select: parseSelectFromSchema(PoolCommunitySchema) }]);
-  this.populate([{ transform, path: "poolMembers.member", select: parseSelectFromSchema(MemberInPoolSchema) }]);
-  this.populate([{ transform, path: "poolAccountInfo.bankAccount", select: parseSelectFromSchema(IPBankAccountSchema) }]);
+  const projection = this.projection();
+
+  if (isPathSelected(projection, "community")) {
+    this.populate([{ transform, path: "community", select: parseSelectFromSchema(PoolCommunitySchema) }]);
+  }
+  if (isPathSelected(projection, "poolMembers")) {
+    this.populate([{ transform, path: "poolMembers.member", select: parseSelectFromSchema(MemberInPoolSchema) }]);
+  }
+  if (isPathSelected(projection, "poolAccountInfo")) {
+    this.populate([{ transform, path: "poolAccountInfo.bankAccount", select: parseSelectFromSchema(IPBankAccountSchema) }]);
+  }
   next();
 };
 
