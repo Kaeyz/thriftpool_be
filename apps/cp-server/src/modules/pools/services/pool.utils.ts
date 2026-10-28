@@ -9,15 +9,11 @@ import type { Ctx } from "@/lib/ctx/ctx.types";
 export class PoolUtils {
   static isCurrentUserPoolOwner(ctx: Ctx, pool: PoolDoc | null): boolean {
     if (!pool || !ctx.communityMember?.id) return false;
-    return pool.poolMembers.some(
-      (poolMember) => poolMember.role === "owner" && poolMember.member.id === ctx.communityMember?.id
-    );
+    return pool.poolMembers.some((poolMember) => poolMember.role === "owner" && poolMember.member.id === ctx.communityMember?.id);
   }
 
   static isPoolOwner(pool: PoolDoc, memberId: string): boolean {
-    return pool.poolMembers.some(
-      (poolMember) => poolMember.role === "owner" && poolMember.member.id === memberId
-    );
+    return pool.poolMembers.some((poolMember) => poolMember.role === "owner" && poolMember.member.id === memberId);
   }
 
   static validatePoolIdFromSlot(poolSlot: PoolSlotDoc | null): string {

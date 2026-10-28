@@ -1,11 +1,6 @@
 import { HttpResponseSchema } from "@packages/core/validation";
 import * as z from "zod";
-import {
-  ISPoolSlotSchema,
-  PoolSlotInputSchema,
-  PoolSlotPaymentInputSchema,
-  PoolSlotQueryResponse,
-} from "../zod/pool-slot.zod";
+import { ISPoolSlotSchema, PoolSlotInputSchema, PoolSlotPaymentInputSchema, PoolSlotQueryResponse } from "../zod/pool-slot.zod";
 import { ISPoolSchema, PoolInputSchema, PoolQueryResponse } from "../zod/pool.zod";
 
 export const WebAppPoolSchemas = {
