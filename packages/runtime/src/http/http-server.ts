@@ -1,8 +1,18 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import type { Application } from "express";
+import type { Application, NextFunction, Request, Response } from "express";
 import express, { json, urlencoded } from "express";
 import helmet from "helmet";
+
+const makeQueryWritable = (req: Request, _res: Response, next: NextFunction) => {
+  Object.defineProperty(req, "query", {
+    configurable: true,
+    enumerable: true,
+    value: req.query,
+    writable: true,
+  });
+  next();
+};
 
 type CorsConfig = {
   allowedOrigins: string[];
@@ -34,6 +44,7 @@ export const createHttpServer = async (config: ServerConfig): Promise<Applicatio
 
   const app = express();
 
+  app.use(makeQueryWritable);
   app.use(cookieParser());
   app.use(helmet());
   app.use(json());
