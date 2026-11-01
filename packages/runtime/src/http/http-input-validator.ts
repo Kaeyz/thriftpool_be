@@ -12,6 +12,7 @@ type TypedRequest<TSource extends Source, TSchema extends z.ZodSchema<unknown>> 
 const getErrorResponse = (source: Source) => {
   if (source === "body") return "Invalid Request Body";
   if (source === "query") return "Invalid Request Query";
+  if (source === "params") return "Invalid Request Params";
   return "Invalid Input";
 };
 
