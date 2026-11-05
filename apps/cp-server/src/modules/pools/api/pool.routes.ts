@@ -1,8 +1,8 @@
 import { catchHttpError, validateHttpInput } from "@packages/runtime/http";
 import type { Router } from "express";
-import { PoolInputSchema } from "../zod/pool.zod";
+import { PoolInputSchema, PoolParamsSchema } from "../zod/pool.zod";
 import { PoolController } from "./pool.controller";
-import { allCommunityAdmin, allCommunityMembers } from "@/lib/definitions/roles";
+import { allCommunityAdmin, allCommunityMembers, communityOwner } from "@/lib/definitions/roles";
 import { useApiCtx } from "@/runtime/http/config/http-context";
 
 export const webAppPoolRouter = (rootPath: string, router: Router) => {
@@ -17,6 +17,17 @@ export const webAppPoolRouter = (rootPath: string, router: Router) => {
     }),
     validateHttpInput(PoolInputSchema, "body"),
     catchHttpError(PoolController.updatePool)
+  );
+
+  router.delete(
+    `${baseRoute}/:id`,
+    useApiCtx({
+      authenticate: true,
+      requireCommunity: true,
+      roleConfig: { community: allCommunityAdmin },
+    }),
+    validateHttpInput(PoolParamsSchema, "params"),
+    catchHttpError(PoolController.deletePool)
   );
 
   router.get(
@@ -34,7 +45,7 @@ export const webAppPoolRouter = (rootPath: string, router: Router) => {
     useApiCtx({
       authenticate: true,
       requireCommunity: true,
-      roleConfig: { community: allCommunityAdmin },
+      roleConfig: { community: communityOwner },
     }),
     validateHttpInput(PoolInputSchema, "body"),
     catchHttpError(PoolController.createPool)

@@ -74,4 +74,14 @@ export class PoolService {
     if (!pool) throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_not_updated);
     return { data: PoolUtils.sanitizePool(pool), message: resp.pool_updated };
   }
+
+  static async deletePool(ctx: Ctx, id: string) {
+    const communityId = ctx?.community?.id || "";
+    const pool = await PoolRepo.getByIdInCommunity(ctx, id, communityId);
+    PoolUtils.validatePool(pool, { status: "initiated" });
+
+    const deleted = await PoolRepo.delete(ctx, id, communityId);
+    if (!deleted) throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_not_deleted);
+    return { message: resp.pool_deleted };
+  }
 }

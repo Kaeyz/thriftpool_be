@@ -87,6 +87,10 @@ export const PoolInputSchema = z
     }
   );
 
+export const PoolParamsSchema = z.object({
+  id: FieldSchemas.dbIdSchema("poolId"),
+});
+
 export const PoolQueryResponse = z.object({
   data: z.array(IPPoolSchema),
   count: z.int(),

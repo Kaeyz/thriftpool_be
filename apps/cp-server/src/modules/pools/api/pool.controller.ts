@@ -34,4 +34,9 @@ export class PoolController {
     const serviceResponse = await PoolService.updatePool(req.ctx, poolId, req.body);
     return getApiSuccessResponse(res, serviceResponse);
   }
+
+  static async deletePool(req: Request, res: Response) {
+    const serviceResponse = await PoolService.deletePool(req.ctx, req.params.id as string);
+    return getApiSuccessResponse(res, serviceResponse);
+  }
 }

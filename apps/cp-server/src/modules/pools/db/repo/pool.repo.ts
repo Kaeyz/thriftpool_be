@@ -15,6 +15,10 @@ export class PoolRepo {
     return Pool.findById(id, {}, { session: ctx?.session });
   }
 
+  static getByIdInCommunity(ctx: Ctx, id: string, communityId: string): Promise<PoolDoc | null> {
+    return Pool.findOne({ _id: id, community: communityId }, {}, { session: ctx?.session });
+  }
+
   static async getAll(ctx: Ctx, query: GetPoolQuery) {
     const { search, sortKey, sortDir, paymentInterval, paymentMode, status, memberId } = query;
 
@@ -68,7 +72,7 @@ export class PoolRepo {
     );
   }
 
-  static delete(ctx: Ctx, id: string): Promise<PoolDoc | null> {
-    return Pool.findByIdAndDelete(id, { new: true, session: ctx?.session });
+  static delete(ctx: Ctx, id: string, communityId: string): Promise<PoolDoc | null> {
+    return Pool.findOneAndDelete({ _id: id, community: communityId, status: "initiated" }, { new: true, session: ctx?.session });
   }
 }

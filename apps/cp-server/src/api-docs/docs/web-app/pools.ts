@@ -66,6 +66,20 @@
  *             schema:
  *               type: object
  *               $ref: '#/components/schemas/Pool'
+ *   delete:
+ *     summary: Delete an initiated pool
+ *     tags: [Pools]
+ *     security:
+ *       - AuthToken: []
+ *       - CommunityKey: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         type: string
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Success
  */
 
 /**
