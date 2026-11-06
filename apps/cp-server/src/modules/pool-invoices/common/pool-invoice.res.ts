@@ -1,0 +1,13 @@
+export const POOL_INVOICE_CREATED = "Pool invoice created";
+export const POOL_INVOICE_UPDATED = "Pool invoice updated";
+export const POOL_INVOICE_DELETED = "Pool invoice deleted";
+export const POOL_INVOICE_NOT_FOUND = "Pool invoice not found";
+export const POOL_INVOICE_NOT_UPDATED = "Pool invoice not updated";
+export const POOL_INVOICE_NOT_DELETED = "Pool invoice not deleted";
+export const POOL_SLOT_NOT_FOUND = "Pool slot not found";
+export const POOL_SLOT_NOT_ACTIVE = "An invoice can only be generated when the pool slot is active";
+export const POOL_SLOT_ACCOUNT_NOT_FOUND = "Pool slot payment account not found";
+export const POOL_NOT_FOUND = "Pool not found";
+export const POOL_OWNER_NOT_FOUND = "Pool owner not found";
+export const POOL_ACCOUNT_NOT_FOUND = "Pool account not found";
+export const POOL_SLOT_POOL_MISMATCH = "Pool slot does not belong to the specified pool";

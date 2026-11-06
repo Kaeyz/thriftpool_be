@@ -1,5 +1,5 @@
 import { FieldSchemas } from "@packages/core/field-schema";
-import { PageInputSchema, LimitInputSchema, SortDirectionSchema } from "@packages/core/zod-schemas";
+import { PageInputSchema, LimitInputSchema, SortDirectionSchema, AccountTypeSchema } from "@packages/core/zod-schemas";
 import * as z from "zod";
 import { IPPoolSchema } from "./pool.zod";
 import { IPBankAccountSchema } from "@/modules/bank-accounts/zod/bank-account.zod";
@@ -7,7 +7,6 @@ import { ISCommunityMemberSchema } from "@/modules/community-members/zod/communi
 
 export const SlotMemberSchema = ISCommunityMemberSchema.pick({ id: true, user: true, role: true });
 export const PoolSlotOwnerStatusSchema = z.enum(["draft", "pending", "approved", "rejected"]);
-export const PoolSlotAccountTypeSchema = z.enum(["bank_account"]);
 
 export const PoolSlotOwnerSchema = z.object({
   member: SlotMemberSchema,
@@ -22,7 +21,7 @@ export const SlotCycleStateSchema = z.object({
 });
 
 export const PoolSlotPaymentInfoSchema = z.object({
-  slotAccountType: PoolSlotAccountTypeSchema,
+  accountType: AccountTypeSchema,
   bankAccount: IPBankAccountSchema,
 });
 
@@ -43,12 +42,12 @@ export const ISPoolSlotSchema = PoolSlotSchema.omit({ updatedAt: true });
 export const PoolSlotInputSchema = z.object({
   memberId: FieldSchemas.dbIdSchema("memberId"),
   position: FieldSchemas.numberSchema("position"),
-  slotAccountType: PoolSlotAccountTypeSchema.optional(),
+  accountType: AccountTypeSchema.optional(),
   bankAccountId: FieldSchemas.dbIdSchema("bankAccountId").optional(),
 });
 
 export const PoolSlotPaymentInputSchema = z.object({
-  slotAccountType: PoolSlotAccountTypeSchema,
+  accountType: AccountTypeSchema,
   bankAccountId: FieldSchemas.dbIdSchema("bankAccountId"),
 });
 

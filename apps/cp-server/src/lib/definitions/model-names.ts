@@ -1,8 +1,11 @@
 export const BANK_ACCOUNTS = "bank_accounts";
+export const BANK_ACCOUNT_HISTORIES = "bank_account_histories";
 export const COMMUNITIES = "communities";
 export const COMMUNITY_MEMBERS = "community_members";
 export const COMMUNITY_INVITES = "community_invites";
+export const POOL_INVOICES = "pool_invoices";
 export const POOLS = "pools";
 export const POOL_SLOTS = "pool_slots";
 export const ROLES = "roles";
+export const TRANSACTIONS = "transactions";
 export const USERS = "users";

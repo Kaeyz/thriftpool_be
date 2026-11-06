@@ -1,3 +1,4 @@
+import type { AccountType } from "@packages/core/enums";
 import { AppError, StatusCodes } from "@packages/core/res-config";
 import type { GetPoolSlotQuery, PoolSlotInput, PoolSlotPaymentInput, ValidatePoolSlotOptions } from "../common/pool-slot.dto";
 import * as resp from "../common/pool.res";
@@ -56,10 +57,10 @@ export class PoolSlotService {
       isActive: true,
     });
     const isSlotOwner = PoolUtils.isPoolOwner(pool, newSlot.memberId);
-    let paymentInfo: { slotAccountType: "bank_account"; bankAccount: string } | undefined;
+    let paymentInfo: { accountType: AccountType; bankAccount: string } | undefined;
 
     if (isSlotOwner) {
-      if (!newSlot.slotAccountType || !newSlot.bankAccountId) {
+      if (!newSlot.accountType || !newSlot.bankAccountId) {
         throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_slot_account_required);
       }
 
@@ -68,7 +69,7 @@ export class PoolSlotService {
         throw new AppError(StatusCodes.BAD_REQUEST, resp.slot_bank_account_invalid);
       }
 
-      paymentInfo = { slotAccountType: newSlot.slotAccountType, bankAccount: newSlot.bankAccountId };
+      paymentInfo = { accountType: newSlot.accountType, bankAccount: newSlot.bankAccountId };
     }
 
     const slot = await PoolSlotRepo.create(ctx, {
@@ -112,10 +113,10 @@ export class PoolSlotService {
       isActive: true,
     });
     const isSlotOwner = PoolUtils.isPoolOwner(pool, slotData.memberId);
-    let paymentInfo: { slotAccountType: "bank_account"; bankAccount: string } | undefined;
+    let paymentInfo: { accountType: AccountType; bankAccount: string } | undefined;
 
     if (isSlotOwner) {
-      if (!slotData.slotAccountType || !slotData.bankAccountId) {
+      if (!slotData.accountType || !slotData.bankAccountId) {
         throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_slot_account_required);
       }
 
@@ -124,7 +125,7 @@ export class PoolSlotService {
         throw new AppError(StatusCodes.BAD_REQUEST, resp.slot_bank_account_invalid);
       }
 
-      paymentInfo = { slotAccountType: slotData.slotAccountType, bankAccount: slotData.bankAccountId };
+      paymentInfo = { accountType: slotData.accountType, bankAccount: slotData.bankAccountId };
     }
 
     poolSlot = await PoolSlotRepo.update(
@@ -195,7 +196,7 @@ export class PoolSlotService {
     poolSlot = await PoolSlotRepo.update(ctx, poolSlotId, {
       slotOwner: { member: poolSlot.slotOwner.member.id, status: "approved" },
       paymentInfo: {
-        slotAccountType: paymentInfo.slotAccountType,
+        accountType: paymentInfo.accountType,
         bankAccount: paymentInfo.bankAccountId,
       },
     });

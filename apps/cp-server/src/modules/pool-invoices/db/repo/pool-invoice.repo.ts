@@ -1,0 +1,67 @@
+import { parseSelectFromSchema } from "@packages/core/database";
+import { buildPagination, buildSortObject } from "@packages/core/db-query";
+import type { GetPoolInvoicesQuery, IPPoolInvoice } from "../../common/pool-invoice.dto";
+import { IPPoolInvoiceSchema } from "../../zod/pool-invoice.zod";
+import { PoolInvoice } from "../models/pool-invoice.model";
+import type { IPoolInvoiceInput, PoolInvoiceDoc } from "../types/pool-invoice.types";
+import type { Ctx } from "@/lib/ctx/ctx.types";
+
+export class PoolInvoiceRepo {
+  static async create(ctx: Ctx, data: IPoolInvoiceInput): Promise<PoolInvoiceDoc> {
+    const invoice = await new PoolInvoice(data).save({ session: ctx?.session });
+    return invoice;
+  }
+
+  static getById(ctx: Ctx, id: string): Promise<PoolInvoiceDoc | null> {
+    return PoolInvoice.findById(id, {}, { session: ctx?.session });
+  }
+
+  static getByPoolSlotAndTurn(ctx: Ctx, poolSlotId: string, turnNumber: number): Promise<PoolInvoiceDoc | null> {
+    return PoolInvoice.findOne({ poolSlot: poolSlotId, turnNumber }, {}, { session: ctx?.session });
+  }
+
+  static async createForPoolSlotTurn(
+    ctx: Ctx,
+    poolSlotId: string,
+    turnNumber: number,
+    data: IPoolInvoiceInput
+  ): Promise<PoolInvoiceDoc> {
+    const invoice = await PoolInvoice.findOneAndUpdate(
+      { poolSlot: poolSlotId, turnNumber },
+      { $setOnInsert: data },
+      { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true, session: ctx?.session }
+    );
+    if (!invoice) throw new Error("Invoice upsert did not return a document");
+    return invoice;
+  }
+
+  static async getAll(ctx: Ctx, query: GetPoolInvoicesQuery) {
+    const { poolId, poolSlotId, status, sortKey, sortDir } = query;
+    const { skip, page, limit } = buildPagination(query.page, query.limit);
+    const sort = buildSortObject(sortKey, sortDir);
+    const queryObject: Record<string, unknown> = {};
+
+    if (poolId) queryObject.pool = poolId;
+    if (poolSlotId) queryObject.poolSlot = poolSlotId;
+    if (status) queryObject.status = status;
+
+    const [data, count] = await Promise.all([
+      PoolInvoice.find<IPPoolInvoice>(queryObject, null, { session: ctx?.session })
+        .select(parseSelectFromSchema(IPPoolInvoiceSchema))
+        .skip(skip)
+        .limit(limit)
+        .sort(sort),
+      PoolInvoice.countDocuments(queryObject, { session: ctx?.session }),
+    ]);
+
+    return { data, count, page, limit };
+  }
+
+  static update(ctx: Ctx, id: string, data: IPoolInvoiceInput): Promise<PoolInvoiceDoc | null> {
+    return PoolInvoice.findByIdAndUpdate(id, data, { new: true, runValidators: true, session: ctx?.session });
+  }
+
+  static delete(ctx: Ctx, id: string): Promise<PoolInvoiceDoc | null> {
+    return PoolInvoice.findByIdAndDelete(id, { session: ctx?.session });
+  }
+}

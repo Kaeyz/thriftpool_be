@@ -1,6 +1,7 @@
+import type { AccountType } from "@packages/core/enums";
 import type { Document } from "mongoose";
 import type { z } from "zod";
-import type { PoolSlotOwnerStatus, PoolSlotPaymentInfo, SlotCycleState } from "../../common/pool-slot.dto";
+import type { PoolSlotOwnerStatus, SlotCycleState } from "../../common/pool-slot.dto";
 import type { PoolSlotSchema } from "../../zod/pool-slot.zod";
 
 export type IPoolSlot = {
@@ -11,7 +12,7 @@ export type IPoolSlot = {
   };
   cycleState: SlotCycleState;
   paymentInfo: {
-    slotAccountType: PoolSlotPaymentInfo["slotAccountType"];
+    accountType: AccountType;
     bankAccount: string;
   };
   position: number;

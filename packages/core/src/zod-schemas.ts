@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { CurrencyCode } from "./enums";
+import { AccountType, CurrencyCode } from "./enums";
 import { FieldSchemas } from "./field-schema";
 
 export const SortDirectionSchema = z.enum(["asc", "desc"]);
@@ -44,3 +44,5 @@ export const PhoneNumberSchema = z.object({
   number: z.string(),
   isVerified: z.boolean(),
 });
+
+export const AccountTypeSchema = z.enum(Object.values(AccountType));

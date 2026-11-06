@@ -1,11 +1,11 @@
 import { currencyCodes } from "@packages/core/currencies";
 import { addVirtualId, isPathSelected, parseSelectFromSchema, transform } from "@packages/core/database";
+import { AccountTypeSchema } from "@packages/core/zod-schemas";
 import type { Model, Query } from "mongoose";
 import { Schema, models, model } from "mongoose";
 import {
   DeadLineUnitSchema,
   MemberInPoolSchema,
-  PoolAccountTypeSchema,
   PoolCommunitySchema,
   PoolMemberRoleSchema,
   PoolPaymentIntervalSchema,
@@ -27,7 +27,7 @@ const PoolSchema: Schema = new Schema(
     paymentInterval: { type: String, enum: PoolPaymentIntervalSchema.options },
     paymentMode: { type: String, enum: PoolPaymentModeSchema.options },
     poolAccountInfo: {
-      accountType: { type: String, enum: PoolAccountTypeSchema.options },
+      accountType: { type: String, enum: AccountTypeSchema.options },
       bankAccount: { type: Schema.Types.ObjectId, ref: BANK_ACCOUNTS },
     },
     paymentDeadline: {

@@ -1,12 +1,8 @@
 import { addVirtualId, isPathSelected, parseSelectFromSchema, transform } from "@packages/core/database";
+import { AccountTypeSchema } from "@packages/core/zod-schemas";
 import type { Model, Query } from "mongoose";
 import { Schema, models, model } from "mongoose";
-import {
-  PoolSlotAccountTypeSchema,
-  PoolSlotCycleStateSchema,
-  PoolSlotOwnerStatusSchema,
-  SlotMemberSchema,
-} from "../../zod/pool-slot.zod";
+import { PoolSlotCycleStateSchema, PoolSlotOwnerStatusSchema, SlotMemberSchema } from "../../zod/pool-slot.zod";
 import { IPPoolSchema } from "../../zod/pool.zod";
 import type { IPoolSlot } from "../types/pool-slot.types";
 import { BANK_ACCOUNTS, COMMUNITY_MEMBERS, POOL_SLOTS, POOLS } from "@/lib/definitions";
@@ -26,7 +22,7 @@ const PoolSlotSchema: Schema = new Schema(
       endDate: Date,
     },
     paymentInfo: {
-      slotAccountType: { type: String, enum: PoolSlotAccountTypeSchema.options },
+      accountType: { type: String, enum: AccountTypeSchema.options },
       bankAccount: { type: Schema.Types.ObjectId, ref: BANK_ACCOUNTS },
     },
   },

@@ -1,0 +1,10 @@
+export const BANK_ACCOUNT_HISTORY_CREATED = "Bank account history entry created";
+export const BANK_ACCOUNT_HISTORY_UPDATED = "Bank account history entry updated";
+export const BANK_ACCOUNT_HISTORY_DELETED = "Bank account history entry deleted";
+export const BANK_ACCOUNT_HISTORY_NOT_FOUND = "Bank account history entry not found";
+export const BANK_ACCOUNT_HISTORY_NOT_UPDATED = "Bank account history entry not updated";
+export const BANK_ACCOUNT_HISTORY_NOT_DELETED = "Bank account history entry not deleted";
+export const BANK_ACCOUNT_HISTORY_RECORDED = "Transaction recorded in bank account history";
+export const TRANSACTION_NOT_FOUND = "Transaction not found";
+export const TRANSACTION_NOT_COMPLETED = "Bank account history can only be recorded for completed transactions";
+export const TRANSACTION_WITHOUT_BANK_ACCOUNT = "The transaction must have at least one bank account";

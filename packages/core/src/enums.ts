@@ -15,3 +15,7 @@ export enum CurrencyCode {
   EUR = "EUR",
   GBP = "GBP",
 }
+
+export enum AccountType {
+  BankAccount = "bank_account",
+}

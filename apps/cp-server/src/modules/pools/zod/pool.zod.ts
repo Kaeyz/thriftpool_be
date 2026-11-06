@@ -1,5 +1,12 @@
+import { AccountType } from "@packages/core/enums";
 import { FieldSchemas } from "@packages/core/field-schema";
-import { PageInputSchema, LimitInputSchema, SortDirectionSchema, CurrencyCodeSchema } from "@packages/core/zod-schemas";
+import {
+  PageInputSchema,
+  LimitInputSchema,
+  SortDirectionSchema,
+  CurrencyCodeSchema,
+  AccountTypeSchema,
+} from "@packages/core/zod-schemas";
 import * as z from "zod";
 import { IPBankAccountSchema } from "@/modules/bank-accounts/zod/bank-account.zod";
 import { ISCommunitySchema } from "@/modules/communities/zod/community.zod";
@@ -10,7 +17,6 @@ export const MemberInPoolSchema = ISCommunityMemberSchema.pick({ id: true, user:
 export const PoolPaymentIntervalSchema = z.enum(["monthly", "weekly"]);
 export const PoolStatusSchema = z.enum(["initiated", "ongoing", "completed"]);
 export const PoolPaymentModeSchema = z.enum(["direct_payment", "via_pool_account"]);
-export const PoolAccountTypeSchema = z.enum(["bank_account"]);
 export const PoolMemberRoleSchema = z.enum(["owner", "admin", "member"]);
 
 export const DeadLineUnitSchema = z.enum(["day", "week"]);
@@ -21,7 +27,7 @@ export const PaymentDeadlineSchema = z.object({
 });
 
 export const PoolAccountInfoSchema = z.object({
-  accountType: PoolAccountTypeSchema,
+  accountType: AccountTypeSchema,
   bankAccount: IPBankAccountSchema,
 });
 
@@ -62,7 +68,7 @@ export const PoolInputSchema = z
     paymentInterval: FieldSchemas.enumSelectSchema("paymentInterval", PoolPaymentIntervalSchema),
     paymentMode: FieldSchemas.enumSelectSchema("paymentMode", PoolPaymentModeSchema),
     paymentDeadline: PaymentDeadlineSchema,
-    poolAccountType: FieldSchemas.enumSelectSchema("poolAccountType", PoolAccountTypeSchema).optional(),
+    poolAccountType: FieldSchemas.enumSelectSchema("poolAccountType", AccountTypeSchema).optional(),
     poolBankAccountId: FieldSchemas.dbIdSchema("poolBankAccountId").optional(),
     noOfSlot: FieldSchemas.numberSchema("noOfSlot"),
   })
@@ -79,7 +85,9 @@ export const PoolInputSchema = z
   .refine(
     (data) => {
       if (data.paymentMode !== "via_pool_account") return true;
-      return data.paymentMode === "via_pool_account" && data.poolAccountType === "bank_account" && data.poolBankAccountId;
+      return (
+        data.paymentMode === "via_pool_account" && data.poolAccountType === AccountType.BankAccount && data.poolBankAccountId
+      );
     },
     {
       path: ["poolBankAccountId"],

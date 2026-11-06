@@ -1,6 +1,6 @@
-import type { CurrencyCode } from "@packages/core/enums";
+import type { AccountType, CurrencyCode } from "@packages/core/enums";
 import { AppError, StatusCodes } from "@packages/core/res-config";
-import type { GetPoolQuery, PoolAccountType, PoolInput, ValidatePoolOptions } from "../common/pool.dto";
+import type { GetPoolQuery, PoolInput, ValidatePoolOptions } from "../common/pool.dto";
 import * as resp from "../common/pool.res";
 import { PoolRepo } from "../db/repo/pool.repo";
 import type { IPoolInput } from "../db/types/pool.types";
@@ -27,7 +27,7 @@ export class PoolService {
     };
     if (newPool.paymentMode === "via_pool_account") {
       poolInput.poolAccountInfo = {
-        accountType: newPool.poolAccountType as PoolAccountType,
+        accountType: newPool.poolAccountType as AccountType,
         bankAccount: newPool?.poolBankAccountId as string,
       };
     }
@@ -64,7 +64,7 @@ export class PoolService {
 
     if (updateData.paymentMode === "via_pool_account") {
       poolInput.poolAccountInfo = {
-        accountType: updateData.poolAccountType as PoolAccountType,
+        accountType: updateData.poolAccountType as AccountType,
         bankAccount: updateData?.poolBankAccountId as string,
       };
     }

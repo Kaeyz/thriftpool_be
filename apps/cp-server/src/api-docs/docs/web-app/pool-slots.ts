@@ -84,7 +84,7 @@
  *     security:
  *       - AuthToken: []
  *       - CommunityKey: []
- *     description: Available to the community owner who owns the pool. Assigning the pool owner requires slotAccountType and bankAccountId and approves the slot immediately.
+ *     description: Available to the community owner who owns the pool. Assigning the pool owner requires accountType and bankAccountId and approves the slot immediately.
  *     parameters:
  *       - in: path
  *         name: poolId
@@ -117,7 +117,7 @@
  *     security:
  *       - AuthToken: []
  *       - CommunityKey: []
- *     description: Available to the community owner who owns the pool. Assigning the pool owner requires slotAccountType and bankAccountId and approves the slot immediately.
+ *     description: Available to the community owner who owns the pool. Assigning the pool owner requires accountType and bankAccountId and approves the slot immediately.
  *     parameters:
  *       - in: path
  *         name: id
