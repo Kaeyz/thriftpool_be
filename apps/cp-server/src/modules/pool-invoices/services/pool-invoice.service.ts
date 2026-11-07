@@ -81,7 +81,7 @@ export class PoolInvoiceService {
       if (!createdInvoice) throw new AppError(StatusCodes.BAD_REQUEST, resp.POOL_INVOICE_NOT_CREATED);
       createdInvoices.push(createdInvoice);
     }
-    return { data: createdInvoices.map(PoolInvoiceUtils.sanitize) };
+    return { data: createdInvoices.map((invoice) => invoice.id), message: resp.POOL_INVOICE_CREATED };
   }
 
   static async getPoolInvoice(ctx: Ctx, id: string, options?: ValidatePoolInvoiceOptions) {
