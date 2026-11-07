@@ -63,6 +63,7 @@ export class CommunityService {
       limit: query.limit,
       page: query.page,
       userId,
+      status: "active",
     });
 
     let queryResponse = {
