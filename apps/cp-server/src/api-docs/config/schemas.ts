@@ -5,6 +5,7 @@ import { WebAppBankAccountSchemas } from "@/modules/bank-accounts/api/bank-accou
 import { WebAppCommunitySchemas } from "@/modules/communities/api/community.schema";
 import { WebAppCommunityInviteSchemas } from "@/modules/community-invites/api/community-invite.schema";
 import { WebAppCommunityMemberSchemas } from "@/modules/community-members/api/community-member.schema";
+import { WebAppPoolInvoiceSchemas } from "@/modules/pool-invoices/api/pool-invoice.schema";
 import { WebAppPoolSchemas } from "@/modules/pools/api/pool.schema";
 import { WebAppUserSchemas } from "@/modules/users/api/user.schema";
 import { WebAppUtilsSchemas } from "@/modules/utils/api/utils.schema";
@@ -21,6 +22,7 @@ export const webAppSchemas = {
   ...WebAppCommunitySchemas,
   ...WebAppCommunityInviteSchemas,
   ...WebAppCommunityMemberSchemas,
+  ...WebAppPoolInvoiceSchemas,
   ...WebAppPoolSchemas,
   ...WebAppUtilsSchemas,
 };

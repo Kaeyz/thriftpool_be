@@ -1,5 +1,6 @@
 import { parseSelectFromSchema } from "@packages/core/database";
 import { buildPagination, buildSortObject } from "@packages/core/db-query";
+import { transformIds } from "@packages/core/validation";
 import type { GetPoolInvoicesQuery, IPPoolInvoice } from "../../common/pool-invoice.dto";
 import { IPPoolInvoiceSchema } from "../../zod/pool-invoice.zod";
 import { PoolInvoice } from "../models/pool-invoice.model";
@@ -14,6 +15,10 @@ export class PoolInvoiceRepo {
 
   static getById(ctx: Ctx, id: string): Promise<PoolInvoiceDoc | null> {
     return PoolInvoice.findById(id, {}, { session: ctx?.session });
+  }
+
+  static getByIdInPools(ctx: Ctx, id: string, poolIds: string[]): Promise<PoolInvoiceDoc | null> {
+    return PoolInvoice.findOne({ _id: id, pool: { $in: poolIds } }, {}, { session: ctx?.session });
   }
 
   static getByPoolSlotAndTurn(ctx: Ctx, poolSlotId: string, turnNumber: number): Promise<PoolInvoiceDoc | null> {
@@ -34,14 +39,20 @@ export class PoolInvoiceRepo {
   }
 
   static async getAll(ctx: Ctx, query: GetPoolInvoicesQuery) {
-    const { poolId, poolSlotId, status, sortKey, sortDir } = query;
+    const { poolId, poolIds, poolSlotId, memberId, status, sortKey, sortDir } = query;
     const { skip, page, limit } = buildPagination(query.page, query.limit);
     const sort = buildSortObject(sortKey, sortDir);
     const queryObject: Record<string, unknown> = {};
 
-    if (poolId) queryObject.pool = poolId;
+    if (poolIds) {
+      const normalizedPoolIds = transformIds(poolIds);
+      queryObject.pool = { $in: poolId ? normalizedPoolIds.filter((id) => id === poolId) : normalizedPoolIds };
+    } else if (poolId) queryObject.pool = poolId;
     if (poolSlotId) queryObject.poolSlot = poolSlotId;
     if (status) queryObject.status = status;
+    if (memberId) {
+      queryObject.$or = [{ "sender.member": memberId }, { "receiver.member": memberId }];
+    }
 
     const [data, count] = await Promise.all([
       PoolInvoice.find<IPPoolInvoice>(queryObject, null, { session: ctx?.session })

@@ -11,6 +11,12 @@ import type { PoolInvoiceCreateInput } from "@/modules/pool-invoices/common/pool
 import { PoolInvoiceService } from "@/modules/pool-invoices/services/pool-invoice.service";
 
 export class PoolService {
+  static async getCommunityPoolIds(ctx: Ctx): Promise<{ data: string[] }> {
+    const communityId = ctx.community?.id || "";
+    const data = await PoolRepo.getIdsByCommunity(ctx, communityId);
+    return { data };
+  }
+
   static async createPool(ctx: Ctx, newPool: PoolInput) {
     const memberId = ctx?.communityMember?.id || "";
     const communityId = ctx?.community?.id || "";

@@ -19,6 +19,11 @@ export class PoolRepo {
     return Pool.findOne({ _id: id, community: communityId }, {}, { session: ctx?.session });
   }
 
+  static async getIdsByCommunity(ctx: Ctx, communityId: string): Promise<string[]> {
+    const ids = await Pool.find({ community: communityId }, { _id: 1 }, { session: ctx?.session }).distinct("_id");
+    return ids.map((id) => id.toString());
+  }
+
   static async getAll(ctx: Ctx, query: GetPoolQuery) {
     const { search, sortKey, sortDir, paymentInterval, paymentMode, status, memberId } = query;
 

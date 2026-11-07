@@ -14,11 +14,13 @@ This repository is a pnpm monorepo. The primary application is `apps/cp-server`;
 - Keep HTTP concerns in routes/controllers, business rules and orchestration in services, and database queries in repositories.
 - Routes should use the existing context/auth middleware, Zod request validation, and HTTP error handling. Controllers should delegate to services rather than implementing domain logic.
 - A module must not import another module's repository or database-layer implementation. Cross-module communication goes through that module's service; expose a narrow service method when needed.
+- A module must never import another module's Mongoose model. Repositories may use models owned by their own module only; expose cross-module data access through the owning module's service and pass the resulting data into the calling module.
 - Reuse shared packages and their public exports instead of duplicating utilities or reaching into another package's internal files.
 
 ## Validation, types, and errors
 
 - Treat Zod schemas as the source of truth for validated input and output shapes. Reuse shared schemas and enums rather than defining parallel versions.
+- When a Zod field uses `FieldSchemas.dbIdsSchema` and accepts a string or string array, normalize it with `transformIds` before using it as a list in repository/database queries.
 - Keep TypeScript types aligned with the schemas and persisted model fields. The project uses strict TypeScript; prefer explicit, accurate types and guards over unsafe casts.
 - Use the existing `AppError` and `StatusCodes` patterns for expected failures. Reuse module response messages where available; do not silently return success-shaped fallbacks for invalid or missing data.
 - Sanitize database documents through the module's established response utilities before exposing them from service/API boundaries.

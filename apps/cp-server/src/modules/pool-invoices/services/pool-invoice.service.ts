@@ -13,6 +13,7 @@ import type { Ctx } from "@/lib/ctx/ctx.types";
 import type { PoolSlotDoc } from "@/modules/pools/db/types/pool-slot.types";
 import type { PoolDoc } from "@/modules/pools/db/types/pool.types";
 import { PoolSlotService } from "@/modules/pools/services/pool-slot.service";
+import { PoolService } from "@/modules/pools/services/pool.service";
 
 export class PoolInvoiceService {
   private static getInvoiceParties(poolSlot: PoolSlotDoc, pool: PoolDoc): Pick<IPoolInvoiceInput, "sender" | "receiver"> {
@@ -85,13 +86,22 @@ export class PoolInvoiceService {
   }
 
   static async getPoolInvoice(ctx: Ctx, id: string, options?: ValidatePoolInvoiceOptions) {
-    let invoice = await PoolInvoiceRepo.getById(ctx, id);
+    const { data: poolIds } = await PoolService.getCommunityPoolIds(ctx);
+    let invoice = await PoolInvoiceRepo.getByIdInPools(ctx, id, poolIds);
     if (options) invoice = PoolInvoiceUtils.validatePoolInvoice(invoice, options);
     return { data: invoice ? PoolInvoiceUtils.sanitize(invoice) : null };
   }
 
   static async getPoolInvoices(ctx: Ctx, query: GetPoolInvoicesQuery) {
-    const data = await PoolInvoiceRepo.getAll(ctx, query);
+    const { data: poolIds } = await PoolService.getCommunityPoolIds(ctx);
+    const data = await PoolInvoiceRepo.getAll(ctx, { ...query, poolIds });
+    return { data };
+  }
+
+  static async getMyPoolInvoices(ctx: Ctx, query: GetPoolInvoicesQuery) {
+    const { data: poolIds } = await PoolService.getCommunityPoolIds(ctx);
+    const memberId = ctx.communityMember?.id || "";
+    const data = await PoolInvoiceRepo.getAll(ctx, { ...query, poolIds, memberId });
     return { data };
   }
 

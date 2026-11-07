@@ -38,6 +38,11 @@ export const PoolInvoiceSchema = z.object({
 
 export const IPPoolInvoiceSchema = PoolInvoiceSchema.omit({ updatedAt: true });
 export const ISPoolInvoiceSchema = PoolInvoiceSchema.omit({ updatedAt: true });
+export const PoolInvoiceApiSchema = ISPoolInvoiceSchema.extend({
+  dueDate: z.iso.datetime(),
+  paidAt: z.iso.datetime().optional(),
+  createdAt: z.iso.datetime(),
+});
 
 export const PoolInvoiceInputSchema = z.object({
   pool: FieldSchemas.dbIdSchema("pool"),
@@ -50,6 +55,10 @@ export const PoolInvoiceInputSchema = z.object({
   dueDate: z.coerce.date(),
   paidAt: z.coerce.date().optional(),
   transaction: FieldSchemas.dbIdSchema("transaction").optional(),
+});
+
+export const PoolInvoiceParamsSchema = z.object({
+  id: FieldSchemas.dbIdSchema("invoiceId"),
 });
 
 export const PoolInvoiceCreateInputSchema = PoolInvoiceInputSchema.extend({
@@ -70,8 +79,29 @@ export const PoolInvoicesQueryInputSchema = z.object({
   page: PageInputSchema,
   limit: LimitInputSchema,
   poolId: FieldSchemas.dbIdSchema("poolId").optional(),
+  poolIds: FieldSchemas.dbIdsSchema("poolIds").optional(),
   poolSlotId: FieldSchemas.dbIdSchema("poolSlotId").optional(),
+  memberId: FieldSchemas.dbIdSchema("memberId").optional(),
   status: PoolInvoiceStatusSchema.optional(),
   sortKey: FieldSchemas.enumSelectSchema("sortKey", PoolInvoiceSortKeySchema).optional(),
   sortDir: FieldSchemas.enumSelectSchema("sortDir", SortDirectionSchema).optional(),
+});
+
+export const GetAllPoolInvoicesQueryInputSchema = PoolInvoicesQueryInputSchema.extend({
+  poolId: FieldSchemas.dbIdSchema("poolId"),
+  poolSlotId: FieldSchemas.dbIdSchema("poolSlotId"),
+});
+
+export const PoolInvoicesQueryResponse = z.object({
+  data: z.array(IPPoolInvoiceSchema),
+  count: z.int(),
+  page: z.int(),
+  limit: z.int(),
+});
+
+export const PoolInvoicesApiQueryResponse = z.object({
+  data: z.array(PoolInvoiceApiSchema),
+  count: z.int(),
+  page: z.int(),
+  limit: z.int(),
 });
