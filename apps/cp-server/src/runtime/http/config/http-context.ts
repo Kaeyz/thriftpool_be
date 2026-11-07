@@ -3,7 +3,7 @@ import type { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import { authenticateHttp, validateHttpCommunity } from "./http-headers";
 import type { AuthorizeRoleRes } from "@/lib/ctx/ctx.types";
-import { validateCommunityRole } from "@/modules/communities";
+import { validateCommunityRole } from "@/modules/communities/services/community.ctx";
 import type { ISUser } from "@/modules/users/common/user.dto";
 
 type BaseCtxConfig = {

@@ -1,7 +1,7 @@
 import { AppError, StatusCodes } from "@packages/core/res-config";
 import type { Request, Response } from "express";
 import passport from "passport";
-import { validateCommunity } from "@/modules/communities";
+import { validateCommunity } from "@/modules/communities/services/community.ctx";
 import type { ISUser } from "@/modules/users/common/user.dto";
 
 export const authenticateHttp = (req: Request, res: Response): Promise<ISUser> => {
