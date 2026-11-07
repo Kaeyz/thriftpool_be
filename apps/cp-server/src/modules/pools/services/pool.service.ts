@@ -2,10 +2,13 @@ import type { AccountType, CurrencyCode } from "@packages/core/enums";
 import { AppError, StatusCodes } from "@packages/core/res-config";
 import type { GetPoolQuery, PoolInput, ValidatePoolOptions } from "../common/pool.dto";
 import * as resp from "../common/pool.res";
+import { PoolSlotRepo } from "../db/repo/pool-slot.repo";
 import { PoolRepo } from "../db/repo/pool.repo";
 import type { IPoolInput } from "../db/types/pool.types";
 import { PoolUtils } from "./pool.utils";
 import type { Ctx } from "@/lib/ctx/ctx.types";
+import type { PoolInvoiceCreateInput } from "@/modules/pool-invoices/common/pool-invoice.dto";
+import { PoolInvoiceService } from "@/modules/pool-invoices/services/pool-invoice.service";
 
 export class PoolService {
   static async createPool(ctx: Ctx, newPool: PoolInput) {
@@ -73,6 +76,93 @@ export class PoolService {
 
     if (!pool) throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_not_updated);
     return { data: PoolUtils.sanitizePool(pool), message: resp.pool_updated };
+  }
+
+  static async startPool(ctx: Ctx, id: string) {
+    const pool = await PoolRepo.getById(ctx, id);
+    PoolUtils.validatePool(pool, { notFound: true, status: "initiated" });
+    if (!pool) throw new AppError(StatusCodes.NOT_FOUND, resp.pool_not_found);
+
+    const { data: poolSlots } = await PoolSlotRepo.getAll(
+      ctx,
+      { poolId: id, page: 1, limit: pool.noOfSlots, sortKey: "position", sortDir: "asc" },
+      { paginate: false }
+    );
+    const plan = PoolUtils.createPoolStartPlan(pool, poolSlots);
+
+    for (const { slot, plannedStartDate, plannedEndDate } of plan.scheduledSlots) {
+      const slotUpdate = {
+        plannedStartDate: plannedStartDate.getTime(),
+        plannedEndDate: plannedEndDate.getTime(),
+        ...(slot.id === plan.firstPoolSlot.id
+          ? {
+              startDate: plannedStartDate.getTime(),
+              cycleState: {
+                state: "active" as const,
+                startDate: plannedStartDate.getTime(),
+                endDate: plannedEndDate.getTime(),
+              },
+            }
+          : {}),
+      };
+      const updatedSlot = await PoolSlotRepo.update(ctx, slot.id, slotUpdate);
+      if (!updatedSlot) throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_slot_not_updated);
+    }
+    const invoices: PoolInvoiceCreateInput[] = [];
+    for (const { slot } of plan.scheduledSlots.slice(1)) {
+      invoices.push({
+        pool: id,
+        poolSlot: slot.id,
+        turnNumber: plan.firstPoolSlot.position,
+        amount: pool.amount,
+        currencyCode: pool.currencyCode,
+        sender: {
+          member: slot.slotOwner.member.id,
+          accountType: slot.paymentInfo.accountType,
+          bankAccount: slot.paymentInfo.bankAccount.id,
+        },
+        receiver:
+          pool.paymentMode === "direct_payment"
+            ? {
+                member: plan.firstPoolSlot.slotOwner.member.id,
+                accountType: plan.firstPoolSlot.paymentInfo.accountType,
+                bankAccount: plan.firstPoolSlot.paymentInfo.bankAccount.id,
+              }
+            : PoolUtils.requirePoolAccountInfo(plan),
+        status: "pending",
+        issuedAt: new Date(),
+        dueDate: plan.firstSlotInvoiceDueDate,
+      });
+    }
+
+    if (pool.paymentMode === "via_pool_account") {
+      invoices.push({
+        pool: id,
+        poolSlot: plan.firstPoolSlot.id,
+        turnNumber: plan.firstPoolSlot.position,
+        amount: pool.amount * (plan.scheduledSlots.length - 1),
+        currencyCode: pool.currencyCode,
+        sender: PoolUtils.requirePoolAccountInfo(plan),
+        receiver: {
+          member: plan.firstPoolSlot.slotOwner.member.id,
+          accountType: plan.firstPoolSlot.paymentInfo.accountType,
+          bankAccount: plan.firstPoolSlot.paymentInfo.bankAccount.id,
+        },
+        status: "pending",
+        issuedAt: new Date(),
+        dueDate: plan.firstPoolSlotPlannedEndDate,
+      });
+    }
+
+    await PoolInvoiceService.createPoolStartInvoices(ctx, invoices);
+    const updatedPool = await PoolRepo.update(ctx, id, {
+      status: "ongoing",
+      startDate: plan.startDate.getTime(),
+      endDate: plan.endDate.getTime(),
+    });
+    if (!updatedPool) throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_not_started);
+
+    return { data: PoolUtils.sanitizePool(updatedPool), message: resp.pool_started };
   }
 
   static async deletePool(ctx: Ctx, id: string) {

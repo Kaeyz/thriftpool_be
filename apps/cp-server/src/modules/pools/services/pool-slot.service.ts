@@ -14,6 +14,16 @@ import type { PoolDoc } from "@/modules/pools/db/types/pool.types";
 import { UserService } from "@/modules/users";
 
 export class PoolSlotService {
+  static async getPoolRecord(ctx: Ctx, id: string) {
+    const data = await PoolRepo.getById(ctx, id);
+    return { data, message: resp.pool_retrieved };
+  }
+
+  static async getPoolSlotRecord(ctx: Ctx, id: string) {
+    const data = await PoolSlotRepo.getById(ctx, id);
+    return { data, message: resp.pool_slot_retrieved };
+  }
+
   private static async notifyPoolOwners(ctx: Ctx, pool: PoolDoc | null, slotOwnerName: string, status: "approved" | "rejected") {
     if (!pool) throw new AppError(StatusCodes.NOT_FOUND, resp.pool_not_found);
 
@@ -38,8 +48,8 @@ export class PoolSlotService {
   }
 
   private static async removePoolMemberIfUnused(ctx: Ctx, poolId: string, memberId: string, excludedSlotId: string) {
-    const hasOtherSlots = await PoolSlotRepo.hasOtherSlotsForMember(ctx, poolId, memberId, excludedSlotId);
-    if (!hasOtherSlots) await PoolRepo.removeMember(ctx, poolId, memberId);
+    const otherSlot = await PoolSlotRepo.getOtherSlotForMember(ctx, poolId, memberId, excludedSlotId);
+    if (!otherSlot) await PoolRepo.removeMember(ctx, poolId, memberId);
   }
 
   static async addNewSlot(ctx: Ctx, poolId: string, newSlot: PoolSlotInput) {
@@ -83,8 +93,8 @@ export class PoolSlotService {
   }
 
   static async getPoolSlots(ctx: Ctx, query: GetPoolSlotQuery) {
-    const data = await PoolSlotRepo.getAll(ctx, query);
-    return { data };
+    const result = await PoolSlotRepo.getAll(ctx, query);
+    return { data: result, message: resp.pool_slots_retrieved };
   }
 
   static async getPoolSlot(ctx: Ctx, id: string, options?: ValidatePoolSlotOptions) {
@@ -93,7 +103,7 @@ export class PoolSlotService {
       throw new AppError(StatusCodes.NOT_FOUND, resp.pool_slot_not_found);
     }
 
-    return { data: poolSlot ? PoolUtils.sanitizePoolSlot(poolSlot) : null };
+    return { data: poolSlot ? PoolUtils.sanitizePoolSlot(poolSlot) : null, message: resp.pool_slot_retrieved };
   }
 
   static async updatePoolSlotMember(ctx: Ctx, poolSlotId: string, slotData: PoolSlotInput) {

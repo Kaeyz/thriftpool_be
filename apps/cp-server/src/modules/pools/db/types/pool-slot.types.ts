@@ -11,6 +11,10 @@ export type IPoolSlot = {
     status: PoolSlotOwnerStatus;
   };
   cycleState: SlotCycleState;
+  plannedStartDate?: number;
+  plannedEndDate?: number;
+  startDate?: number;
+  endedDate?: number;
   paymentInfo: {
     accountType: AccountType;
     bankAccount: string;

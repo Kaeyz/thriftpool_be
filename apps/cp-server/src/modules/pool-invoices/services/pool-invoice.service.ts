@@ -1,14 +1,18 @@
 import { AppError, StatusCodes } from "@packages/core/res-config";
-import type { GetPoolInvoicesQuery, PoolInvoiceInput, ValidatePoolInvoiceOptions } from "../common/pool-invoice.dto";
+import type {
+  GetPoolInvoicesQuery,
+  PoolInvoiceCreateInput,
+  PoolInvoiceInput,
+  ValidatePoolInvoiceOptions,
+} from "../common/pool-invoice.dto";
 import * as resp from "../common/pool-invoice.res";
 import { PoolInvoiceUtils } from "../common/pool-invoice.utils";
 import { PoolInvoiceRepo } from "../db/repo/pool-invoice.repo";
 import type { IPoolInvoiceInput } from "../db/types/pool-invoice.types";
 import type { Ctx } from "@/lib/ctx/ctx.types";
-import { PoolSlotRepo } from "@/modules/pools/db/repo/pool-slot.repo";
-import { PoolRepo } from "@/modules/pools/db/repo/pool.repo";
 import type { PoolSlotDoc } from "@/modules/pools/db/types/pool-slot.types";
 import type { PoolDoc } from "@/modules/pools/db/types/pool.types";
+import { PoolSlotService } from "@/modules/pools/services/pool-slot.service";
 
 export class PoolInvoiceService {
   private static getInvoiceParties(poolSlot: PoolSlotDoc, pool: PoolDoc): Pick<IPoolInvoiceInput, "sender" | "receiver"> {
@@ -36,13 +40,13 @@ export class PoolInvoiceService {
   }
 
   static async createInvoiceForPoolSlot(ctx: Ctx, poolSlotId: string) {
-    const poolSlot = await PoolSlotRepo.getById(ctx, poolSlotId);
+    const { data: poolSlot } = await PoolSlotService.getPoolSlotRecord(ctx, poolSlotId);
     if (!poolSlot) throw new AppError(StatusCodes.NOT_FOUND, resp.POOL_SLOT_NOT_FOUND);
     if (poolSlot.cycleState?.state !== "active") {
       throw new AppError(StatusCodes.BAD_REQUEST, resp.POOL_SLOT_NOT_ACTIVE);
     }
 
-    const pool = await PoolRepo.getById(ctx, poolSlot.pool.id);
+    const { data: pool } = await PoolSlotService.getPoolRecord(ctx, poolSlot.pool.id);
     if (!pool) throw new AppError(StatusCodes.NOT_FOUND, resp.POOL_NOT_FOUND);
 
     const turnNumber = poolSlot.position;
@@ -57,6 +61,7 @@ export class PoolInvoiceService {
       issuedAt: new Date(),
       dueDate: new Date(poolSlot.cycleState.endDate),
     });
+    if (!invoice) throw new AppError(StatusCodes.BAD_REQUEST, resp.POOL_INVOICE_NOT_CREATED);
     return { data: PoolInvoiceUtils.sanitize(invoice), message: resp.POOL_INVOICE_CREATED };
   }
 
@@ -67,6 +72,16 @@ export class PoolInvoiceService {
       ...PoolInvoiceService.getInvoiceParties(poolSlot, pool),
     });
     return { data: PoolInvoiceUtils.sanitize(invoice), message: resp.POOL_INVOICE_CREATED };
+  }
+
+  static async createPoolStartInvoices(ctx: Ctx, invoices: PoolInvoiceCreateInput[]) {
+    const createdInvoices = [];
+    for (const invoice of invoices) {
+      const createdInvoice = await PoolInvoiceRepo.createForPoolSlotTurn(ctx, invoice.poolSlot, invoice.turnNumber, invoice);
+      if (!createdInvoice) throw new AppError(StatusCodes.BAD_REQUEST, resp.POOL_INVOICE_NOT_CREATED);
+      createdInvoices.push(createdInvoice);
+    }
+    return { data: createdInvoices.map(PoolInvoiceUtils.sanitize) };
   }
 
   static async getPoolInvoice(ctx: Ctx, id: string, options?: ValidatePoolInvoiceOptions) {
@@ -97,11 +112,11 @@ export class PoolInvoiceService {
   }
 
   private static async getInvoiceEntities(ctx: Ctx, poolId: string, poolSlotId: string) {
-    const poolSlot = await PoolSlotRepo.getById(ctx, poolSlotId);
+    const { data: poolSlot } = await PoolSlotService.getPoolSlotRecord(ctx, poolSlotId);
     if (!poolSlot) throw new AppError(StatusCodes.NOT_FOUND, resp.POOL_SLOT_NOT_FOUND);
     if (poolSlot.pool.id !== poolId) throw new AppError(StatusCodes.BAD_REQUEST, resp.POOL_SLOT_POOL_MISMATCH);
 
-    const pool = await PoolRepo.getById(ctx, poolId);
+    const { data: pool } = await PoolSlotService.getPoolRecord(ctx, poolId);
     if (!pool) throw new AppError(StatusCodes.NOT_FOUND, resp.POOL_NOT_FOUND);
     return { pool, poolSlot };
   }

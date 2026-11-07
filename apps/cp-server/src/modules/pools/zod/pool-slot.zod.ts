@@ -32,11 +32,15 @@ export const PoolSlotSchema = z.object({
   slotOwner: PoolSlotOwnerSchema,
   cycleState: SlotCycleStateSchema,
   paymentInfo: PoolSlotPaymentInfoSchema,
+  plannedStartDate: z.number().optional(),
+  plannedEndDate: z.number().optional(),
+  startDate: z.number().optional(),
+  endedDate: z.number().optional(),
   createdAt: z.number(),
   updatedAt: z.number(),
 });
 
-export const IPPoolSlotSchema = PoolSlotSchema.pick({ id: true, position: true, slotOwner: true });
+export const IPPoolSlotSchema = PoolSlotSchema.pick({ id: true, position: true, slotOwner: true, paymentInfo: true });
 export const ISPoolSlotSchema = PoolSlotSchema.omit({ updatedAt: true });
 
 export const PoolSlotInputSchema = z.object({
@@ -66,7 +70,7 @@ export const PoolSlotQueryResponse = z.object({
   limit: z.int(),
 });
 
-export const PoolSlotSortKeySchema = z.enum(["createdAt"]);
+export const PoolSlotSortKeySchema = z.enum(["createdAt", "position"]);
 export const PoolSlotQueryInputSchema = z.object({
   page: PageInputSchema,
   limit: LimitInputSchema,

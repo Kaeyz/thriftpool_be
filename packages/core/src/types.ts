@@ -21,3 +21,6 @@ export type EncryptionKey = z.infer<typeof EncryptionKeySchema>;
 export type Amount = z.infer<typeof AmountSchema>;
 export type PhoneNumber = z.infer<typeof PhoneNumberSchema>;
 export type SortDirection = z.infer<typeof SortDirectionSchema>;
+export type GetAllOptions = {
+  paginate?: boolean;
+};

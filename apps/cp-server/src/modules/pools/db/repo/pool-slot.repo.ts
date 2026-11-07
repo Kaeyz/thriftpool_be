@@ -1,5 +1,6 @@
 import { parseSelectFromSchema } from "@packages/core/database";
 import { buildPagination, buildSortObject } from "@packages/core/db-query";
+import type { GetAllOptions } from "@packages/core/types";
 import type { GetPoolSlotQuery, IPPoolSlot } from "../../common/pool-slot.dto";
 import { IPPoolSlotSchema } from "../../zod/pool-slot.zod";
 import { PoolSlot } from "../models/pool-slot.model";
@@ -15,17 +16,19 @@ export class PoolSlotRepo {
     return PoolSlot.findById(id, {}, { session: ctx?.session });
   }
 
-  static getByPosition(ctx: Ctx, poolId: string, position: number) {
+  static getByPosition(ctx: Ctx, poolId: string, position: number): Promise<PoolSlotDoc | null> {
     return PoolSlot.findOne({ pool: poolId, position }, {}, { session: ctx?.session });
   }
 
-  static hasOtherSlotsForMember(ctx: Ctx, poolId: string, memberId: string, excludedSlotId: string): Promise<boolean> {
-    return PoolSlot.exists({ pool: poolId, _id: { $ne: excludedSlotId }, "slotOwner.member": memberId })
-      .session(ctx?.session ?? null)
-      .then(Boolean);
+  static getOtherSlotForMember(ctx: Ctx, poolId: string, memberId: string, excludedSlotId: string): Promise<PoolSlotDoc | null> {
+    return PoolSlot.findOne(
+      { pool: poolId, _id: { $ne: excludedSlotId }, "slotOwner.member": memberId },
+      {},
+      { session: ctx?.session }
+    );
   }
 
-  static async getAll(ctx: Ctx, query: GetPoolSlotQuery) {
+  static async getAll(ctx: Ctx, query: GetPoolSlotQuery, options: GetAllOptions = {}) {
     const { sortKey, sortDir, poolId } = query;
 
     const { skip, page, limit } = buildPagination(query.page, query.limit);
@@ -36,11 +39,11 @@ export class PoolSlotRepo {
     if (poolId) queryObject.pool = poolId;
 
     const countQuery = PoolSlot.countDocuments(queryObject, { session: ctx?.session });
-    const dataQuery = PoolSlot.find<IPPoolSlot>(queryObject, null, { session: ctx?.session })
-      .select(parseSelectFromSchema(IPPoolSlotSchema))
-      .skip(skip)
-      .limit(limit)
-      .sort(sort);
+    const dataQuery = PoolSlot.find<IPPoolSlot>(queryObject, null, { session: ctx?.session }).select(
+      parseSelectFromSchema(IPPoolSlotSchema)
+    );
+    if (options.paginate !== false) dataQuery.skip(skip).limit(limit);
+    dataQuery.sort(sort);
 
     const [data, count] = await Promise.all([dataQuery, countQuery]);
 

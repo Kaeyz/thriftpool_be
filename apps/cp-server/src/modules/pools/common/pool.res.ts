@@ -1,6 +1,8 @@
 export const pool_created = "New pool created";
 export const pool_updated = "Pool updated";
 export const pool_deleted = "Pool deleted";
+export const pool_started = "Pool started";
+export const pool_retrieved = "Pool retrieved";
 
 // Error
 export const pool_not_found = "Pool not found";
@@ -9,12 +11,18 @@ export const pool_not_updated = "Pool not updated";
 export const pool_not_deleted = "Pool not deleted";
 export const pool_not_suspended = "Pool not suspended";
 export const pool_suspended = "Pool suspended";
+export const pool_not_started = "Pool could not be started";
+export const pool_slots_incomplete = "All pool slots must be assigned and approved before starting the pool";
+export const pool_slot_payment_account_required = "All pool slot owners must have a bank account before starting the pool";
+export const pool_account_required = "Pool account and pool owner are required before starting the pool";
 
 //
 export const pool_slot_position_exist = "Pool slot exist on selected position";
 export const pool_slot_not_found = "Pool slot not found";
 export const pool_slot_not_updated = "Pool slot not updated";
 export const pool_slot_updated = "Pool slot updated";
+export const pool_slots_retrieved = "Pool slots retrieved";
+export const pool_slot_retrieved = "Pool slot retrieved";
 export const pool_slot_account_required = "Slot account type and bank account are required for the pool owner";
 export const pool_owner_only = "Only the pool owner can manage pool slots";
 export const pool_slot_accepted = "Pool slot accepted";

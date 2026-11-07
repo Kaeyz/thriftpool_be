@@ -7,13 +7,13 @@ import type {
 import * as resp from "../common/bank-account-history.res";
 import { BankAccountHistoryUtils } from "../common/bank-account-history.utils";
 import { BankAccountHistoryRepo } from "../db/repo/bank-account-history.repo";
-import type { IBankAccountHistoryInput } from "../db/types/bank-account-history.types";
+import type { BankAccountHistoryDoc, IBankAccountHistoryInput } from "../db/types/bank-account-history.types";
 import type { Ctx } from "@/lib/ctx/ctx.types";
-import { TransactionRepo } from "@/modules/transactions/db/repo/transaction.repo";
+import { TransactionService } from "@/modules/transactions/services/transaction.service";
 
 export class BankAccountHistoryService {
   static async recordTransaction(ctx: Ctx, transactionId: string) {
-    const transaction = await TransactionRepo.getById(ctx, transactionId);
+    const { data: transaction } = await TransactionService.getTransaction(ctx, transactionId);
     if (!transaction) throw new AppError(StatusCodes.NOT_FOUND, resp.TRANSACTION_NOT_FOUND);
     if (transaction.status !== "completed") {
       throw new AppError(StatusCodes.BAD_REQUEST, resp.TRANSACTION_NOT_COMPLETED);
@@ -50,7 +50,15 @@ export class BankAccountHistoryService {
     }
 
     const entries = await Promise.all(historyEntries.map((entry) => BankAccountHistoryRepo.createIfMissing(ctx, entry)));
-    return { data: entries.map(BankAccountHistoryUtils.sanitize), message: resp.BANK_ACCOUNT_HISTORY_RECORDED };
+    if (entries.some((entry) => !entry)) {
+      throw new AppError(StatusCodes.BAD_REQUEST, resp.BANK_ACCOUNT_HISTORY_NOT_RECORDED);
+    }
+
+    const recordedEntries = entries.filter((entry): entry is BankAccountHistoryDoc => entry !== null);
+    return {
+      data: recordedEntries.map(BankAccountHistoryUtils.sanitize),
+      message: resp.BANK_ACCOUNT_HISTORY_RECORDED,
+    };
   }
 
   static async createBankAccountHistory(ctx: Ctx, data: BankAccountHistoryInput) {

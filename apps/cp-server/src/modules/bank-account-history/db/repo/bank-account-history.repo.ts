@@ -15,22 +15,12 @@ export class BankAccountHistoryRepo {
     return BankAccountHistory.findById(id, {}, { session: ctx?.session });
   }
 
-  static getByTransaction(ctx: Ctx, transactionId: string): Promise<BankAccountHistoryDoc[]> {
-    return BankAccountHistory.find({ transaction: transactionId }, {}, { session: ctx?.session }).sort({ occurredAt: 1 });
-  }
-
-  static getByBankAccount(ctx: Ctx, bankAccountId: string): Promise<BankAccountHistoryDoc[]> {
-    return BankAccountHistory.find({ bankAccount: bankAccountId }, {}, { session: ctx?.session }).sort({ occurredAt: -1 });
-  }
-
-  static async createIfMissing(ctx: Ctx, data: IBankAccountHistoryInput): Promise<BankAccountHistoryDoc> {
-    const historyEntry = await BankAccountHistory.findOneAndUpdate(
+  static createIfMissing(ctx: Ctx, data: IBankAccountHistoryInput): Promise<BankAccountHistoryDoc | null> {
+    return BankAccountHistory.findOneAndUpdate(
       { bankAccount: data.bankAccount, transaction: data.transaction, type: data.type },
       { $setOnInsert: data },
       { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true, session: ctx?.session }
     );
-    if (!historyEntry) throw new Error("Bank account history upsert did not return a document");
-    return historyEntry;
   }
 
   static async getAll(ctx: Ctx, query: GetBankAccountHistoryQuery) {

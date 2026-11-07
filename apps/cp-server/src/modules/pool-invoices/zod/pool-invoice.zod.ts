@@ -52,6 +52,19 @@ export const PoolInvoiceInputSchema = z.object({
   transaction: FieldSchemas.dbIdSchema("transaction").optional(),
 });
 
+export const PoolInvoiceCreateInputSchema = PoolInvoiceInputSchema.extend({
+  sender: z.object({
+    member: FieldSchemas.dbIdSchema("sender.member"),
+    accountType: AccountTypeSchema,
+    bankAccount: FieldSchemas.dbIdSchema("sender.bankAccount"),
+  }),
+  receiver: z.object({
+    member: FieldSchemas.dbIdSchema("receiver.member"),
+    accountType: AccountTypeSchema,
+    bankAccount: FieldSchemas.dbIdSchema("receiver.bankAccount"),
+  }),
+});
+
 export const PoolInvoiceSortKeySchema = z.enum(["createdAt", "dueDate", "issuedAt"]);
 export const PoolInvoicesQueryInputSchema = z.object({
   page: PageInputSchema,

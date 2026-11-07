@@ -4,6 +4,7 @@ export const BANK_ACCOUNT_HISTORY_DELETED = "Bank account history entry deleted"
 export const BANK_ACCOUNT_HISTORY_NOT_FOUND = "Bank account history entry not found";
 export const BANK_ACCOUNT_HISTORY_NOT_UPDATED = "Bank account history entry not updated";
 export const BANK_ACCOUNT_HISTORY_NOT_DELETED = "Bank account history entry not deleted";
+export const BANK_ACCOUNT_HISTORY_NOT_RECORDED = "Bank account history entry not recorded";
 export const BANK_ACCOUNT_HISTORY_RECORDED = "Transaction recorded in bank account history";
 export const TRANSACTION_NOT_FOUND = "Transaction not found";
 export const TRANSACTION_NOT_COMPLETED = "Bank account history can only be recorded for completed transactions";

@@ -20,19 +20,17 @@ export class PoolInvoiceRepo {
     return PoolInvoice.findOne({ poolSlot: poolSlotId, turnNumber }, {}, { session: ctx?.session });
   }
 
-  static async createForPoolSlotTurn(
+  static createForPoolSlotTurn(
     ctx: Ctx,
     poolSlotId: string,
     turnNumber: number,
     data: IPoolInvoiceInput
-  ): Promise<PoolInvoiceDoc> {
-    const invoice = await PoolInvoice.findOneAndUpdate(
+  ): Promise<PoolInvoiceDoc | null> {
+    return PoolInvoice.findOneAndUpdate(
       { poolSlot: poolSlotId, turnNumber },
       { $setOnInsert: data },
       { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true, session: ctx?.session }
     );
-    if (!invoice) throw new Error("Invoice upsert did not return a document");
-    return invoice;
   }
 
   static async getAll(ctx: Ctx, query: GetPoolInvoicesQuery) {

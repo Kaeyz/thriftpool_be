@@ -21,6 +21,10 @@ const PoolSlotSchema: Schema = new Schema(
       startDate: Date,
       endDate: Date,
     },
+    plannedStartDate: Date,
+    plannedEndDate: Date,
+    startDate: Date,
+    endedDate: Date,
     paymentInfo: {
       accountType: { type: String, enum: AccountTypeSchema.options },
       bankAccount: { type: Schema.Types.ObjectId, ref: BANK_ACCOUNTS },
