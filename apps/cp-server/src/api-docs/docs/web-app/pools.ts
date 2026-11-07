@@ -112,3 +112,27 @@
  *               type: object
  *               $ref: '#/components/schemas/Pool'
  */
+
+/**
+ * @swagger
+ * /pools/{id}/start:
+ *   post:
+ *     summary: Start an initiated pool
+ *     tags: [Pools]
+ *     security:
+ *       - AuthToken: []
+ *       - CommunityKey: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         type: string
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/components/schemas/Pool'
+ */

@@ -19,6 +19,17 @@ export const webAppPoolRouter = (rootPath: string, router: Router) => {
     catchHttpError(PoolController.updatePool)
   );
 
+  router.post(
+    `${baseRoute}/:id/start`,
+    useApiCtx({
+      authenticate: true,
+      requireCommunity: true,
+      roleConfig: { community: allCommunityAdmin },
+    }),
+    validateHttpInput(PoolParamsSchema, "params"),
+    catchHttpError(PoolController.startPool)
+  );
+
   router.delete(
     `${baseRoute}/:id`,
     useApiCtx({
@@ -45,7 +56,7 @@ export const webAppPoolRouter = (rootPath: string, router: Router) => {
     useApiCtx({
       authenticate: true,
       requireCommunity: true,
-      roleConfig: { community: communityOwner },
+      roleConfig: { community: allCommunityAdmin },
     }),
     validateHttpInput(PoolInputSchema, "body"),
     catchHttpError(PoolController.createPool)

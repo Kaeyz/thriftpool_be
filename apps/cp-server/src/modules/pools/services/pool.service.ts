@@ -82,6 +82,9 @@ export class PoolService {
     const pool = await PoolRepo.getById(ctx, id);
     PoolUtils.validatePool(pool, { notFound: true, status: "initiated" });
     if (!pool) throw new AppError(StatusCodes.NOT_FOUND, resp.pool_not_found);
+    if (!PoolUtils.isCurrentUserPoolOwner(ctx, pool)) {
+      throw new AppError(StatusCodes.UNAUTHORIZED, resp.pool_owner_only);
+    }
 
     const { data: poolSlots } = await PoolSlotRepo.getAll(
       ctx,
