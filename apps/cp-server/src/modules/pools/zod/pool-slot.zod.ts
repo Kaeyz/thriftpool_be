@@ -28,7 +28,7 @@ export const PoolSlotPaymentInfoSchema = z.object({
 export const PoolSlotSchema = z.object({
   id: z.string(),
   pool: IPPoolSchema,
-  position: z.number(),
+  position: z.number().min(1),
   slotOwner: PoolSlotOwnerSchema,
   cycleState: SlotCycleStateSchema,
   paymentInfo: PoolSlotPaymentInfoSchema,

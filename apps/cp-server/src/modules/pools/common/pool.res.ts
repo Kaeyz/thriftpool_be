@@ -18,6 +18,7 @@ export const pool_account_required = "Pool account and pool owner are required b
 
 //
 export const pool_slot_position_exist = "Pool slot exist on selected position";
+export const pool_slot_position_exceeds_capacity = "Pool slot position cannot exceed the number of available slots";
 export const pool_slot_not_found = "Pool slot not found";
 export const pool_slot_not_updated = "Pool slot not updated";
 export const pool_slot_updated = "Pool slot updated";

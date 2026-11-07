@@ -2,6 +2,7 @@ import { catchHttpError, validateHttpInput } from "@packages/runtime/http";
 import type { Router } from "express";
 import { CommunityRoleUpdateSchema } from "../zod/community-member.zod";
 import { CommunityMemberController } from "./community-member.controller";
+import { allCommunityMembers, communityOwner } from "@/lib/definitions/roles";
 import { useApiCtx } from "@/runtime/http/config/http-context";
 
 export const webAppCommunityMemberRouter = (rootPath: string, router: Router) => {
@@ -16,13 +17,13 @@ export const webAppCommunityMemberRouter = (rootPath: string, router: Router) =>
 
   router.put(
     `${baseRoute}/:memberId/unsuspend`,
-    useApiCtx({ authenticate: true, requireCommunity: true, roleConfig: { community: ["owner"] } }),
+    useApiCtx({ authenticate: true, requireCommunity: true, roleConfig: { community: communityOwner } }),
     catchHttpError(CommunityMemberController.unSuspendMember)
   );
 
   router.put(
     `${baseRoute}/:memberId/suspend`,
-    useApiCtx({ authenticate: true, requireCommunity: true, roleConfig: { community: ["owner"] } }),
+    useApiCtx({ authenticate: true, requireCommunity: true, roleConfig: { community: communityOwner } }),
     catchHttpError(CommunityMemberController.suspendMember)
   );
 
@@ -30,7 +31,7 @@ export const webAppCommunityMemberRouter = (rootPath: string, router: Router) =>
 
   router.get(
     baseRoute,
-    useApiCtx({ authenticate: true, requireCommunity: true, roleConfig: { community: ["owner", "admin", "member"] } }),
+    useApiCtx({ authenticate: true, requireCommunity: true, roleConfig: { community: allCommunityMembers } }),
     catchHttpError(CommunityMemberController.getMembers)
   );
 

@@ -59,6 +59,9 @@ export class PoolSlotService {
     if (!PoolUtils.isCurrentUserPoolOwner(ctx, pool)) {
       throw new AppError(StatusCodes.UNAUTHORIZED, resp.pool_owner_only);
     }
+    if (newSlot.position > pool.noOfSlots) {
+      throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_slot_position_exceeds_capacity);
+    }
 
     const poolSlotExist = await PoolSlotRepo.getByPosition(ctx, poolId, newSlot.position);
     if (poolSlotExist) throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_slot_position_exist);
@@ -88,6 +91,7 @@ export class PoolSlotService {
       pool: poolId,
       ...(paymentInfo ? { paymentInfo } : {}),
     });
+    await PoolSlotService.addPoolMemberIfMissing(ctx, poolId, newSlot.memberId);
 
     return { data: PoolUtils.sanitizePoolSlot(slot), message: resp.pool_created };
   }
@@ -149,6 +153,7 @@ export class PoolSlotService {
     );
     if (!poolSlot) throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_slot_not_updated);
 
+    await PoolSlotService.addPoolMemberIfMissing(ctx, poolId, slotData.memberId);
     if (previousMemberId && previousMemberId !== slotData.memberId) {
       await PoolSlotService.removePoolMemberIfUnused(ctx, poolId, previousMemberId, poolSlotId);
     }

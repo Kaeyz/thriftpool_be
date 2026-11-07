@@ -52,14 +52,22 @@ export class PoolUtils {
   }
 
   static createPoolStartPlan(pool: PoolDoc, poolSlots: IPPoolSlot[]): PoolStartPlan {
+    const positions = new Set(poolSlots.map((slot) => slot.position));
     if (
       poolSlots.length !== pool.noOfSlots ||
-      poolSlots.some((slot, index) => slot.position !== index + 1 || slot.slotOwner?.status !== "approved")
+      positions.size !== pool.noOfSlots ||
+      poolSlots.some(
+        (slot) =>
+          !Number.isInteger(slot.position) ||
+          slot.position < 1 ||
+          slot.position > pool.noOfSlots ||
+          slot.slotOwner?.status !== "approved"
+      )
     ) {
       throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_slots_incomplete);
     }
 
-    const firstPoolSlot = poolSlots[0];
+    const firstPoolSlot = poolSlots.find((slot) => slot.position === 1);
     if (!firstPoolSlot) throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_slots_incomplete);
     if (poolSlots.some((slot) => !slot.slotOwner?.member || !slot.paymentInfo?.bankAccount)) {
       throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_slot_payment_account_required);
@@ -70,13 +78,15 @@ export class PoolUtils {
       throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_not_started);
     }
 
-    const scheduledSlots = poolSlots.map((slot, index) => ({
-      slot,
-      plannedStartDate: PoolUtils.getPlannedDate(startDate, pool.paymentInterval, index),
-      plannedEndDate: PoolUtils.getPlannedDate(startDate, pool.paymentInterval, index + 1),
-    }));
-    const firstSlotSchedule = scheduledSlots[0];
-    const finalSlotSchedule = scheduledSlots[scheduledSlots.length - 1];
+    const scheduledSlots = poolSlots
+      .map((slot) => ({
+        slot,
+        plannedStartDate: PoolUtils.getPlannedDate(startDate, pool.paymentInterval, slot.position - 1),
+        plannedEndDate: PoolUtils.getPlannedDate(startDate, pool.paymentInterval, slot.position),
+      }))
+      .sort((a, b) => a.slot.position - b.slot.position);
+    const firstSlotSchedule = scheduledSlots.find(({ slot }) => slot.position === 1);
+    const finalSlotSchedule = scheduledSlots.find(({ slot }) => slot.position === pool.noOfSlots);
     if (!firstSlotSchedule || !finalSlotSchedule) {
       throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_slots_incomplete);
     }
