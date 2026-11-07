@@ -15,6 +15,7 @@ This repository is a pnpm monorepo. The primary application is `apps/cp-server`;
 - Routes should use the existing context/auth middleware, Zod request validation, and HTTP error handling. Controllers should delegate to services rather than implementing domain logic.
 - A module must not import another module's repository or database-layer implementation. Cross-module communication goes through that module's service; expose a narrow service method when needed.
 - A module must never import another module's Mongoose model. Repositories may use models owned by their own module only; expose cross-module data access through the owning module's service and pass the resulting data into the calling module.
+- Export files ending in `.service.ts` from the module's `index.ts`. Code importing a service from another module must import it from that module's root (for example, `@/modules/pools`), never directly from its `services/` implementation path. This rule does not apply to other files under `services/`.
 - Reuse shared packages and their public exports instead of duplicating utilities or reaching into another package's internal files.
 
 ## Validation, types, and errors

@@ -8,7 +8,7 @@ import {
   SortDirectionSchema,
 } from "@packages/core/zod-schemas";
 import * as z from "zod";
-import { MediaFileSchema } from "@/lib/file-upload";
+import { MediaFileSchema } from "@/lib/file-upload/file-zod-schemas";
 
 export const UserTypeSchema = z.enum(["user", "admin"]);
 

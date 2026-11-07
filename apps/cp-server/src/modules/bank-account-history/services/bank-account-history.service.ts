@@ -9,7 +9,7 @@ import { BankAccountHistoryUtils } from "../common/bank-account-history.utils";
 import { BankAccountHistoryRepo } from "../db/repo/bank-account-history.repo";
 import type { BankAccountHistoryDoc, IBankAccountHistoryInput } from "../db/types/bank-account-history.types";
 import type { Ctx } from "@/lib/ctx/ctx.types";
-import { TransactionService } from "@/modules/transactions/services/transaction.service";
+import { TransactionService } from "@/modules/transactions";
 
 export class BankAccountHistoryService {
   static async recordTransaction(ctx: Ctx, transactionId: string) {

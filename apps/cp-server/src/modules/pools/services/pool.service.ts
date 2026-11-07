@@ -7,8 +7,8 @@ import { PoolRepo } from "../db/repo/pool.repo";
 import type { IPoolInput } from "../db/types/pool.types";
 import { PoolUtils } from "./pool.utils";
 import type { Ctx } from "@/lib/ctx/ctx.types";
+import { PoolInvoiceService } from "@/modules/pool-invoices";
 import type { PoolInvoiceCreateInput } from "@/modules/pool-invoices/common/pool-invoice.dto";
-import { PoolInvoiceService } from "@/modules/pool-invoices/services/pool-invoice.service";
 
 export class PoolService {
   static async getCommunityPoolIds(ctx: Ctx): Promise<{ data: string[] }> {

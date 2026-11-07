@@ -10,10 +10,9 @@ import { PoolInvoiceUtils } from "../common/pool-invoice.utils";
 import { PoolInvoiceRepo } from "../db/repo/pool-invoice.repo";
 import type { IPoolInvoiceInput } from "../db/types/pool-invoice.types";
 import type { Ctx } from "@/lib/ctx/ctx.types";
+import { PoolService, PoolSlotService } from "@/modules/pools";
 import type { PoolSlotDoc } from "@/modules/pools/db/types/pool-slot.types";
 import type { PoolDoc } from "@/modules/pools/db/types/pool.types";
-import { PoolSlotService } from "@/modules/pools/services/pool-slot.service";
-import { PoolService } from "@/modules/pools/services/pool.service";
 
 export class PoolInvoiceService {
   private static getInvoiceParties(poolSlot: PoolSlotDoc, pool: PoolDoc): Pick<IPoolInvoiceInput, "sender" | "receiver"> {
