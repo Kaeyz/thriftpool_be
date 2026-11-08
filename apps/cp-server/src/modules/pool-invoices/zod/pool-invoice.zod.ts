@@ -30,19 +30,14 @@ export const PoolInvoiceSchema = z.object({
   currencyCode: CurrencyCodeSchema,
   transaction: z.string().optional(),
   status: PoolInvoiceStatusSchema,
-  dueDate: z.date(),
-  paidAt: z.date().optional(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  dueDate: z.iso.datetime(),
+  paidAt: z.iso.datetime().optional(),
+  createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
 });
 
 export const IPPoolInvoiceSchema = PoolInvoiceSchema.omit({ updatedAt: true });
 export const ISPoolInvoiceSchema = PoolInvoiceSchema.omit({ updatedAt: true });
-export const PoolInvoiceApiSchema = ISPoolInvoiceSchema.extend({
-  dueDate: z.iso.datetime(),
-  paidAt: z.iso.datetime().optional(),
-  createdAt: z.iso.datetime(),
-});
 
 export const PoolInvoiceInputSchema = z.object({
   pool: FieldSchemas.dbIdSchema("pool"),
@@ -94,13 +89,6 @@ export const GetAllPoolInvoicesQueryInputSchema = PoolInvoicesQueryInputSchema.e
 
 export const PoolInvoicesQueryResponse = z.object({
   data: z.array(IPPoolInvoiceSchema),
-  count: z.int(),
-  page: z.int(),
-  limit: z.int(),
-});
-
-export const PoolInvoicesApiQueryResponse = z.object({
-  data: z.array(PoolInvoiceApiSchema),
   count: z.int(),
   page: z.int(),
   limit: z.int(),

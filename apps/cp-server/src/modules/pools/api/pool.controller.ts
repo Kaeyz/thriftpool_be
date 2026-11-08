@@ -25,7 +25,7 @@ export class PoolController {
   }
 
   static async getPool(req: Request, res: Response) {
-    const serviceResponse = await PoolService.getPool(req.ctx, req.params.id as string);
+    const serviceResponse = await PoolService.getPool(req.ctx, req.params.id as string, { notFound: true });
     return getApiSuccessResponse(res, serviceResponse);
   }
 

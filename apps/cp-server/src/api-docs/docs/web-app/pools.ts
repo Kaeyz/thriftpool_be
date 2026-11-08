@@ -85,6 +85,25 @@
 /**
  * @swagger
  * /pools/{id}:
+ *   get:
+ *     summary: Get a pool by ID
+ *     tags: [Pools]
+ *     security:
+ *       - AuthToken: []
+ *       - CommunityKey: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         type: string
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/components/schemas/Pool'
  *   put:
  *     summary: Update community
  *     tags: [Pools]

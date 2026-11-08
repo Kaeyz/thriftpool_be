@@ -52,7 +52,7 @@ export class PoolService {
   }
 
   static async getPool(ctx: Ctx, id: string, options?: ValidatePoolOptions) {
-    let pool = await PoolRepo.getById(ctx, id);
+    let pool = await PoolRepo.getByIdInCommunity(ctx, id, ctx.community?.id || "");
     if (options) pool = PoolUtils.validatePool(pool, options);
     return { data: pool ? PoolUtils.sanitizePool(pool) : null };
   }
@@ -69,6 +69,7 @@ export class PoolService {
       noOfSlots: updateData.noOfSlot,
       paymentInterval: updateData.paymentInterval,
       paymentMode: updateData.paymentMode,
+      paymentDeadline: updateData.paymentDeadline,
     };
 
     if (updateData.paymentMode === "via_pool_account") {

@@ -51,6 +51,17 @@ export const webAppPoolRouter = (rootPath: string, router: Router) => {
     catchHttpError(PoolController.getMyPools)
   );
 
+  router.get(
+    `${baseRoute}/:id`,
+    useApiCtx({
+      authenticate: true,
+      requireCommunity: true,
+      roleConfig: { community: allCommunityMembers },
+    }),
+    validateHttpInput(PoolParamsSchema, "params"),
+    catchHttpError(PoolController.getPool)
+  );
+
   router.post(
     `${baseRoute}`,
     useApiCtx({
