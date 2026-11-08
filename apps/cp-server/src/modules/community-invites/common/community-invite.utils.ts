@@ -1,7 +1,7 @@
 import { AppError, StatusCodes } from "@packages/core/res-config";
 import type { CommunityInviteDoc } from "../db/community-invite.types";
 import type { ISCommunityInvite, ValidateCommunityInviteOptions } from "./community-invite.dto";
-import { COMMUNITY_INVITE_NOT_FOUND, INVALID_INVITE_STATUS } from "./community-invite.res";
+import { COMMUNITY_INVITE_NOT_FOUND } from "./community-invite.res";
 
 export class CommunityInviteUtils {
   static sanitize(communityInvite: CommunityInviteDoc): ISCommunityInvite {

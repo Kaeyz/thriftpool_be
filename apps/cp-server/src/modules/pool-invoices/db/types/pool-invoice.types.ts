@@ -1,7 +1,8 @@
 import type { AccountType, CurrencyCode } from "@packages/core/enums";
-import type { HydratedDocument } from "mongoose";
+import type { Document } from "mongoose";
 import type { z } from "zod";
-import type { PoolInvoiceStatusSchema } from "../../zod/pool-invoice.zod";
+import type { PoolInvoiceStatus } from "../../common/pool-invoice.dto";
+import type { PoolInvoiceSchema } from "../../zod/pool-invoice.zod";
 
 export type IPoolInvoice = {
   id: string;
@@ -21,7 +22,7 @@ export type IPoolInvoice = {
   amount: number;
   currencyCode: CurrencyCode;
   transaction?: string;
-  status: z.infer<typeof PoolInvoiceStatusSchema>;
+  status: PoolInvoiceStatus;
   issuedAt: Date;
   dueDate: Date;
   paidAt?: Date;
@@ -29,7 +30,5 @@ export type IPoolInvoice = {
   updatedAt: Date;
 };
 
-export type IPoolInvoiceInput = Omit<IPoolInvoice, "id" | "createdAt" | "updatedAt" | "status"> & {
-  status?: IPoolInvoice["status"];
-};
-export type PoolInvoiceDoc = HydratedDocument<IPoolInvoice>;
+export type IPoolInvoiceInput = Partial<IPoolInvoice>;
+export type PoolInvoiceDoc = z.infer<typeof PoolInvoiceSchema> & Document;
