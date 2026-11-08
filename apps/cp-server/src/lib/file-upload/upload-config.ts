@@ -2,15 +2,17 @@ import type { Ctx } from "../ctx/ctx.types";
 import type { RequestSource } from "../definitions";
 import type { EntityConfig } from "./types";
 import { communityUploadConfig } from "@/modules/communities/services/community.upload-config";
+import { transactionUploadConfig } from "@/modules/transactions/services/transaction.upload-config";
 import { userUploadConfig } from "@/modules/users/services/user.upload-config";
 
 export const fileUploadConfigs: Partial<Record<string, EntityConfig<string, string, object>>> = {
   user: userUploadConfig,
   community: communityUploadConfig,
+  transaction: transactionUploadConfig,
 };
 
 const sourceConfigs: Record<RequestSource, string[]> = {
-  "web-app": ["user", "community"],
+  "web-app": ["user", "community", "transaction"],
   system: [],
 };
 

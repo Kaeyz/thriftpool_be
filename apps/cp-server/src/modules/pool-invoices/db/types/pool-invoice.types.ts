@@ -22,6 +22,8 @@ export type IPoolInvoice = {
   amount: number;
   currencyCode: CurrencyCode;
   transaction?: string;
+  transactions?: string[];
+  remittedAmount?: number;
   status: PoolInvoiceStatus;
   issuedAt: Date;
   dueDate: Date;

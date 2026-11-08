@@ -5,6 +5,7 @@ import * as resp from "../common/pool.res";
 import type { PoolSlotDoc } from "../db/types/pool-slot.types";
 import type { PoolDoc } from "../db/types/pool.types";
 import type { Ctx } from "@/lib/ctx/ctx.types";
+import type { PoolInvoiceCreateInput } from "@/modules/pool-invoices/common/pool-invoice.dto";
 
 type ScheduledPoolSlot = {
   slot: IPPoolSlot;
@@ -27,6 +28,85 @@ type PoolStartPlan = {
 };
 
 export class PoolUtils {
+  static validatePoolOwnerAction(ctx: Ctx, pool: PoolDoc | null, status: PoolDoc["status"]): PoolDoc {
+    PoolUtils.validatePool(pool, { notFound: true, status });
+    if (!pool) throw new AppError(StatusCodes.NOT_FOUND, resp.pool_not_found);
+    if (!PoolUtils.isCurrentUserPoolOwner(ctx, pool)) {
+      throw new AppError(StatusCodes.UNAUTHORIZED, resp.pool_owner_only);
+    }
+    return pool;
+  }
+
+  static getSlotAccountInfo(slot: IPPoolSlot): PoolInvoiceCreateInput["sender"] {
+    if (!slot.slotOwner?.member || !slot.paymentInfo?.bankAccount) {
+      throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_slot_payment_account_required);
+    }
+    return {
+      member: slot.slotOwner.member.id,
+      accountType: slot.paymentInfo.accountType,
+      bankAccount: slot.paymentInfo.bankAccount.id,
+    };
+  }
+
+  static getPoolAccountInfo(pool: PoolDoc): PoolStartPlan["poolAccountInfo"] {
+    if (pool.paymentMode !== "via_pool_account") return undefined;
+    const poolOwner = pool.poolMembers.find((poolMember) => poolMember.role === "owner");
+    if (!poolOwner?.member || !pool.poolAccountInfo?.bankAccount) {
+      throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_account_required);
+    }
+    return {
+      member: poolOwner.member.id,
+      accountType: pool.poolAccountInfo.accountType,
+      bankAccount: pool.poolAccountInfo.bankAccount.id,
+    };
+  }
+
+  static createContributionInvoice(
+    pool: PoolDoc,
+    payerSlot: IPPoolSlot,
+    receiver: PoolInvoiceCreateInput["receiver"],
+    turnNumber: number,
+    issuedAt: Date,
+    dueDate: Date
+  ): PoolInvoiceCreateInput {
+    return {
+      pool: pool.id,
+      poolSlot: payerSlot.id,
+      turnNumber,
+      amount: pool.amount,
+      currencyCode: pool.currencyCode,
+      sender: PoolUtils.getSlotAccountInfo(payerSlot),
+      receiver,
+      status: "pending",
+      issuedAt,
+      dueDate,
+    };
+  }
+
+  static createPoolAccountInvoice(
+    pool: PoolDoc,
+    recipientSlot: IPPoolSlot,
+    contributionCount: number,
+    turnNumber: number,
+    issuedAt: Date,
+    dueDate: Date
+  ): PoolInvoiceCreateInput {
+    const poolAccountInfo = PoolUtils.getPoolAccountInfo(pool);
+    if (!poolAccountInfo) throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_account_required);
+    return {
+      pool: pool.id,
+      poolSlot: recipientSlot.id,
+      turnNumber,
+      amount: pool.amount * contributionCount,
+      currencyCode: pool.currencyCode,
+      sender: poolAccountInfo,
+      receiver: PoolUtils.getSlotAccountInfo(recipientSlot),
+      status: "pending",
+      issuedAt,
+      dueDate,
+    };
+  }
+
   private static getPlannedDate(startDate: Date, interval: PoolDoc["paymentInterval"], period: number): Date {
     if (interval === "weekly") {
       const date = new Date(startDate);
@@ -49,6 +129,10 @@ export class PoolUtils {
     const days = deadline.value * (deadline.unit === "week" ? 7 : 1);
     dueDate.setUTCDate(dueDate.getUTCDate() - days);
     return dueDate;
+  }
+
+  static getInvoiceDueDate(date: Date, deadline: PoolDoc["paymentDeadline"]): Date {
+    return PoolUtils.subtractPaymentDeadline(date, deadline);
   }
 
   static createPoolStartPlan(pool: PoolDoc, poolSlots: IPPoolSlot[]): PoolStartPlan {
@@ -91,19 +175,7 @@ export class PoolUtils {
       throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_slots_incomplete);
     }
 
-    let poolAccountInfo: PoolStartPlan["poolAccountInfo"];
-    if (pool.paymentMode === "via_pool_account") {
-      const poolOwner = pool.poolMembers.find((poolMember) => poolMember.role === "owner");
-      if (!poolOwner?.member || !pool.poolAccountInfo?.bankAccount) {
-        throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_account_required);
-      }
-
-      poolAccountInfo = {
-        member: poolOwner.member.id,
-        accountType: pool.poolAccountInfo.accountType,
-        bankAccount: pool.poolAccountInfo.bankAccount.id,
-      };
-    }
+    const poolAccountInfo = PoolUtils.getPoolAccountInfo(pool);
 
     return {
       scheduledSlots,

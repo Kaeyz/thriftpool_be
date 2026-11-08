@@ -25,6 +25,8 @@ const PoolInvoiceSchema: Schema = new Schema(
     amount: { type: Number, required: true, min: 0 },
     currencyCode: { type: String, required: true },
     transaction: { type: Schema.Types.ObjectId, ref: TRANSACTIONS },
+    transactions: [{ type: Schema.Types.ObjectId, ref: TRANSACTIONS }],
+    remittedAmount: { type: Number, min: 0, default: 0 },
     status: { type: String, enum: PoolInvoiceStatusSchema.options, default: "pending" },
     issuedAt: { type: Date, required: true },
     dueDate: { type: Date, required: true },

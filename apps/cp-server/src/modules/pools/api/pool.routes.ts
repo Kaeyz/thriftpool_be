@@ -30,6 +30,18 @@ export const webAppPoolRouter = (rootPath: string, router: Router) => {
     catchHttpError(PoolController.startPool)
   );
 
+  router.post(
+    `${baseRoute}/:id/start-next`,
+    useApiCtx({
+      authenticate: true,
+      requireCommunity: true,
+      roleConfig: { community: allCommunityAdmin },
+      dbTransaction: true,
+    }),
+    validateHttpInput(PoolParamsSchema, "params"),
+    catchHttpError(PoolController.startNextPool)
+  );
+
   router.delete(
     `${baseRoute}/:id`,
     useApiCtx({

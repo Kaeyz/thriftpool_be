@@ -58,16 +58,27 @@
  * /utils/upload:
  *   post:
  *     summary: Upload file and images to the application
+ *     description: For transaction proof, use entityName transaction, useCase proof, and the transaction ID as entityId.
  *     tags: [Utils]
  *     security:
  *       - AuthToken: []
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
- *             $ref: '#/components/schemas/FileUploadInput'
+ *             required: [entityName, useCase, entityId, file]
+ *             properties:
+ *               entityName:
+ *                 type: string
+ *               useCase:
+ *                 type: string
+ *               entityId:
+ *                 type: string
+ *               file:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       200:
  *         description: Success

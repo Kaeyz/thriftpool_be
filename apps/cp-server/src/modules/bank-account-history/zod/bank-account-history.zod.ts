@@ -12,13 +12,20 @@ export const BankAccountHistorySchema = z.object({
   amount: z.number(),
   currencyCode: CurrencyCodeSchema,
   description: z.string().optional(),
-  occurredAt: z.date(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  occurredAt: z.iso.datetime(),
+  createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
 });
 
 export const IPBankAccountHistorySchema = BankAccountHistorySchema.omit({ updatedAt: true });
 export const ISBankAccountHistorySchema = BankAccountHistorySchema.omit({ updatedAt: true });
+
+export const BankAccountHistoriesQueryResponse = z.object({
+  data: z.array(IPBankAccountHistorySchema),
+  count: z.int(),
+  page: z.int(),
+  limit: z.int(),
+});
 
 export const BankAccountHistoryInputSchema = z.object({
   bankAccount: FieldSchemas.dbIdSchema("bankAccount"),
@@ -34,7 +41,7 @@ export const BankAccountHistorySortKeySchema = z.enum(["createdAt", "occurredAt"
 export const BankAccountHistoryQueryInputSchema = z.object({
   page: PageInputSchema,
   limit: LimitInputSchema,
-  bankAccountId: FieldSchemas.dbIdSchema("bankAccountId").optional(),
+  bankAccountId: FieldSchemas.dbIdSchema("bankAccountId"),
   transactionId: FieldSchemas.dbIdSchema("transactionId").optional(),
   type: BankAccountHistoryTypeSchema.optional(),
   sortKey: FieldSchemas.enumSelectSchema("sortKey", BankAccountHistorySortKeySchema).optional(),

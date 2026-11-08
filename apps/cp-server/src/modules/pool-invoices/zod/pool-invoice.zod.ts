@@ -12,7 +12,7 @@ import { ISCommunityMemberSchema } from "@/modules/community-members/zod/communi
 import { ISPoolSlotSchema } from "@/modules/pools/zod/pool-slot.zod";
 
 export const SlotMemberSchema = ISCommunityMemberSchema.pick({ id: true, user: true, role: true });
-export const PoolInvoiceStatusSchema = z.enum(["pending", "paid", "cancelled"]);
+export const PoolInvoiceStatusSchema = z.enum(["pending", "partially_paid", "paid", "cancelled"]);
 export const PoolSlotInInvoiceSchema = ISPoolSlotSchema;
 export const PoolInvoiceAccountInfoSchema = z.object({
   member: SlotMemberSchema,
@@ -29,6 +29,8 @@ export const PoolInvoiceSchema = z.object({
   amount: z.number(),
   currencyCode: CurrencyCodeSchema,
   transaction: z.string().optional(),
+  transactions: z.array(z.string()).optional(),
+  remittedAmount: z.number().nonnegative().optional(),
   status: PoolInvoiceStatusSchema,
   dueDate: z.iso.datetime(),
   paidAt: z.iso.datetime().optional(),
@@ -46,6 +48,8 @@ export const PoolInvoiceInputSchema = z.object({
   amount: FieldSchemas.numberSchema("amount"),
   currencyCode: CurrencyCodeSchema,
   status: PoolInvoiceStatusSchema.optional(),
+  transactions: z.array(FieldSchemas.dbIdSchema("transaction")).optional(),
+  remittedAmount: FieldSchemas.numberSchema("remittedAmount").optional(),
   issuedAt: z.coerce.date(),
   dueDate: z.coerce.date(),
   paidAt: z.coerce.date().optional(),
@@ -78,6 +82,7 @@ export const PoolInvoicesQueryInputSchema = z.object({
   poolSlotId: FieldSchemas.dbIdSchema("poolSlotId").optional(),
   memberId: FieldSchemas.dbIdSchema("memberId").optional(),
   status: PoolInvoiceStatusSchema.optional(),
+  turnNumber: FieldSchemas.numberSchema("turnNumber").optional(),
   sortKey: FieldSchemas.enumSelectSchema("sortKey", PoolInvoiceSortKeySchema).optional(),
   sortDir: FieldSchemas.enumSelectSchema("sortDir", SortDirectionSchema).optional(),
 });

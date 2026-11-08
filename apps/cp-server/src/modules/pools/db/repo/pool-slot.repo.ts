@@ -20,6 +20,43 @@ export class PoolSlotRepo {
     return PoolSlot.findOne({ pool: poolId, position }, {}, { session: ctx?.session });
   }
 
+  static getActiveByPool(ctx: Ctx, poolId: string): Promise<PoolSlotDoc | null> {
+    return PoolSlot.findOne({ pool: poolId, "cycleState.state": "active" }, {}, { session: ctx?.session });
+  }
+
+  static completeActiveCycle(ctx: Ctx, poolId: string, poolSlotId: string, endedAt: number): Promise<PoolSlotDoc | null> {
+    return PoolSlot.findOneAndUpdate(
+      { _id: poolSlotId, pool: poolId, "cycleState.state": "active" },
+      {
+        $set: {
+          "cycleState.state": "completed",
+          "cycleState.endDate": endedAt,
+          endedDate: endedAt,
+        },
+      },
+      { new: true, session: ctx?.session }
+    );
+  }
+
+  static activateCycle(
+    ctx: Ctx,
+    poolId: string,
+    poolSlotId: string,
+    startDate: number,
+    endDate: number
+  ): Promise<PoolSlotDoc | null> {
+    return PoolSlot.findOneAndUpdate(
+      { _id: poolSlotId, pool: poolId, "cycleState.state": { $ne: "active" } },
+      {
+        $set: {
+          startDate,
+          cycleState: { state: "active", startDate, endDate },
+        },
+      },
+      { new: true, session: ctx?.session }
+    );
+  }
+
   static getOtherSlotForMember(ctx: Ctx, poolId: string, memberId: string, excludedSlotId: string): Promise<PoolSlotDoc | null> {
     return PoolSlot.findOne(
       { pool: poolId, _id: { $ne: excludedSlotId }, "slotOwner.member": memberId },
@@ -45,7 +82,14 @@ export class PoolSlotRepo {
     if (options.paginate !== false) dataQuery.skip(skip).limit(limit);
     dataQuery.sort(sort);
 
-    const [data, count] = await Promise.all([dataQuery, countQuery]);
+    let data: IPPoolSlot[];
+    let count: number;
+    if (ctx?.session) {
+      data = await dataQuery;
+      count = await countQuery;
+    } else {
+      [data, count] = await Promise.all([dataQuery, countQuery]);
+    }
 
     return { data, count, page, limit };
   }

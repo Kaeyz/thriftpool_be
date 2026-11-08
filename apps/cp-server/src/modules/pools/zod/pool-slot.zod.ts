@@ -40,7 +40,14 @@ export const PoolSlotSchema = z.object({
   updatedAt: z.number(),
 });
 
-export const IPPoolSlotSchema = PoolSlotSchema.pick({ id: true, position: true, slotOwner: true, paymentInfo: true });
+export const IPPoolSlotSchema = PoolSlotSchema.pick({
+  id: true,
+  position: true,
+  slotOwner: true,
+  paymentInfo: true,
+  plannedStartDate: true,
+  plannedEndDate: true,
+});
 export const ISPoolSlotSchema = PoolSlotSchema.omit({ updatedAt: true });
 
 export const PoolSlotInputSchema = z.object({

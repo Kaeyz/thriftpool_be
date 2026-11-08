@@ -6,6 +6,15 @@ import { TransactionStatusSchema } from "../../zod/transaction.zod";
 import type { ITransaction } from "../types/transaction.types";
 import { BANK_ACCOUNTS, POOL_INVOICES, TRANSACTIONS } from "@/lib/definitions";
 
+const MediaFileSchema = new Schema(
+  {
+    fileId: { type: String, required: true },
+    fileName: { type: String, required: true },
+    url: { type: String, required: true },
+  },
+  { _id: false, versionKey: false }
+);
+
 const TransactionSchema: Schema = new Schema(
   {
     invoice: { type: Schema.Types.ObjectId, ref: POOL_INVOICES, required: true },
@@ -14,8 +23,9 @@ const TransactionSchema: Schema = new Schema(
     amount: { type: Number, required: true, min: 0 },
     currencyCode: { type: String, enum: Object.values(CurrencyCode), required: true },
     status: { type: String, enum: TransactionStatusSchema.options, default: "pending" },
+    proof: { type: MediaFileSchema },
     reference: String,
-    description: String,
+    rejectionReason: String,
     completedAt: Date,
   },
   { timestamps: true, versionKey: false }

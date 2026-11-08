@@ -134,6 +134,26 @@
 
 /**
  * @swagger
+ * /pools/{id}/start-next:
+ *   post:
+ *     summary: Complete the active slot and start the next pool turn
+ *     description: Only the pool owner can advance. All invoices for the active turn must be fully remitted. The pool is completed after its final slot.
+ *     tags: [Pools]
+ *     security:
+ *       - AuthToken: []
+ *       - CommunityKey: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         type: string
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Pool turn advanced or pool completed
+ */
+
+/**
+ * @swagger
  * /pools/{id}/start:
  *   post:
  *     summary: Start an initiated pool

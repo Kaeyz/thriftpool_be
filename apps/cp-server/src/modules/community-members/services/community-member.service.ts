@@ -48,6 +48,11 @@ export class CommunityMemberService {
     return { data };
   }
 
+  static async getCommunityMemberIdsByUser(ctx: Ctx, userId: string) {
+    const data = await CommunityMemberRepo.getIdsByUserId(ctx, userId);
+    return { data, message: resp.COMMUNITY_MEMBERS_RETRIEVED };
+  }
+
   static async updateMemberRole(ctx: Ctx, memberId: string, data: CommunityRoleUpdateInput) {
     let member = await CommunityMemberRepo.getById(ctx, memberId);
     if (!member) throw new AppError(StatusCodes.NOT_FOUND, resp.COMMUNITY_MEMBER_NOT_FOUND);

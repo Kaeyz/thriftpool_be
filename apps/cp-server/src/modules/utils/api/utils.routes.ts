@@ -3,9 +3,13 @@ import type { NextFunction, Router, Request, Response } from "express";
 import multer, { memoryStorage } from "multer";
 import { FileUploadInputSchema } from "../zod/utils.zod";
 import { UtilsController } from "./utils.controller";
+import { allCommunityMembers } from "@/lib/definitions/roles";
 import { useApiCtx } from "@/runtime/http/config";
 
 const multerUpload = multer({ storage: memoryStorage() });
+const uploadAuthConfigByEntity: Partial<Record<string, { requireCommunity: true; roleConfig: { community: string[] } }>> = {
+  transaction: { requireCommunity: true, roleConfig: { community: allCommunityMembers } },
+};
 
 const upload = (fieldName: string) => {
   const singleUpload = multerUpload.single(fieldName);
@@ -26,7 +30,10 @@ export const webAppUtilsRouter = (rootPath: string, router: Router) => {
     `${baseRoute}/upload`,
     upload("file"),
     validateHttpInput(FileUploadInputSchema, "body"),
-    useApiCtx({ authenticate: true }),
+    useApiCtx((req) => ({
+      authenticate: true,
+      ...(uploadAuthConfigByEntity[req.body?.entityName] ?? {}),
+    })),
     catchHttpError(UtilsController.uploadFile)
   );
   router.get(`${baseRoute}/upload`, catchHttpError(UtilsController.getUploadConfig));

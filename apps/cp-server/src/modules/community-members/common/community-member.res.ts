@@ -2,6 +2,7 @@ export const COMMUNITY_MEMBER_CREATED = "New community member added";
 export const COMMUNITY_MEMBER_UPDATED = "Community member updated";
 export const COMMUNITY_MEMBER_ACTIVATED = "Community member activated";
 export const COMMUNITY_MEMBER_INVITED = "Community member invited";
+export const COMMUNITY_MEMBERS_RETRIEVED = "Community members retrieved";
 
 // Error
 export const COMMUNITY_MEMBER_EXIST = "Community member already exist";

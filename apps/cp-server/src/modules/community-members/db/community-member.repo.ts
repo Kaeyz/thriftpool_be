@@ -15,6 +15,11 @@ export class CommunityMemberRepo {
     return CommunityMember.findOne({ community: data.communityId, user: data.userId }, {}, { session: ctx?.session });
   }
 
+  static async getIdsByUserId(ctx: Ctx, userId: string): Promise<string[]> {
+    const ids = await CommunityMember.find({ user: userId }, { _id: 1 }, { session: ctx?.session }).distinct("_id");
+    return ids.map((id) => id.toString());
+  }
+
   static getById(ctx: Ctx, id: string): Promise<CommunityMemberDoc | null> {
     return CommunityMember.findById(id, {}, { session: ctx?.session });
   }

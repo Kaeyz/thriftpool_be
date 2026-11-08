@@ -2,6 +2,8 @@ export const pool_created = "New pool created";
 export const pool_updated = "Pool updated";
 export const pool_deleted = "Pool deleted";
 export const pool_started = "Pool started";
+export const pool_next_turn_started = "Next pool turn started";
+export const pool_completed = "Pool completed";
 export const pool_retrieved = "Pool retrieved";
 
 // Error
@@ -26,6 +28,9 @@ export const pool_slots_retrieved = "Pool slots retrieved";
 export const pool_slot_retrieved = "Pool slot retrieved";
 export const pool_slot_account_required = "Slot account type and bank account are required for the pool owner";
 export const pool_owner_only = "Only the pool owner can perform this action";
+export const pool_turn_invoices_not_found = "No invoices exist for the active pool turn";
+export const pool_turn_invoices_unpaid = "All invoices for the active pool turn must be fully remitted before advancing";
+export const pool_slot_cycle_not_advanced = "Pool slot cycle could not be advanced";
 export const pool_slot_accepted = "Pool slot accepted";
 export const pool_slot_rejected = "Pool slot rejected";
 export const pool_slot_revoked = "Pool slot revoked";

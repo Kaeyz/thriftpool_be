@@ -1,6 +1,8 @@
 import type { CurrencyCode } from "@packages/core/enums";
+import type { MediaFile } from "@packages/core/types";
 import type { Document } from "mongoose";
 import type { z } from "zod";
+import type { TransactionStatus } from "../../common/transaction.dto";
 import type { TransactionSchema } from "../../zod/transaction.zod";
 
 export type ITransaction = {
@@ -10,9 +12,10 @@ export type ITransaction = {
   toBankAccount?: string;
   amount: number;
   currencyCode: CurrencyCode;
-  status: "pending" | "completed" | "failed";
+  status: TransactionStatus;
+  proof?: MediaFile;
   reference?: string;
-  description?: string;
+  rejectionReason?: string;
   completedAt?: Date;
   createdAt: Date;
   updatedAt: Date;

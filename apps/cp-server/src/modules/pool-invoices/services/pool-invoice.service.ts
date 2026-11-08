@@ -88,20 +88,46 @@ export class PoolInvoiceService {
     const { data: poolIds } = await PoolService.getCommunityPoolIds(ctx);
     let invoice = await PoolInvoiceRepo.getByIdInPools(ctx, id, poolIds);
     if (options) invoice = PoolInvoiceUtils.validatePoolInvoice(invoice, options);
-    return { data: invoice ? PoolInvoiceUtils.sanitize(invoice) : null };
+    return {
+      data: invoice ? PoolInvoiceUtils.sanitize(invoice) : null,
+      message: resp.POOL_INVOICE_RETRIEVED,
+    };
   }
 
   static async getPoolInvoices(ctx: Ctx, query: GetPoolInvoicesQuery) {
     const { data: poolIds } = await PoolService.getCommunityPoolIds(ctx);
     const data = await PoolInvoiceRepo.getAll(ctx, { ...query, poolIds });
-    return { data };
+    return { data, message: resp.POOL_INVOICE_RETRIEVED };
   }
 
   static async getMyPoolInvoices(ctx: Ctx, query: GetPoolInvoicesQuery) {
     const { data: poolIds } = await PoolService.getCommunityPoolIds(ctx);
     const memberId = ctx.communityMember?.id || "";
     const data = await PoolInvoiceRepo.getAll(ctx, { ...query, poolIds, memberId });
-    return { data };
+    return { data, message: resp.POOL_INVOICE_RETRIEVED };
+  }
+
+  static async getPoolInvoiceIds(ctx: Ctx, poolIds: string[], memberId?: string, poolSlotId?: string) {
+    const data = await PoolInvoiceRepo.getIdsByPools(ctx, poolIds, memberId, poolSlotId);
+    return { data, message: resp.POOL_INVOICE_RETRIEVED };
+  }
+
+  static async getPoolInvoiceIdsByMembers(ctx: Ctx, memberIds: string[], poolId?: string, poolSlotId?: string) {
+    const data = await PoolInvoiceRepo.getIdsByMembers(ctx, memberIds, poolId, poolSlotId);
+    return { data, message: resp.POOL_INVOICE_RETRIEVED };
+  }
+
+  static async getPoolInvoicesByTurn(ctx: Ctx, poolId: string, turnNumber: number, limit: number) {
+    const result = await PoolInvoiceRepo.getAll(ctx, { poolId, turnNumber, page: 1, limit }, { paginate: false });
+    return { data: result.data, message: resp.POOL_INVOICE_RETRIEVED };
+  }
+
+  static async applyInvoiceRemittance(ctx: Ctx, invoiceId: string, transactionId: string, amount: number) {
+    const invoice = await PoolInvoiceRepo.applyRemittance(ctx, invoiceId, transactionId, amount);
+    return {
+      data: invoice ? PoolInvoiceUtils.sanitize(invoice) : null,
+      message: invoice ? resp.POOL_INVOICE_UPDATED : resp.POOL_INVOICE_NOT_UPDATED,
+    };
   }
 
   static async updatePoolInvoice(ctx: Ctx, id: string, data: PoolInvoiceInput) {
@@ -117,7 +143,7 @@ export class PoolInvoiceService {
   static async deletePoolInvoice(ctx: Ctx, id: string) {
     const invoice = await PoolInvoiceRepo.delete(ctx, id);
     if (!invoice) throw new AppError(StatusCodes.BAD_REQUEST, resp.POOL_INVOICE_NOT_DELETED);
-    return { message: resp.POOL_INVOICE_DELETED };
+    return { data: null, message: resp.POOL_INVOICE_DELETED };
   }
 
   private static async getInvoiceEntities(ctx: Ctx, poolId: string, poolSlotId: string) {
