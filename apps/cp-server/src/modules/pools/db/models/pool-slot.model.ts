@@ -17,7 +17,7 @@ const PoolSlotSchema: Schema = new Schema(
       status: { type: String, enum: PoolSlotOwnerStatusSchema.options },
     },
     cycleState: {
-      state: { type: String, enum: PoolSlotCycleStateSchema.options },
+      state: { type: String, enum: PoolSlotCycleStateSchema.options, default: "pending" },
       startDate: Date,
       endDate: Date,
     },
