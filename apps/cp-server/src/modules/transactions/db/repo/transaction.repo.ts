@@ -44,6 +44,7 @@ export class TransactionRepo {
   static async getUnsettledAmountByInvoice(ctx: Ctx, invoiceId: string): Promise<number> {
     const transactions = await Transaction.find(
       { invoice: invoiceId, status: { $in: ["pending", "awaiting_proof", "pending_approval"] } },
+      null,
       { session: ctx?.session }
     );
     return transactions.reduce((total, transaction) => total + transaction.amount, 0);
