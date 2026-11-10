@@ -8,7 +8,10 @@ const mocks = vi.hoisted(() => ({
   completeActiveCycle: vi.fn(),
   activateCycle: vi.fn(),
   getPoolInvoicesByTurn: vi.fn(),
-  createPoolStartInvoices: vi.fn(),
+  createPoolStartInvoices: vi.fn(async (_ctx, invoices) => ({
+    data: invoices.map((invoice) => `${invoice.poolSlot}-${invoice.turnNumber}`),
+    message: "Pool invoices created",
+  })),
   validatePool: vi.fn(),
   validatePoolOwnerAction: vi.fn((_ctx, pool) => pool),
   isCurrentUserPoolOwner: vi.fn(),
@@ -103,6 +106,14 @@ const pool = {
 
 const slots = [
   {
+    id: "slot-1",
+    position: 1,
+    slotOwner: { member: { id: "member-1" } },
+    paymentInfo: { accountType: "bank_account", bankAccount: { id: "bank-1" } },
+    plannedStartDate: 1_000,
+    plannedEndDate: 2_000,
+  },
+  {
     id: "slot-2",
     position: 2,
     slotOwner: { member: { id: "member-2" } },
@@ -134,7 +145,9 @@ describe("PoolService.startNextPool", () => {
     mocks.getPoolInvoicesByTurn.mockResolvedValue({
       data: [{ id: "invoice-1", amount: 10, remittedAmount: 10, status: "paid" }],
     });
-    mocks.createPoolStartInvoices.mockResolvedValue({ data: [] });
+    mocks.createPoolStartInvoices.mockImplementation(async (_ctx, invoices) => ({
+      data: invoices.map((invoice) => `${invoice.poolSlot}-${invoice.turnNumber}`),
+    }));
     mocks.completeActiveCycle.mockResolvedValue({ id: "slot-1" });
     mocks.activateCycle.mockResolvedValue({ id: "slot-2" });
     mocks.updatePool.mockResolvedValue(pool);
@@ -159,25 +172,54 @@ describe("PoolService.startNextPool", () => {
       "pool-1"
     );
 
-    expect(mocks.createPoolStartInvoices).toHaveBeenCalledWith(expect.anything(), [
-      expect.objectContaining({
-        poolSlot: "slot-3",
-        turnNumber: 2,
-        sender: {
-          member: "member-3",
-          accountType: "bank_account",
-          bankAccount: "bank-3",
-        },
-        receiver: {
-          member: "member-2",
-          accountType: "bank_account",
-          bankAccount: "bank-2",
-        },
-      }),
-    ]);
+    expect(mocks.createPoolStartInvoices).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.arrayContaining([
+        expect.objectContaining({
+          poolSlot: "slot-1",
+          turnNumber: 2,
+          sender: {
+            member: "member-1",
+            accountType: "bank_account",
+            bankAccount: "bank-1",
+          },
+          receiver: {
+            member: "member-2",
+            accountType: "bank_account",
+            bankAccount: "bank-2",
+          },
+        }),
+        expect.objectContaining({
+          poolSlot: "slot-3",
+          turnNumber: 2,
+          sender: {
+            member: "member-3",
+            accountType: "bank_account",
+            bankAccount: "bank-3",
+          },
+          receiver: {
+            member: "member-2",
+            accountType: "bank_account",
+            bankAccount: "bank-2",
+          },
+        }),
+      ])
+    );
     expect(mocks.completeActiveCycle).toHaveBeenCalledWith(expect.anything(), "pool-1", "slot-1", expect.any(Number));
     expect(mocks.activateCycle).toHaveBeenCalledWith(expect.anything(), "pool-1", "slot-2", 2_000, 3_000);
     expect(mocks.updatePool).toHaveBeenCalledWith(expect.anything(), "pool-1", { status: "ongoing" });
+  });
+
+  it("does not advance the cycle unless every next-turn invoice is saved", async () => {
+    mocks.createPoolStartInvoices.mockResolvedValue({ data: [], message: "Pool invoices created" });
+
+    await expect(
+      PoolService.startNextPool({ community: { id: "community-1" }, communityMember: { id: "owner-member" } } as never, "pool-1")
+    ).rejects.toThrow("Invoices for the next pool turn could not be saved");
+
+    expect(mocks.completeActiveCycle).not.toHaveBeenCalled();
+    expect(mocks.activateCycle).not.toHaveBeenCalled();
+    expect(mocks.updatePool).not.toHaveBeenCalled();
   });
 
   it("completes the pool when the active slot is the last slot", async () => {

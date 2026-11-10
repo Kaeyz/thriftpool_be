@@ -203,23 +203,23 @@ export class PoolService {
       nextEndDate = plannedEndDate;
 
       const receiver = PoolUtils.getSlotAccountInfo(nextSlot);
-      const futureSlots = poolSlots.data.filter((slot) => slot.position > nextSlot.position);
+      const contributingSlots = poolSlots.data.filter((slot) => slot.id !== nextSlot.id);
       const poolAccountInfo = PoolUtils.getPoolAccountInfo(pool);
 
       const paymentReceiver = pool.paymentMode === "direct_payment" ? receiver : poolAccountInfo;
       if (!paymentReceiver) throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_account_required);
       const issuedAt = new Date();
       const dueDate = PoolUtils.getInvoiceDueDate(new Date(plannedEndDate), pool.paymentDeadline);
-      const invoicesToCreate: PoolInvoiceCreateInput[] = futureSlots.map((slot) =>
+      const invoicesToCreate: PoolInvoiceCreateInput[] = contributingSlots.map((slot) =>
         PoolUtils.createContributionInvoice(pool, slot, paymentReceiver, nextSlot.position, issuedAt, dueDate)
       );
 
-      if (poolAccountInfo && futureSlots.length > 0) {
+      if (poolAccountInfo && contributingSlots.length > 0) {
         invoicesToCreate.push(
           PoolUtils.createPoolAccountInvoice(
             pool,
             nextSlot,
-            futureSlots.length,
+            contributingSlots.length,
             nextSlot.position,
             issuedAt,
             new Date(plannedEndDate)
@@ -227,7 +227,10 @@ export class PoolService {
         );
       }
 
-      await PoolInvoiceService.createPoolStartInvoices(ctx, invoicesToCreate);
+      const { data: savedInvoiceIds } = await PoolInvoiceService.createPoolStartInvoices(ctx, invoicesToCreate);
+      if (savedInvoiceIds.length !== invoicesToCreate.length) {
+        throw new AppError(StatusCodes.BAD_REQUEST, resp.pool_next_turn_invoices_not_created);
+      }
     }
 
     const now = Date.now();

@@ -30,6 +30,7 @@ export const pool_slot_account_required = "Slot account type and bank account ar
 export const pool_owner_only = "Only the pool owner can perform this action";
 export const pool_turn_invoices_not_found = "No invoices exist for the active pool turn";
 export const pool_turn_invoices_unpaid = "All invoices for the active pool turn must be fully remitted before advancing";
+export const pool_next_turn_invoices_not_created = "Invoices for the next pool turn could not be saved";
 export const pool_slot_cycle_not_advanced = "Pool slot cycle could not be advanced";
 export const pool_slot_accepted = "Pool slot accepted";
 export const pool_slot_rejected = "Pool slot rejected";
