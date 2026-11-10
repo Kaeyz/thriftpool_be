@@ -131,6 +131,45 @@ const slots = [
   },
 ];
 
+describe("PoolService.getPool", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mocks.getByIdInCommunity.mockResolvedValue({
+      id: "pool-1",
+      poolMembers: [
+        { member: { id: "owner-member" }, role: "owner" },
+        { member: { id: "pool-member" }, role: "member" },
+      ],
+    });
+  });
+
+  it("allows the pool owner to retrieve the pool", async () => {
+    mocks.isCurrentUserPoolOwner.mockReturnValue(true);
+
+    await PoolService.getPool({ community: { id: "community-1" }, communityMember: { id: "owner-member" } } as never, "pool-1");
+
+    expect(mocks.sanitizePool).toHaveBeenCalled();
+  });
+
+  it("allows a pool member to retrieve the pool", async () => {
+    mocks.isCurrentUserPoolOwner.mockReturnValue(false);
+
+    await PoolService.getPool({ community: { id: "community-1" }, communityMember: { id: "pool-member" } } as never, "pool-1");
+
+    expect(mocks.sanitizePool).toHaveBeenCalled();
+  });
+
+  it("returns not found to community members who do not belong to the pool", async () => {
+    mocks.isCurrentUserPoolOwner.mockReturnValue(false);
+
+    await expect(
+      PoolService.getPool({ community: { id: "community-1" }, communityMember: { id: "other-member" } } as never, "pool-1")
+    ).rejects.toThrow("Pool not found");
+
+    expect(mocks.sanitizePool).not.toHaveBeenCalled();
+  });
+});
+
 describe("PoolService.startNextPool", () => {
   beforeEach(() => {
     vi.clearAllMocks();

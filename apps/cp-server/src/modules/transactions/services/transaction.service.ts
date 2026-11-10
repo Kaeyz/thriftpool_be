@@ -14,6 +14,7 @@ import * as resp from "../common/transaction.res";
 import { TransactionUtils } from "../common/transaction.utils";
 import { TransactionRepo } from "../db/repo/transaction.repo";
 import type { Ctx } from "@/lib/ctx/ctx.types";
+import { discordService } from "@/lib/helpers/discord";
 import { BankAccountHistoryService } from "@/modules/bank-account-history";
 import { CommunityMemberService } from "@/modules/community-members";
 import { PoolInvoiceService } from "@/modules/pool-invoices";
@@ -37,6 +38,18 @@ export class TransactionService {
 
     const unsettledAmount = await TransactionRepo.getUnsettledAmountByInvoice(ctx, invoice.id);
     const remainingAmount = invoice.amount - (invoice.remittedAmount ?? 0) - unsettledAmount;
+    void discordService.sendMessage("serverLogs", {
+      data: {
+        remainingAmount,
+        unsettledAmount,
+        invoiceAmount: invoice.amount,
+        invoiceId: invoice.id,
+        transactionAmount: data.amount,
+      },
+      type: "transaction_registration",
+      env: "dev",
+      subject: "Transaction Registration Attempt",
+    });
     if (data.amount > remainingAmount) {
       throw new AppError(StatusCodes.BAD_REQUEST, resp.TRANSACTION_AMOUNT_EXCEEDS_BALANCE);
     }
