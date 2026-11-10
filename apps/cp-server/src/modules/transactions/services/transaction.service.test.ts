@@ -54,7 +54,6 @@ vi.mock("@/modules/bank-account-history", () => ({
     recordTransaction: mocks.recordTransaction,
   },
 }));
-
 import { TransactionService } from "./transaction.service";
 
 const invoice = {
@@ -103,6 +102,19 @@ describe("TransactionService", () => {
       })
     );
     expect(result.data).toBe(transaction);
+  });
+
+  it("rounds the remaining invoice balance to two decimal places", async () => {
+    mocks.getPoolInvoice.mockResolvedValue({ data: { ...invoice, amount: 0.3, remittedAmount: 0 } });
+    mocks.getUnsettledAmountByInvoice.mockResolvedValue(0.2);
+    mocks.create.mockResolvedValue({ id: "transaction-1", status: "awaiting_proof" });
+
+    await TransactionService.registerTransaction({ communityMember: { id: "sender-member" } } as never, {
+      invoice: "invoice-1",
+      amount: 0.1,
+    });
+
+    expect(mocks.create).toHaveBeenCalled();
   });
 
   it("rejects payments that exceed the remaining invoice balance", async () => {
