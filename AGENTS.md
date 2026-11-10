@@ -17,7 +17,7 @@ This repository is a pnpm monorepo. The primary application is `apps/cp-server`;
 
 - Feature modules generally organize code into `api/`, `services/`, `db/`, `common/`, and `zod/`. Follow the module's existing layout and kebab-case file naming.
 - Keep HTTP concerns in routes/controllers, business rules and orchestration in services, and database queries in repositories.
-- Routes should use the existing context/auth middleware, Zod request validation, and HTTP error handling. Controllers should delegate to services rather than implementing domain logic.
+- Routes should use the existing context/auth middleware, Zod request validation, and HTTP error handling. Validate request queries in the route with `validateHttpInput(schema, "query")`; controllers must not parse or validate queries again. Controllers should delegate to services rather than implementing domain logic.
 - Controllers must whitelist query parameters before calling services: destructure only supported fields from the validated query and construct the typed query object explicitly. Never pass raw `req.query` to a service or spread it into a database filter.
 - A module must not import another module's repository or database-layer implementation. Cross-module communication goes through that module's service; expose a narrow service method when needed.
 - A module must never import another module's Mongoose model. Repositories may use models owned by their own module only; expose cross-module data access through the owning module's service and pass the resulting data into the calling module.
