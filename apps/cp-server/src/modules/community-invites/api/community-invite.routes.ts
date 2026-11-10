@@ -1,6 +1,10 @@
 import { catchHttpError, validateHttpInput } from "@packages/runtime/http";
 import type { Router } from "express";
-import { CommunityInviteInputSchema, CommunityPendingInviteSchema } from "../zod/community-invite.zod";
+import {
+  CommunityInviteInputSchema,
+  CommunityInvitesQueryInputSchema,
+  CommunityPendingInviteSchema,
+} from "../zod/community-invite.zod";
 import { CommunityInviteController } from "./community-invite.controller";
 import { useApiCtx } from "@/runtime/http/config/http-context";
 
@@ -21,11 +25,17 @@ export const webAppCommunityInviteRouter = (rootPath: string, router: Router) =>
     catchHttpError(CommunityInviteController.sendNewInvite)
   );
 
-  router.get(`${baseRoute}/me`, useApiCtx({ authenticate: true }), catchHttpError(CommunityInviteController.getMyInvites));
+  router.get(
+    `${baseRoute}/me`,
+    useApiCtx({ authenticate: true }),
+    validateHttpInput(CommunityInvitesQueryInputSchema, "query"),
+    catchHttpError(CommunityInviteController.getMyInvites)
+  );
 
   router.get(
     baseRoute,
     useApiCtx({ authenticate: true, requireCommunity: true, roleConfig: { community: ["owner", "admin"] } }),
+    validateHttpInput(CommunityInvitesQueryInputSchema, "query"),
     catchHttpError(CommunityInviteController.getInvites)
   );
 

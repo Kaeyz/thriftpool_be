@@ -1,6 +1,6 @@
 import { catchHttpError, validateHttpInput } from "@packages/runtime/http";
 import type { Router } from "express";
-import { CommunityInputSchema } from "../zod/community.zod";
+import { CommunityInputSchema, CommunityQueryInputSchema } from "../zod/community.zod";
 import { CommunityController } from "./community.controller";
 import { useApiCtx } from "@/runtime/http/config/http-context";
 
@@ -18,7 +18,12 @@ export const webAppCommunityRouter = (rootPath: string, router: Router) => {
     catchHttpError(CommunityController.updateCommunity)
   );
 
-  router.get(`${baseRoute}/me`, useApiCtx({ authenticate: true }), catchHttpError(CommunityController.getMyCommunities));
+  router.get(
+    `${baseRoute}/me`,
+    useApiCtx({ authenticate: true }),
+    validateHttpInput(CommunityQueryInputSchema, "query"),
+    catchHttpError(CommunityController.getMyCommunities)
+  );
 
   router.post(
     `${baseRoute}`,

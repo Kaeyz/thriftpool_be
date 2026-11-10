@@ -1,6 +1,6 @@
 import { catchHttpError, validateHttpInput } from "@packages/runtime/http";
 import type { Router } from "express";
-import { CommunityRoleUpdateSchema } from "../zod/community-member.zod";
+import { CommunityMembersQueryInputSchema, CommunityRoleUpdateSchema } from "../zod/community-member.zod";
 import { CommunityMemberController } from "./community-member.controller";
 import { allCommunityMembers, communityOwner } from "@/lib/definitions/roles";
 import { useApiCtx } from "@/runtime/http/config/http-context";
@@ -27,11 +27,17 @@ export const webAppCommunityMemberRouter = (rootPath: string, router: Router) =>
     catchHttpError(CommunityMemberController.suspendMember)
   );
 
-  router.get(`${baseRoute}/me`, useApiCtx({ authenticate: true }), catchHttpError(CommunityMemberController.getMyMemberShips));
+  router.get(
+    `${baseRoute}/me`,
+    useApiCtx({ authenticate: true }),
+    validateHttpInput(CommunityMembersQueryInputSchema, "query"),
+    catchHttpError(CommunityMemberController.getMyMemberShips)
+  );
 
   router.get(
     baseRoute,
     useApiCtx({ authenticate: true, requireCommunity: true, roleConfig: { community: allCommunityMembers } }),
+    validateHttpInput(CommunityMembersQueryInputSchema, "query"),
     catchHttpError(CommunityMemberController.getMembers)
   );
 

@@ -1,6 +1,6 @@
 import { catchHttpError, validateHttpInput } from "@packages/runtime/http";
 import type { Router } from "express";
-import { PoolInputSchema, PoolParamsSchema } from "../zod/pool.zod";
+import { PoolInputSchema, PoolParamsSchema, PoolQueryInputSchema } from "../zod/pool.zod";
 import { PoolController } from "./pool.controller";
 import { allCommunityAdmin, allCommunityMembers, communityOwner } from "@/lib/definitions/roles";
 import { useApiCtx } from "@/runtime/http/config/http-context";
@@ -60,6 +60,7 @@ export const webAppPoolRouter = (rootPath: string, router: Router) => {
       requireCommunity: true,
       roleConfig: { community: allCommunityMembers },
     }),
+    validateHttpInput(PoolQueryInputSchema, "query"),
     catchHttpError(PoolController.getMyPools)
   );
 
