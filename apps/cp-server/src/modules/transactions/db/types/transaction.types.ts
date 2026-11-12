@@ -7,6 +7,7 @@ import type { TransactionSchema } from "../../zod/transaction.zod";
 
 export type ITransaction = {
   id: string;
+  ref: string;
   invoice: string;
   fromBankAccount?: string;
   toBankAccount?: string;
@@ -21,5 +22,5 @@ export type ITransaction = {
   updatedAt: Date;
 };
 
-export type ITransactionInput = Partial<ITransaction>;
+export type ITransactionInput = Partial<Omit<ITransaction, "ref">>;
 export type TransactionDoc = z.infer<typeof TransactionSchema> & Document;

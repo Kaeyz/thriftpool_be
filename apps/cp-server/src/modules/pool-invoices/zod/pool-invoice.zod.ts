@@ -22,6 +22,7 @@ export const PoolInvoiceAccountInfoSchema = z.object({
 
 export const PoolInvoiceSchema = z.object({
   id: z.string(),
+  ref: z.string(),
   pool: z.string(),
   poolSlot: PoolSlotInInvoiceSchema,
   sender: PoolInvoiceAccountInfoSchema,

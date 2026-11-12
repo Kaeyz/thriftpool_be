@@ -6,6 +6,7 @@ import type { PoolInvoiceSchema } from "../../zod/pool-invoice.zod";
 
 export type IPoolInvoice = {
   id: string;
+  ref: string;
   pool: string;
   poolSlot: string;
   sender: {
@@ -32,5 +33,5 @@ export type IPoolInvoice = {
   updatedAt: Date;
 };
 
-export type IPoolInvoiceInput = Partial<IPoolInvoice>;
+export type IPoolInvoiceInput = Partial<Omit<IPoolInvoice, "ref">>;
 export type PoolInvoiceDoc = z.infer<typeof PoolInvoiceSchema> & Document;

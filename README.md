@@ -73,6 +73,12 @@ pnpm cp dev
 
 Environment variables are defined in `.env` files (either at root of each service).
 
+### Invoice and transaction references
+
+New pool invoices and transactions receive immutable, unique `ref` values prefixed
+`PNV-` and `TXN-`, respectively. A transaction's existing `reference` remains a
+separate, user-supplied payment reference.
+
 ---
 
 ## 🧪 Linting & Type Checking

@@ -16,6 +16,7 @@ export const TransactionDecisionSchema = z.enum(["approve", "reject"]);
 
 export const TransactionSchema = z.object({
   id: z.string(),
+  ref: z.string(),
   invoice: z.string(),
   fromBankAccount: z.string().optional(),
   toBankAccount: z.string().optional(),

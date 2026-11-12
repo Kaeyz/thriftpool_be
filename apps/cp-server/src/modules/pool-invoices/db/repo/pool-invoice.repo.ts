@@ -1,5 +1,6 @@
 import { parseSelectFromSchema } from "@packages/core/database";
 import { buildPagination, buildSortObject } from "@packages/core/db-query";
+import { generateUniqueRef } from "@packages/core/helpers";
 import type { GetAllOptions } from "@packages/core/types";
 import { transformIds } from "@packages/core/validation";
 import type { GetPoolInvoicesQuery, IPPoolInvoice } from "../../common/pool-invoice.dto";
@@ -10,7 +11,9 @@ import type { Ctx } from "@/lib/ctx/ctx.types";
 
 export class PoolInvoiceRepo {
   static async create(ctx: Ctx, data: IPoolInvoiceInput): Promise<PoolInvoiceDoc> {
-    return new PoolInvoice(data).save({ session: ctx?.session }) as unknown as PoolInvoiceDoc;
+    return new PoolInvoice({ ...data, ref: generateUniqueRef("PNV") }).save({
+      session: ctx?.session,
+    }) as unknown as PoolInvoiceDoc;
   }
 
   static getById(ctx: Ctx, id: string): Promise<PoolInvoiceDoc | null> {
@@ -56,7 +59,7 @@ export class PoolInvoiceRepo {
   ): Promise<PoolInvoiceDoc | null> {
     return PoolInvoice.findOneAndUpdate(
       { poolSlot: poolSlotId, turnNumber },
-      { $setOnInsert: data },
+      { $setOnInsert: { ...data, ref: generateUniqueRef("PNV") } },
       { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true, session: ctx?.session }
     );
   }

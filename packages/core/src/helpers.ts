@@ -1,3 +1,9 @@
+import { randomUUID } from "node:crypto";
+
+export function generateUniqueRef(prefix: string): string {
+  return `${prefix}-${randomUUID()}`;
+}
+
 export const sortObject = (value: object): object => {
   if (Array.isArray(value)) {
     return value.map(sortObject);

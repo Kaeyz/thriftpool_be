@@ -1,5 +1,6 @@
 import { parseSelectFromSchema } from "@packages/core/database";
 import { buildPagination, buildSortObject } from "@packages/core/db-query";
+import { generateUniqueRef } from "@packages/core/helpers";
 import { transformIds } from "@packages/core/validation";
 import type { GetTransactionsQuery, IPTransaction, TransactionStatus } from "../../common/transaction.dto";
 import { IPTransactionSchema } from "../../zod/transaction.zod";
@@ -9,7 +10,9 @@ import type { Ctx } from "@/lib/ctx/ctx.types";
 
 export class TransactionRepo {
   static async create(ctx: Ctx, data: ITransactionInput): Promise<TransactionDoc> {
-    return new Transaction(data).save({ session: ctx?.session }) as unknown as TransactionDoc;
+    return new Transaction({ ...data, ref: generateUniqueRef("TXN") }).save({
+      session: ctx?.session,
+    }) as unknown as TransactionDoc;
   }
 
   static getById(ctx: Ctx, id: string): Promise<TransactionDoc | null> {

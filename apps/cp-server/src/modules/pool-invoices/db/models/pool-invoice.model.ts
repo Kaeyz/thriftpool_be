@@ -9,6 +9,7 @@ import { IPBankAccountSchema } from "@/modules/bank-accounts/zod/bank-account.zo
 
 const PoolInvoiceSchema: Schema = new Schema(
   {
+    ref: { type: String, required: true, immutable: true },
     pool: { type: Schema.Types.ObjectId, ref: POOLS, required: true },
     poolSlot: { type: Schema.Types.ObjectId, ref: POOL_SLOTS, required: true },
     sender: {
@@ -36,6 +37,7 @@ const PoolInvoiceSchema: Schema = new Schema(
 );
 
 addVirtualId(PoolInvoiceSchema);
+PoolInvoiceSchema.index({ ref: 1 }, { unique: true, sparse: true });
 PoolInvoiceSchema.index({ poolSlot: 1, turnNumber: 1 }, { unique: true });
 
 const autoPopulate = function (this: Query<unknown, unknown>, next: () => void) {
